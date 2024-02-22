@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+body {
+  overflow: hidden;
+}
+
+.ant-layout-sider-children {
+  background: #141414 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #535657;
+  border-radius: 15px;
+}
+
+.select-none {
+  user-select: none;
+}
+
+.display-none {
+  display: none;
+}
+
+.ant-breadcrumb-separator {
+  display: none;
+}
+
+.menu-scroll {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes-month {
+  font-size: 20px;
+  text-align: center;
+}
+.notes-month section {
+  font-size: 28px;
+}
