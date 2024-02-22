@@ -57,7 +57,7 @@ export default function SiderLayout () {
         icon={
           isCollapsed
             ? (
-            <AlignJustify className="w-full" />
+            <AlignJustify targetX='Hola' className="w-full" />
               )
             : (
             <X className="w-full" />
@@ -77,7 +77,7 @@ export default function SiderLayout () {
         <img
           src='logo.svg'
           className={
-            'w-full mx-auto px-4 py-2 border-r-[1px] border-[#2c2c2c] transition-all'
+            'w-full mx-auto px-6 py-3 border-r-[1px] border-[#2c2c2c] transition-all'
           }
         />
         <Menu

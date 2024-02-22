@@ -1,24 +1,26 @@
 import { Card } from 'antd'
-import { ShoppingCart } from 'lucide-react'
-const CardItem = () => {
+
+// icons
+import { RiFilter3Fill } from 'react-icons/ri'
+
+export default function CardItem ({ cardTitle, children, filterItems }) {
   return (
-    <div className='flex gap-8 justify-start'>
-      <Card
-        title="Total productos"
-        className='w-full'
-        bordered
-        size="small"
-        style={{
-          width: 300
-        }}
-      >
-        <div className="flex gap-2">
-          <ShoppingCart />
-          <p className="text-xl ml-2">12</p>
-        </div>
-      </Card>
-    </div>
+    <Card
+      title={cardTitle}
+      size="small"
+      extra={
+        filterItems && (
+          <RiFilter3Fill
+            onClick={filterItems}
+            className="text-3xl hover:bg-poor-black  rounded-xl p-1 cursor-pointer active:bg-secondary-light/70 transition-colors"
+          />
+        )
+      }
+      style={{
+        width: '100%'
+      }}
+    >
+      {children}
+    </Card>
   )
 }
-
-export default CardItem
