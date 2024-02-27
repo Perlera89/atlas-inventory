@@ -19,7 +19,9 @@ module.exports = {
         'border-black': '#272727',
         'content-black': '#141414',
         'ghost-white': '#D3D3D3',
-        'font-color': '#adadad'
+        'font-color': '#adadad',
+        'dark-gray': '#1a1a1a',
+        'light-gray': '#2c2c2c'
       }
     }
   },

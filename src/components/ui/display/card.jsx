@@ -3,10 +3,10 @@ import { Card } from 'antd'
 // icons
 import { RiFilter3Fill } from 'react-icons/ri'
 
-export default function CardItem ({ cardTitle, children, filterItems }) {
+export default function CardItem ({ title, children, filterItems }) {
   return (
     <Card
-      title={cardTitle}
+      title={title}
       size="small"
       extra={
         filterItems && (

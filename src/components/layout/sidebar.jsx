@@ -2,14 +2,14 @@
 
 // icons
 import {
-  ShoppingCart,
-  Tag,
-  Package,
-  UserCog,
-  User,
-  X,
-  AlignJustify
-} from 'lucide-react'
+  LuShoppingCart,
+  LuTag,
+  LuPackage,
+  LuUserCog,
+  LuUser,
+  LuX,
+  LuAlignJustify
+} from 'react-icons/lu'
 
 import React, { useState } from 'react'
 import { FloatButton, Layout, Menu } from 'antd'
@@ -37,7 +37,7 @@ const items = [
   label
 }))
 
-const siderItems = [ShoppingCart, Tag, Package, UserCog, User].map(
+const siderItems = [LuShoppingCart, LuTag, LuPackage, LuUserCog, LuUser].map(
   (icon, index) => {
     return {
       key: index + 1,
@@ -57,10 +57,10 @@ export default function SiderLayout () {
         icon={
           isCollapsed
             ? (
-            <AlignJustify targetX='Hola' className="w-full" />
+            <LuAlignJustify targetX='Hola' className="w-full" />
               )
             : (
-            <X className="w-full" />
+            <LuX className="w-full" />
               )
         }
         onClick={() => {
