@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "providers",
+  "info": {
+    "singularName": "provider",
+    "pluralName": "providers",
+    "displayName": "provider",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "tel": {
+      "type": "integer"
+    },
+    "email": {
+      "type": "email"
+    },
+    "payment_terms": {
+      "type": "text"
+    },
+    "return_polities": {
+      "type": "text"
+    },
+    "warranties": {
+      "type": "text"
+    },
+    "delivrery_times": {
+      "type": "datetime"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    },
+    "address": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::address.address"
+    },
+    "purchases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::purchase.purchase",
+      "mappedBy": "provider"
+    }
+  }
+}

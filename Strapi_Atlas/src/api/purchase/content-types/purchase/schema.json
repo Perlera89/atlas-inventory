@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "purchases",
+  "info": {
+    "singularName": "purchase",
+    "pluralName": "purchases",
+    "displayName": "purchase",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "code": {
+      "type": "integer"
+    },
+    "amount": {
+      "type": "integer"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "provider": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::provider.provider",
+      "inversedBy": "purchases"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tag_details",
+  "info": {
+    "singularName": "tag-detail",
+    "pluralName": "tag-details",
+    "displayName": "tag_detail"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::tag.tag",
+      "inversedBy": "tag_details"
+    },
+    "product_info": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-info.product-info",
+      "inversedBy": "tag_details"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    }
+  }
+}

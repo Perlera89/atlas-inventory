@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sales",
+  "info": {
+    "singularName": "sale",
+    "pluralName": "sales",
+    "displayName": "sale"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "code": {
+      "type": "integer"
+    },
+    "discount": {
+      "type": "decimal"
+    },
+    "note": {
+      "type": "text"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    },
+    "is_cancel": {
+      "type": "boolean"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    },
+    "credential": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::credential.credential"
+    },
+    "client": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::client.client"
+    },
+    "product_sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-sale.product-sale",
+      "mappedBy": "sale"
+    }
+  }
+}
