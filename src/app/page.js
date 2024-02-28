@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 'use client'
+=======
+>>>>>>> Stashed changes
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

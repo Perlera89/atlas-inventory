@@ -12,6 +12,11 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.14.1",
+<<<<<<< Updated upstream
+=======
+    "axios": "^1.6.7",
+    "lucide-react": "^0.335.0",
+>>>>>>> Stashed changes
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
