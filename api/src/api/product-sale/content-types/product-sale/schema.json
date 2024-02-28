@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_sales",
+  "info": {
+    "singularName": "product-sale",
+    "pluralName": "product-sales",
+    "displayName": "product_sale"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "amount": {
+      "type": "integer"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "product_sales"
+    },
+    "sale": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sale.sale",
+      "inversedBy": "product_sales"
+    }
+  }
+}

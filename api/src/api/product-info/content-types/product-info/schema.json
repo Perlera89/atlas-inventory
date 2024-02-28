@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_infos",
+  "info": {
+    "singularName": "product-info",
+    "pluralName": "product-infos",
+    "displayName": "product_info"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "thumbnail": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "product_type": {
+      "type": "enumeration",
+      "enum": [
+        "venta ",
+        "no venta"
+      ]
+    },
+    "safety_info": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "product_infos"
+    },
+    "area": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::area.area",
+      "inversedBy": "product_infos"
+    },
+    "brand": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::brand.brand",
+      "inversedBy": "product_infos"
+    },
+    "tag_details": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tag-detail.tag-detail",
+      "mappedBy": "product_info"
+    }
+  }
+}

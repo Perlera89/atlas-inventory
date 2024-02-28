@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "employees",
+  "info": {
+    "singularName": "employee",
+    "pluralName": "employees",
+    "displayName": "employee",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firts_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "tel": {
+      "type": "integer"
+    },
+    "genre": {
+      "type": "enumeration",
+      "enum": [
+        "female",
+        "male"
+      ]
+    },
+    "salary": {
+      "type": "decimal"
+    },
+    "position": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::position.position"
+    },
+    "address": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::address.address",
+      "inversedBy": "employees"
+    },
+    "sale_points": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sale-point.sale-point",
+      "mappedBy": "employee"
+    }
+  }
+}
