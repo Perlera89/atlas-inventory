@@ -20,9 +20,15 @@ export const useInventoryStore = create((set, get) => {
       const res =
         viewType === 'list'
           ? await axios.get(PRODUCTS_ROOT)
-          : await axios.get(`${PRODUCTS_ROOT}`)
-      const products = await res.data
+          : await axios.get(PRODUCTS_ROOT, {
+            params: {
+              select: 'code,stock',
+              populate: 'product_info:name-thumbnail'
+            }
+          })
 
+      const products = await res.data
+      console.log('products', products)
       set({ products, productCount: products.length }, false, 'FETCH_PRODUCTS')
     }
   }
