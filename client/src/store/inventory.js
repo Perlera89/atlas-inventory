@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 import { PRODUCTS_ROOT } from '@/utils/config'
+import { LIST } from '@/utils/querys'
 
 export const useInventoryStore = create((set, get) => {
   return {
@@ -19,13 +20,8 @@ export const useInventoryStore = create((set, get) => {
     fetchProducts: async (viewType = get().view) => {
       const res =
         viewType === 'list'
-          ? await axios.get(PRODUCTS_ROOT)
-          : await axios.get(PRODUCTS_ROOT, {
-            params: {
-              select: 'code,stock',
-              populate: 'product_info:name-thumbnail'
-            }
-          })
+          ? await axios.get(PRODUCTS_ROOT, LIST)
+          : await axios.get(PRODUCTS_ROOT)
 
       const products = await res.data
       console.log('products', products)
