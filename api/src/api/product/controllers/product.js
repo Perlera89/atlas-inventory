@@ -1,13 +1,13 @@
 'use strict'
 
-const { constulCustom } = require('../../../hooks/consults')
+const { constulCustom } = require('../../../utils/consults')
 const { createCoreController } = require('@strapi/strapi').factories
 // @ts-ignore
 module.exports = createCoreController('api::product.product', ({ strapi }) => ({
   async find (params) {
     const table = 'api::product.product'
-    let attributes = ['code', 'stock', 'sale_price']; 
-    const populate = {product_info: { select: ['id', 'name'] }}
+    let attributes = ['code', 'stock', 'sale_price', 'purshes_price'];
+    const populate = {product_info: { select: ['id', 'name', 'thumbnail', ]} }
     /*if (params.request.url.includes('select')) {
       const selectParam = new URLSearchParams(params.request.url.split('?')[1]).get('select');
       if (selectParam) {
