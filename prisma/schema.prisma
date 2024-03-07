@@ -1,0 +1,283 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Cash { 
+  id Int @id @default(autoincrement())
+  initBalance Decimal
+  endBalance Decimal
+  income Decimal
+  expensive Decimal
+  note String
+  isDeleted Boolean
+  salePoint Sale_Point?
+}
+
+model Position {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  isDeleted Boolean
+  employee Employee []
+}
+
+model District {
+  id Int @id @default(autoincrement())
+  name String
+  note String
+  isDeleted Boolean
+  address Address?
+}
+
+model City {
+  id Int @id @default(autoincrement())
+  name String
+  note String
+  isDeleted Boolean
+  address Address?
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+  department Department @relation(fields: [departmentId],references: [id])
+  departmentId Int @unique
+  isDeleted Boolean
+  city City @relation(fields: [cityId],references: [id])
+  cityId Int @unique
+  district District @relation(fields: [districtId],references: [id])
+  districtId Int @unique
+  provider Provider[]
+  employee Employee []
+  profile Profile?
+  client Client?
+}
+model Provider {
+  id Int @id @default(autoincrement()) 
+  name String
+  tel String
+  email String
+  paymentTerms String
+  returnPolities String
+  warranties String
+  deliveryTimes String
+  isDeleted Boolean
+  address Address @relation(fields: [addressId],references: [id])
+  addressId Int
+  purshase Purshase []
+}
+model Sale {
+  id Int @id @default(autoincrement())
+  code Int
+  discount Decimal
+  note String
+  state State @relation(fields: [stateId],references: [id])
+  stateId Int @unique
+  isCancel Boolean
+  isDeleted Boolean
+  user User @relation(fields: [userId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+  userId Int @unique
+  clientId Int @unique
+  productSale Product_Sale[]
+}
+model Area {
+  id Int @id @default(autoincrement())
+  name String
+  color String
+  isDeleted Boolean
+  productInfo Product_Info[]
+}
+model Brand {
+  id Int @id @default(autoincrement())
+  name String
+  color String
+  isDeleted Boolean
+  productInfo Product_Info []
+}
+model Category {
+  id Int @id @default(autoincrement())
+name String
+  color String
+  isDeleted Boolean
+  tag Tag @relation(fields: [tagId],references: [id])
+  tagId Int @unique
+  productInfo Product_Info[]
+}
+model Tag {
+  id Int @id @default(autoincrement())
+  name String
+  color String
+  isDeleted Boolean
+  category Category?
+  tagDetail Tag_Detail[]
+}
+model Tag_Detail {
+  id Int @id @default(autoincrement())
+  tag Tag @relation(fields: [tagId],references: [id])
+  tagId Int
+  productInfo Product_Info @relation(fields: [productId], references: [id])
+  productId Int
+}
+model Product_Info {
+  id Int @id @default(autoincrement())
+  name String
+  thumbnail String
+  type Type @relation(fields: [typeId],references: [id])
+  typeId Int @unique
+  safetyInfo String
+  description String
+  minimunStock Decimal
+  isDeleted Boolean
+  category Category @relation(fields: [categoryId], references: [id])
+  area Area @relation(fields: [areaId], references: [id])
+  brand Brand @relation(fields: [brandId], references: [id])
+  categoryId Int
+  areaId Int
+  brandId Int
+  tagDetail Tag_Detail []
+  product Product?
+}
+model Product {
+  id Int @id @default(autoincrement())
+  code Int
+  stock Int
+  purshasePrice  Decimal
+  minimumPrice   Decimal
+  salePrice   Decimal
+  iva             Decimal
+  isOnSale      Boolean
+  isDeleted      Boolean
+  productInfo Product_Info @relation(fields: [productInfoId],references: [id])
+  productInfoId Int @unique
+  productSale Product_Sale []
+  purshase Purshase?
+}
+model Product_Sale {
+  id Int @id @default(autoincrement())
+  amount          Int
+  price           Float
+  sale            Sale    @relation(fields: [saleId], references: [id])
+  saleId Int
+  product         Product @relation(fields: [productId], references: [id])
+  productId Int 
+  isDeleted      Boolean
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+  email       String
+  firstName  String
+  lastName   String
+  tel         Int
+  genre       Genre @relation(fields: [genreId],references: [id])
+  genreId Int @unique
+  salary      Decimal
+  isDeleted Boolean
+  position    Position @relation(fields: [positionId],references: [id])
+  positionId Int @unique
+  address     Address @relation(fields: [addressId],references: [id])
+  addressId Int 
+  user User?
+  salePoint Sale_Point []
+}
+model User {
+  id Int @id @default(autoincrement())
+  sale Sale?
+  userName   String
+  pass        String
+  date        DateTime
+  lastDate   DateTime
+  type        Type_User @relation(fields: [typeId],references: [id])
+  typeId Int @unique
+  isDeleted Boolean
+  employee Employee @relation(fields: [employeeId],references: [id])
+  employeeId Int @unique
+}
+model Profile {
+  id Int @id @default(autoincrement())
+  thumbnails  String
+  name        String
+  tel         Int
+  email       String
+  isDeleted Boolean
+  address Address @relation(fields: [addressId], references: [id])
+  addressId Int @unique
+}
+
+model Purshase {
+  id Int @id @default(autoincrement())
+  code        String
+  amount      Int
+  price       Float
+  product     Product  @relation(fields: [productId], references: [id])
+  productId Int @unique
+  provider    Provider @relation(fields: [providerId], references: [id])
+  providerId Int
+  isDeleted Boolean
+}
+model Sale_Point {
+  id Int @id @default(autoincrement())
+  name           String
+  code           Int
+  state          String
+  balance        Decimal
+  isDeleted Boolean
+  employee Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  cash Cash @relation(fields: [cashId],references: [id])
+  cashId Int @unique
+}
+
+model Client {
+  id Int @id @default(autoincrement())
+  sale Sale?
+  firts_name    String
+  last_name     String
+  DUI           Int
+  tel           Int
+  email         String
+  relevant_info String
+  isDeleted Boolean
+  address       Address @relation(fields: [addressId],references: [id])
+  addressId Int @unique
+}
+
+model Department {
+  id Int @id @default(autoincrement())
+  name String
+  address Address?
+}
+model State {
+  id Int @id @default(autoincrement())
+  name String 
+  sale Sale?
+}
+
+model Type {
+ id Int @id @default(autoincrement())
+ name String
+ productInfo Product_Info?
+}
+
+model Genre {
+  id Int @id @default(autoincrement())
+  name String 
+  employeeId Employee?
+}
+
+model Type_User {
+ id Int @id @default(autoincrement())
+ name String
+ user User?
+}
