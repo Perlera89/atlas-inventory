@@ -21,8 +21,9 @@
     "product_type": {
       "type": "enumeration",
       "enum": [
-        "venta ",
-        "no venta"
+        "Storable",
+        "Service",
+        "Consumable"
       ]
     },
     "safety_info": {

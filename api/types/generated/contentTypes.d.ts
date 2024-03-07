@@ -1262,7 +1262,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
   attributes: {
     thumbnail: Attribute.String;
     name: Attribute.String;
-    product_type: Attribute.Enumeration<['venta ', 'no venta']>;
+    product_type: Attribute.Enumeration<['Storable', 'Service', 'Consumable']>;
     safety_info: Attribute.Text;
     description: Attribute.Text;
     is_deleted: Attribute.Boolean;
