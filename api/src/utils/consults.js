@@ -89,11 +89,28 @@ async constulCustomOne(params, attributsDefault, table,populate){
           //console.log('anidationpopulate', anidationpopulate)
           anidationpopulate.forEach(value => { 
             const [tableAnidate, select2] = value.split(';') //separador de NbTablashijas y sus atributos
-            //console.log('tableAnidate,select', tableAnidate,select2)
-            const selects = select2.split('-') // separador de atributos tanto como padres e hijos
+            const [seletcanidate,subpopulte] = select2.split('*')
+            console.log('subpopulate', subpopulte)
+            const selects = seletcanidate.split('-') // separador de atributos tanto como padres e hijos
             //console.log('selects', selects)
+            let subpopulate = {}
+            if (subpopulte) {
+              const subAnidatePopulate = subpopulte.split('¿')
+
+              subAnidatePopulate.forEach(value => {
+                const [subtableanidate, subselect] = value.split('!')
+
+                subpopulate[subtableanidate] = {select:subselect.split('-')}
+
+                console.log('subpopulate', subpopulate)
+                populate[tableAnidate] = {select : selects, populate : subpopulate}
+                population[tableName] = { select: select.split('-'), populate };
+              })
+            }else{
             populate[tableAnidate] = {select : selects}
             population[tableName] = { select: select.split('-'), populate };
+            }
+            
           })
         }
         else{
