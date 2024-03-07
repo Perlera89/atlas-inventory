@@ -5,7 +5,6 @@ import { useInventoryStore } from '@/store/inventory'
 
 export default function InputTextItem ({
   placeholder,
-  showCount = false,
   value,
   handleChange = null,
   maxLength,
@@ -34,8 +33,8 @@ export default function InputTextItem ({
       ref={inputRef}
       readOnly={action === 'view'}
       variant="borderless"
-      allowClear={showCount}
-      showCount={showCount}
+      allowClear={action !== 'view'}
+      showCount={action !== 'view'}
       maxLength={maxLength}
       className="w-full"
       placeholder={placeholder}

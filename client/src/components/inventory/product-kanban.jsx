@@ -9,8 +9,8 @@ export default function ProductKanbanItem ({ products }) {
   )
   const setAction = useInventoryStore((state) => state.setAction)
 
-  const handleClick = (record) => {
-    handleOpenProduct(record)
+  const handleClick = (id) => {
+    handleOpenProduct(id)
     setAction('view')
   }
 
@@ -21,7 +21,7 @@ export default function ProductKanbanItem ({ products }) {
           key={key}
           size="small"
           className="hover:bg-dark-gray transition-colors hover:cursor-pointer"
-          onClick={() => handleClick(product)}
+          onClick={() => handleClick(product.id)}
         >
           <div className="flex gap-4">
             <Image

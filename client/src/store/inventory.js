@@ -13,9 +13,7 @@ export const useInventoryStore = create((set, get) => {
     handleChangeView: (e) => set({ view: e.target.value }),
     openProduct: false,
     handleOpenProduct: async (id) => {
-      console.log('id', id)
       const res = await axios.get(`${PRODUCTS_ROOT}/${id}`, LIST)
-      console.log('res.data', res.data)
       set({ product: res.data, openProduct: true })
     },
     handleCancelProduct: () => set({ openProduct: false }),

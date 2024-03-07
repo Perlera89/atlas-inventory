@@ -38,7 +38,7 @@ export default function InventoryPage () {
   const setAction = useInventoryStore((state) => state.setAction)
 
   const handleClick = () => {
-    handleOpenProduct(product)
+    // handleOpenProduct(product)
     setAction('add')
   }
 
@@ -104,7 +104,7 @@ export default function InventoryPage () {
           }}
           handleCancel={handleCancelProduct}
         >
-          <ProductViewItem product={product} />
+          <ProductViewItem />
         </ProductModalItem>
       </div>
     </>

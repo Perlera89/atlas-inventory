@@ -11,35 +11,37 @@ import TagsTab from './tabs/tags-tab'
 import ExtraTab from './tabs/extra-tab'
 const { Text } = Typography
 
-export default function ProductViewItem ({ product }) {
+export default function ProductViewItem () {
+  const product = useInventoryStore((state) => state.product)
   return (
     <div>
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-8">
         <InputTextItem
           placeholder="Product name"
           maxLength={30}
-          value={product.name}
+          value={product.product_info?.name}
           showCount={false}
         />
         <div className="flex gap-4 align-middle justify-center">
           <Image
             width={125}
+            src={product.product_info?.thumbnail}
             fallback="/fallback.png"
             className="rounded-md cursor-pointer"
             preview={{ mask: null }}
           />
           <div className="flex flex-col gap-2 w-full align-middle">
             <div className="flex gap-2 items-center">
-              <Checkbox defaultChecked />
+              <Checkbox defaultChecked checked={product.is_on_sale} />
               <Text className="ml-3">On sale</Text>
             </div>
             <div className="flex gap-2 items-center">
               <FaBarcode className="text-xl" />
-              <InputTextItem maxLength={30} placeholder="Code" />
+              <InputTextItem maxLength={30} placeholder="Code" value={product.code} />
             </div>
             <div className="flex gap-2 items-center">
               <FaBox className="text-xl" />
-              <InputNumberItem placeholder="Stock" />
+              <InputNumberItem placeholder="Stock" value={product.stock} />
             </div>
           </div>
         </div>
