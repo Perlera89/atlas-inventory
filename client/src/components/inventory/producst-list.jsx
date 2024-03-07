@@ -49,7 +49,8 @@ export default function ProductListItem ({ products }) {
   }))
 
   const handleRow = (record) => {
-    handleOpenProduct(record)
+    handleOpenProduct(record.id)
+    console.log('record', record)
     setAction('view')
   }
 
