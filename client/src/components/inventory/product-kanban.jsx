@@ -4,23 +4,31 @@ import { useInventoryStore } from '@/store/inventory'
 const { Text } = Typography
 
 export default function ProductKanbanItem ({ products }) {
-  const handleOpenProduct = useInventoryStore((state) => state.handleOpenProduct)
+  const handleOpenProduct = useInventoryStore(
+    (state) => state.handleOpenProduct
+  )
+  const setAction = useInventoryStore((state) => state.setAction)
+
+  const handleClick = (record) => {
+    handleOpenProduct(record)
+    setAction('view')
+  }
 
   return (
-    <div className='grid grid-cols-5 gap-2'>
+    <div className="grid grid-cols-5 gap-2">
       {products.map((product, key) => (
         <Card
           key={key}
           size="small"
           className="hover:bg-dark-gray transition-colors hover:cursor-pointer"
-          onClick={() => handleOpenProduct(product)}
+          onClick={() => handleClick(product)}
         >
           <div className="flex gap-4">
             <Image
               className="rounded-md"
               width={75}
               height={75}
-              preview={{ mask: null }}
+              preview={false}
               fallback="/fallback.png"
               src={product.product_info?.thumbnail}
             />

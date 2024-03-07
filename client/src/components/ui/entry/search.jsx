@@ -25,6 +25,7 @@ const SearchItem = ({ text, onSearch, options, update }) => {
   return (
     <>
       <Search
+        variant="outlined"
         allowClear
         placeholder={text || 'Search'}
         className="w-full min-w-[400px]"

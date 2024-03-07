@@ -2,7 +2,6 @@
 // components
 import { Button, Radio, Typography } from 'antd'
 import CardItem from '@/components/ui/display/card'
-import ModalItem from '@/components/ui/display/modal'
 import SearchItem from '@/components/ui/entry/search'
 import IconButtonItem from '@/components/ui/common/icon-buttom'
 import SelectItem from '@/components/ui/entry/select'
@@ -19,22 +18,29 @@ import {
 // hooks
 import { useInventoryStore } from '@/store/inventory'
 import { ProductsItem } from '../../components/inventory/products'
-import ProductViewItem from '@/components/inventory/modal-view'
+import ProductViewItem from '@/components/inventory/product-view'
+import ProductModalItem from '@/components/inventory/product-modal'
 
 const { Text } = Typography
 
 export default function InventoryPage () {
   const product = useInventoryStore((state) => state.product)
-  const openModal = useInventoryStore((state) => state.openModal)
-  const handleOpenModal = useInventoryStore((state) => state.handleOpenModal)
-  const handleCloseModal = useInventoryStore((state) => state.handleCloseModal)
   const view = useInventoryStore((state) => state.view)
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const productCount = useInventoryStore((state) => state.productCount)
   const openProduct = useInventoryStore((state) => state.openProduct)
+  const handleOpenProduct = useInventoryStore(
+    (state) => state.handleOpenProduct
+  )
   const handleCancelProduct = useInventoryStore(
     (state) => state.handleCancelProduct
   )
+  const setAction = useInventoryStore((state) => state.setAction)
+
+  const handleClick = () => {
+    handleOpenProduct(product)
+    setAction('add')
+  }
 
   return (
     <>
@@ -47,7 +53,7 @@ export default function InventoryPage () {
         </CardItem>
         <div className="flex justify-between items-center">
           <div className="flex gap-2">
-            <Button onClick={handleOpenModal}>Add product</Button>
+            <Button onClick={handleClick}>Add product</Button>
             <SearchItem />
             <SelectItem placeholder="Select filter" />
           </div>
@@ -89,21 +95,17 @@ export default function InventoryPage () {
             </Radio.Group>
           </div>
         </div>
-        <ModalItem
-          title="Modal"
-          width={500}
-          isModalOpen={openModal}
-          handleCancel={handleCloseModal}
-        />
         <ProductsItem />
-        <ProductViewItem
-          title={product.name || product.product_info?.name || 'Product'}
-          width={500}
+        <ProductModalItem
+          width={600}
           isModalOpen={openProduct}
+          handleEdit={() => {
+            setAction('edit')
+          }}
           handleCancel={handleCancelProduct}
         >
-          Contenido
-        </ProductViewItem>
+          <ProductViewItem product={product} />
+        </ProductModalItem>
       </div>
     </>
   )

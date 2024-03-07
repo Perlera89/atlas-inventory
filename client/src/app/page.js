@@ -7,5 +7,5 @@ export default function Home () {
   useEffect(() => {
     router.push('/purchases')
   }, [])
-  return null
+  return <></>
 }

@@ -13,7 +13,7 @@ export default function TableItem ({ locale, columns, dataSource, loading, handl
       rowClassName='cursor-pointer'
       bordered
       size="small"
-      locale={locale}
+      locale={{ emptyText: 'No Data' }}
       columns={columns}
       dataSource={dataSource}
       loading={loading}

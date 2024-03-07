@@ -3,6 +3,8 @@ import { useInventoryStore } from '@/store/inventory'
 
 export default function ProductListItem ({ products }) {
   const handleOpenProduct = useInventoryStore((state) => state.handleOpenProduct)
+  const setAction = useInventoryStore((state) => state.setAction)
+
   const columns = [
     {
       title: '',
@@ -48,6 +50,7 @@ export default function ProductListItem ({ products }) {
 
   const handleRow = (record) => {
     handleOpenProduct(record)
+    setAction('view')
   }
 
   return (

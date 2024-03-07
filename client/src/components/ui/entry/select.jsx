@@ -1,7 +1,4 @@
-import { Select, Typography } from 'antd'
-
-const { Text } = Typography
-
+import { Select } from 'antd'
 const filterOption = (input, option) => {
   const label = option?.label
   const labelValue = typeof label === 'object' ? label.props.children : label
@@ -14,7 +11,7 @@ const SelectItem = ({
   options,
   handleSelect,
   disabled,
-  bordered
+  bordered = 'bordered'
 }) => (
   <Select
     variant={bordered}
@@ -26,11 +23,7 @@ const SelectItem = ({
     placeholder={placeholder || 'Select'}
     options={options}
     filterOption={filterOption}
-    notFoundContent={
-      <Text className="flex justify-center my-2" type="secondary">
-        No data
-      </Text>
-    }
+    notFoundContent='No data'
     className="w-full min-w-[150px]"
   />
 )
