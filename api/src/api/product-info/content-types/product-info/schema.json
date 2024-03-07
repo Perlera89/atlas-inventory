@@ -53,9 +53,9 @@
     },
     "tag_details": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::tag-detail.tag-detail",
-      "mappedBy": "product_info"
+      "mappedBy": "product_infos"
     }
   }
 }

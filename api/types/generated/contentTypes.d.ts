@@ -1283,7 +1283,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
     >;
     tag_details: Attribute.Relation<
       'api::product-info.product-info',
-      'oneToMany',
+      'manyToMany',
       'api::tag-detail.tag-detail'
     >;
     createdAt: Attribute.DateTime;
@@ -1582,7 +1582,7 @@ export interface ApiTagTag extends Schema.CollectionType {
     is_deleted: Attribute.Boolean;
     tag_details: Attribute.Relation<
       'api::tag.tag',
-      'oneToMany',
+      'manyToMany',
       'api::tag-detail.tag-detail'
     >;
     createdAt: Attribute.DateTime;
@@ -1601,19 +1601,20 @@ export interface ApiTagDetailTagDetail extends Schema.CollectionType {
     singularName: 'tag-detail';
     pluralName: 'tag-details';
     displayName: 'tag_detail';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    tag: Attribute.Relation<
+    tags: Attribute.Relation<
       'api::tag-detail.tag-detail',
-      'manyToOne',
+      'manyToMany',
       'api::tag.tag'
     >;
-    product_info: Attribute.Relation<
+    product_infos: Attribute.Relation<
       'api::tag-detail.tag-detail',
-      'manyToOne',
+      'manyToMany',
       'api::product-info.product-info'
     >;
     is_deleted: Attribute.Boolean;
