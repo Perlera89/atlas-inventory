@@ -4,7 +4,8 @@
   "info": {
     "singularName": "product-info",
     "pluralName": "product-infos",
-    "displayName": "product_info"
+    "displayName": "product_info",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -20,8 +21,9 @@
     "product_type": {
       "type": "enumeration",
       "enum": [
-        "venta ",
-        "no venta"
+        "Storable",
+        "Service",
+        "Consumable"
       ]
     },
     "safety_info": {
@@ -53,9 +55,12 @@
     },
     "tag_details": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::tag-detail.tag-detail",
-      "mappedBy": "product_info"
+      "mappedBy": "product_infos"
+    },
+    "minimun_stock": {
+      "type": "integer"
     }
   }
 }

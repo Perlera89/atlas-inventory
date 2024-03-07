@@ -4,22 +4,23 @@
   "info": {
     "singularName": "tag-detail",
     "pluralName": "tag-details",
-    "displayName": "tag_detail"
+    "displayName": "tag_detail",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "tag": {
+    "tags": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::tag.tag",
       "inversedBy": "tag_details"
     },
-    "product_info": {
+    "product_infos": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::product-info.product-info",
       "inversedBy": "tag_details"
     },

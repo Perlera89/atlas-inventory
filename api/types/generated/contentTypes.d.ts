@@ -1214,7 +1214,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
   attributes: {
     code: Attribute.Integer;
     stock: Attribute.Integer;
-    minimun_stock: Attribute.Integer;
     purshes_price: Attribute.Decimal;
     sale_price: Attribute.Decimal;
     minimun_price: Attribute.Decimal;
@@ -1255,6 +1254,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
     singularName: 'product-info';
     pluralName: 'product-infos';
     displayName: 'product_info';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1262,7 +1262,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
   attributes: {
     thumbnail: Attribute.String;
     name: Attribute.String;
-    product_type: Attribute.Enumeration<['venta ', 'no venta']>;
+    product_type: Attribute.Enumeration<['Storable', 'Service', 'Consumable']>;
     safety_info: Attribute.Text;
     description: Attribute.Text;
     is_deleted: Attribute.Boolean;
@@ -1283,9 +1283,10 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
     >;
     tag_details: Attribute.Relation<
       'api::product-info.product-info',
-      'oneToMany',
+      'manyToMany',
       'api::tag-detail.tag-detail'
     >;
+    minimun_stock: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1582,7 +1583,7 @@ export interface ApiTagTag extends Schema.CollectionType {
     is_deleted: Attribute.Boolean;
     tag_details: Attribute.Relation<
       'api::tag.tag',
-      'oneToMany',
+      'manyToMany',
       'api::tag-detail.tag-detail'
     >;
     createdAt: Attribute.DateTime;
@@ -1601,19 +1602,20 @@ export interface ApiTagDetailTagDetail extends Schema.CollectionType {
     singularName: 'tag-detail';
     pluralName: 'tag-details';
     displayName: 'tag_detail';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    tag: Attribute.Relation<
+    tags: Attribute.Relation<
       'api::tag-detail.tag-detail',
-      'manyToOne',
+      'manyToMany',
       'api::tag.tag'
     >;
-    product_info: Attribute.Relation<
+    product_infos: Attribute.Relation<
       'api::tag-detail.tag-detail',
-      'manyToOne',
+      'manyToMany',
       'api::product-info.product-info'
     >;
     is_deleted: Attribute.Boolean;
