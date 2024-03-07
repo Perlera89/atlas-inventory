@@ -1,7 +1,7 @@
 export const LIST = {
   params: {
-    select: 'code,stock,minimun_stock,purshes_price,sale_price,minimun_price,IVA,is_on_sale,is_deleted',
-    populate: 'product_info:name-thumbnail-description-safety_info.brand;name-color/category;name-color/area;name-color'
+    select: 'code,stock,purshes_price,sale_price,minimun_price,IVA,is_on_sale,is_deleted',
+    populate: 'product_info:name-thumbnail-description-safety_info-minimun_stock-product_type.brand;id-name-color/category;id-name-color/area;id-name-color/tag_details;is_deleted*tags!id-name-color'
   }
 }
 

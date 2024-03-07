@@ -4,7 +4,8 @@
   "info": {
     "singularName": "product-info",
     "pluralName": "product-infos",
-    "displayName": "product_info"
+    "displayName": "product_info",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -56,6 +57,9 @@
       "relation": "manyToMany",
       "target": "api::tag-detail.tag-detail",
       "mappedBy": "product_infos"
+    },
+    "minimun_stock": {
+      "type": "integer"
     }
   }
 }

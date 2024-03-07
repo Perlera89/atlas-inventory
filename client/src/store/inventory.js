@@ -21,6 +21,7 @@ export const useInventoryStore = create((set, get) => {
     handleCancelProduct: () => set({ openProduct: false }),
     fetchProducts: async () => {
       const res = await axios.get(PRODUCTS_ROOT, LIST)
+      console.log('res', res)
       const products = await res.data
       // create = await axios.post(PRODUCTS_ROOT, CREATE)
       // update = await axios.put(`${PRODUCTS_ROOT}/5`, UPDATE) el 5 es el id de el que se esta editando

@@ -1214,7 +1214,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
   attributes: {
     code: Attribute.Integer;
     stock: Attribute.Integer;
-    minimun_stock: Attribute.Integer;
     purshes_price: Attribute.Decimal;
     sale_price: Attribute.Decimal;
     minimun_price: Attribute.Decimal;
@@ -1255,6 +1254,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
     singularName: 'product-info';
     pluralName: 'product-infos';
     displayName: 'product_info';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1286,6 +1286,7 @@ export interface ApiProductInfoProductInfo extends Schema.CollectionType {
       'manyToMany',
       'api::tag-detail.tag-detail'
     >;
+    minimun_stock: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
