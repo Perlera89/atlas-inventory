@@ -6,7 +6,7 @@ import { Modal, Button } from 'antd'
 import { useInventoryStore } from '@/store/inventory'
 
 // icons
-import { MdEdit, MdClose, MdDelete } from 'react-icons/md'
+import { MdClose, MdDelete } from 'react-icons/md'
 
 export default function ProductModalItem ({
   width,
@@ -60,7 +60,7 @@ export default function ProductModalItem ({
             <Button key="cancel" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button key="save" type='primary' onClick={handleCancel}>
+            <Button key="save" type="primary" onClick={handleCancel}>
               Save
             </Button>
           </>
@@ -100,17 +100,6 @@ export default function ProductModalItem ({
         <div className="flex gap-1 justify-end items-center align-middle">
           {action === 'view' && (
             <>
-              <Button
-                type="text"
-                icon={
-                  <MdEdit
-                    title="Edit"
-                    className="text-font-color text-2xl flex items-center"
-                  />
-                }
-                className="rounded-full"
-                onClick={handleEdit}
-              />
               <Button
                 type="text"
                 icon={

@@ -30,11 +30,11 @@ export default function ProductKanbanItem ({ products }) {
               height={75}
               preview={false}
               fallback="/fallback.png"
-              src={product.product_info?.thumbnail}
+              src={product.productInfo?.thumbnail}
             />
             <div>
               <h3 className="text-lg font-bold">
-                {product.product_info?.name}
+                {product.productInfo?.name}
               </h3>
               <div className="flex gap-2">
                 <Text>Stock:</Text>
@@ -42,7 +42,7 @@ export default function ProductKanbanItem ({ products }) {
               </div>
               <div className="flex gap-2">
                 <Text>Price:</Text>
-                <Text type="secondary">$ {product.sale_price}</Text>
+                <Text type="secondary">$ {product.salePrice}</Text>
               </div>
             </div>
           </div>

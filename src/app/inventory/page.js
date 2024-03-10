@@ -24,21 +24,18 @@ import ProductModalItem from '@/components/inventory/product-modal'
 const { Text } = Typography
 
 export default function InventoryPage () {
-  const product = useInventoryStore((state) => state.product)
+  const handleOpenProduct = useInventoryStore((state) => state.handleOpenProduct)
   const view = useInventoryStore((state) => state.view)
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const productCount = useInventoryStore((state) => state.productCount)
   const openProduct = useInventoryStore((state) => state.openProduct)
-  const handleOpenProduct = useInventoryStore(
-    (state) => state.handleOpenProduct
-  )
   const handleCancelProduct = useInventoryStore(
     (state) => state.handleCancelProduct
   )
   const setAction = useInventoryStore((state) => state.setAction)
 
   const handleClick = () => {
-    // handleOpenProduct(product)
+    handleOpenProduct()
     setAction('add')
   }
 

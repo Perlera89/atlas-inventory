@@ -9,39 +9,58 @@ import InputTextItem from '../ui/entry/input-text'
 import GeneralTab from './tabs/general-tab'
 import TagsTab from './tabs/tags-tab'
 import ExtraTab from './tabs/extra-tab'
+import { useEffect, useState } from 'react'
+import UploadItem from '../ui/entry/upload'
 const { Text } = Typography
 
 export default function ProductViewItem () {
   const product = useInventoryStore((state) => state.product)
+  const action = useInventoryStore((state) => state.action)
+
+  // states
+  const [name, setName] = useState('')
+  const [isOnSale, setIsOnSale] = useState(true)
+  const [thumbnail, setThumbnail] = useState('')
+  const [code, setCode] = useState(null)
+  const [stock, setStock] = useState(null)
+
+  useEffect(() => {
+    if (action !== 'add') {
+      setName(product.productInfo.name)
+      setIsOnSale(product.isOnSale)
+      setThumbnail(product.productInfo.thumbnail)
+      setCode(product.code)
+      setStock(product.stock)
+    }
+  }, [action])
+
   return (
     <div>
       <div className="flex flex-col gap-4 mt-8">
         <InputTextItem
           placeholder="Product name"
           maxLength={30}
-          value={product.product_info?.name}
+          value={name}
           showCount={false}
         />
         <div className="flex gap-4 align-middle justify-center">
-          <Image
-            width={125}
-            src={product.product_info?.thumbnail}
-            fallback="/fallback.png"
-            className="rounded-md cursor-pointer"
-            preview={{ mask: null }}
-          />
+          <UploadItem />
           <div className="flex flex-col gap-2 w-full align-middle">
             <div className="flex gap-2 items-center">
-              <Checkbox defaultChecked checked={product.is_on_sale} />
+              <Checkbox defaultChecked checked={isOnSale} />
               <Text className="ml-3">On sale</Text>
             </div>
             <div className="flex gap-2 items-center">
               <FaBarcode className="text-xl" />
-              <InputTextItem maxLength={30} placeholder="Code" value={product.code} />
+              <InputTextItem
+                maxLength={30}
+                placeholder="Code"
+                value={code}
+              />
             </div>
             <div className="flex gap-2 items-center">
               <FaBox className="text-xl" />
-              <InputNumberItem placeholder="Stock" value={product.stock} />
+              <InputNumberItem placeholder="Stock" value={stock} />
             </div>
           </div>
         </div>

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkstrapi_atlas=self.webpackChunkstrapi_atlas||[]).push([[8176],{38176:(s,t,e)=>{e.r(t),e.d(t,{default:()=>a});const a={"plugin.description.long":"L\xE4gger till en GraphQL-rutt med standard API-metoder.","plugin.description.short":"L\xE4gger till en GraphQL-rutt med standard API-metoder.","plugin.name":"GraphQL"}}}]);

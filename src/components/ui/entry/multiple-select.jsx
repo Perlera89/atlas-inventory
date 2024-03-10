@@ -1,9 +1,8 @@
-import { Select, Typography } from 'antd'
-
-const { Text } = Typography
+import { Select } from 'antd'
 
 export default function MultipleSelectItem ({
   placeholder,
+  value,
   options,
   bordered = 'bordered',
   handleSelect
@@ -17,6 +16,7 @@ export default function MultipleSelectItem ({
   return (
     <Select
       allowClear
+      value={value}
       variant={bordered}
       mode="multiple"
       style={{

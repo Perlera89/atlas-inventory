@@ -1,6 +1,6 @@
-const ROOT = 'http://localhost:1337/api'
+const ROOT = 'http://localhost:3000/api'
 
-export const PRODUCTS_ROOT = `${ROOT}/products`
+export const PRODUCTS_ROOT = `${ROOT}/product`
 export const ADDRESS_ROOT = `${ROOT}/addresses`
 export const AREAS_ROOT = `${ROOT}/areas`
 export const BRANDS_ROOT = `${ROOT}/brands`

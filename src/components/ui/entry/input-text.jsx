@@ -1,8 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { Input } from 'antd'
 
-import { useInventoryStore } from '@/store/inventory'
-
 export default function InputTextItem ({
   placeholder,
   value,
@@ -10,7 +8,6 @@ export default function InputTextItem ({
   maxLength,
   focus = false
 }) {
-  const action = useInventoryStore((state) => state.action)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -31,10 +28,7 @@ export default function InputTextItem ({
   return (
     <Input
       ref={inputRef}
-      readOnly={action === 'view'}
       variant="borderless"
-      allowClear={action !== 'view'}
-      showCount={action !== 'view'}
       maxLength={maxLength}
       className="w-full"
       placeholder={placeholder}

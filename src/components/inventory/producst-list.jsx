@@ -24,12 +24,14 @@ export default function ProductListItem ({ products }) {
     {
       title: 'Price',
       dataIndex: 'price',
-      align: 'center'
+      align: 'center',
+      render: (text) => `$ ${text}`
     },
     {
       title: 'Cost',
       dataIndex: 'cost',
-      align: 'center'
+      align: 'center',
+      render: (text) => `$ ${text}`
     },
     {
       title: 'Stock',
@@ -41,11 +43,11 @@ export default function ProductListItem ({ products }) {
   const dataSource = products.map((product) => ({
     key: product.id,
     id: product.id,
-    name: product.product_info.name,
+    name: product.productInfo.name,
     code: product.code,
     stock: product.stock,
-    price: product.sale_price,
-    cost: product.purshes_price
+    price: product.salePrice,
+    cost: product.purchasePrice
   }))
 
   const handleRow = (record) => {

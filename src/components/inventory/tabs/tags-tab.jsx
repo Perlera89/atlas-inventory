@@ -2,7 +2,8 @@ import MultipleSelectItem from '@/components/ui/entry/multiple-select'
 import SelectItem from '@/components/ui/entry/select'
 import CustomSelectItem from '@/components/ui/entry/custom-select'
 import { useInventoryStore } from '@/store/inventory'
-import { Tag, Typography } from 'antd'
+import { Typography } from 'antd'
+import { useEffect, useState } from 'react'
 
 const { Text } = Typography
 
@@ -10,72 +11,51 @@ export default function TagsTab () {
   const product = useInventoryStore((state) => state.product)
   const action = useInventoryStore((state) => state.action)
 
-  const info = product.product_info
+  const [type, setType] = useState(null)
+  const [category, setCategory] = useState(null)
+  const [brand, setBrand] = useState(null)
+  const [area, setArea] = useState(null)
+  const [tags, setTags] = useState([])
+
+  const info = product && product.productInfo
+
+  const options =
+    product &&
+    info.tagDetails.map((details) => ({
+      value: details.tag.id,
+      label: details.tag.name
+    }))
+
+  useEffect(() => {
+    if (action !== 'add') {
+      setType(info.type.id)
+      setCategory(info.category.name)
+      setBrand(info.brand.name)
+      setArea(info?.area?.name)
+      setTags(info.tagDetails.map((details) => details.tag.id))
+    }
+  }, [action])
 
   return (
     <div>
       <div className="flex flex-col gap-2">
-        {action === 'view'
-          ? <>
-            <div className="flex items-center gap-2">
-              <Text className='w-24'>Type</Text>
-              {info.type
-                ? (
-                <Tag color={info?.category?.color}>{info?.type?.name}</Tag>
-                  )
-                : (
-                <Text type="secondary">No type</Text>
-                  )}
-            </div>
-            <div className="flex items-center gap-2">
-              <Text className='w-24'>Category</Text>
-              <Tag color={info?.category?.color}>{info?.category?.name}</Tag>
-            </div>
-            <div className="flex items-center gap-2">
-              <Text className='w-24'>Brand</Text>
-              <Tag color={info?.brand?.color}>{info?.brand?.name}</Tag>
-            </div>
-            <div className="flex items-center gap-2">
-              <Text className='w-24'>Area</Text>
-              {info.area ? <Tag color={info.area.color}>{info?.area?.name}</Tag> : <Text type="secondary">No area</Text>}
-            </div>
-            <div className="flex items-center gap-2">
-              <Text className='w-24'>Tags</Text>
-              {info.tags
-                ? <Tag color={info.area.color}>
-                {info?.area?.name}
-              </Tag>
-                : <Text type="secondary">No tags</Text>}
-            </div>
-            {/* <div className='flex items-center gap-2'>
-            <Text>Tags</Text>
-            <Tag color={info.category.color}>{info.category.name}</Tag>
-          </div> */}
-          </>
-          : <>
-            <SelectItem
-              placeholder="Select type"
-              options={[
-                { value: 'storable', label: 'Storable' },
-                { value: 'service', label: 'Service' },
-                { value: 'consumable', label: 'Consumable' }
-              ]}
-            />
-            <CustomSelectItem
-              placeholder="Select category"
-              value={product.product_info.category.name}
-            />
-            <CustomSelectItem
-              placeholder="Select brand"
-              value={product.product_info.brand.name}
-            />
-            <CustomSelectItem
-              placeholder="Select area"
-              value={product.product_info?.area?.name}
-            />
-            <MultipleSelectItem placeholder="Select tags" />
-          </>
-        }
+        <SelectItem
+          placeholder="Select type"
+          value={type}
+          options={[
+            { value: 1, label: 'Consumable' },
+            { value: 2, label: 'Storable' },
+            { value: 3, label: 'Service' }
+          ]}
+        />
+        <CustomSelectItem placeholder="Select category" value={category} />
+        <CustomSelectItem placeholder="Select brand" value={brand} />
+        <CustomSelectItem placeholder="Select area" value={area} />
+        <MultipleSelectItem
+          options={options}
+          value={tags}
+          placeholder="Select tags"
+        />
       </div>
     </div>
   )

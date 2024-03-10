@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkstrapi_atlas=self.webpackChunkstrapi_atlas||[]).push([[9135],{89135:(p,a,n)=>{n.r(a),n.d(a,{default:()=>i});const i={"plugin.description.long":"Dodaje GraphQL endpoint z domy\u015Blnymi metodami API.","plugin.description.short":"Dodaje GraphQL endpoint z domy\u015Blnymi metodami API.","plugin.name":"GraphQL"}}}]);
