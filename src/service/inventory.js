@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-import { PRODUCTS_ROOT } from '@/utils/config'
+import { PRODUCTS_ROOT } from '@/util/config'
 import { useInventoryStore } from '@/store/inventory'
 
 export function useProductsService () {

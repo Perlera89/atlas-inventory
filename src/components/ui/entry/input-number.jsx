@@ -5,17 +5,17 @@ export default function InputNumberItem ({
   placeholder,
   decimal = false,
   value,
-  onChange
+  handleChange
 }) {
   return (
     <InputNumber
-      placeholder={placeholder || 'Type a number'}
+      placeholder={placeholder || 'Number'}
       variant="borderless"
       style={{ width: '100%' }}
       min={0}
       type="number"
       value={value}
-      onChange={onChange}
+      onChange={handleChange}
       status="warning"
     />
   )

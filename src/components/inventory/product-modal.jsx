@@ -11,13 +11,11 @@ import { MdClose, MdDelete } from 'react-icons/md'
 export default function ProductModalItem ({
   width,
   isModalOpen,
-  handleSave,
-  handleCancel,
-  handleEdit,
-  validate,
   children
 }) {
   const action = useInventoryStore((state) => state.action)
+  const handleCancel = useInventoryStore((state) => state.handleCancelProduct)
+  const handleSave = useInventoryStore((state) => state.handleSaveProduct)
   const [disabled, setDisabled] = useState(true)
   const [bounds, setBounds] = useState({
     left: 0,
@@ -60,7 +58,7 @@ export default function ProductModalItem ({
             <Button key="cancel" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button key="save" type="primary" onClick={handleCancel}>
+            <Button key="save" type="primary" onClick={handleSave}>
               Save
             </Button>
           </>

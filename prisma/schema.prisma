@@ -120,7 +120,7 @@ model Tag {
   id         Int         @id @default(autoincrement())
   name       String
   categoryId Int
-  category   Category    @relation(fields: [categoryId], references: [id])
+  categories   Category    @relation(fields: [categoryId], references: [id])
   isDeleted  Boolean     @default(false)
   tagDetails TagDetail[]
 }
@@ -141,8 +141,8 @@ model ProductInfo {
   name         String
   thumbnail    String
   minimumStock Int
-  safetyInfo   String
-  description  String
+  safetyInfo   String @default("Empty")
+  description  String @default("Empty")
   categoryId   Int
   typeId       Int         
   areaId       Int?

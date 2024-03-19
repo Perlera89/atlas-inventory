@@ -36,27 +36,27 @@ export async function POST (restProduct) {
         safetyInfo: productData.safetyInfo,
         description: productData.description,
         brand: {
-          connect: { id: Number(productData.brandId) }
+          connect: { id: Number(productData.brand) }
         },
         area: {
-          connect: { id: Number(productData.areaId) }
+          connect: { id: Number(productData.area) }
         },
         category: {
-          connect: { id: Number(productData.categoryId) }
+          connect: { id: Number(productData.category) }
         },
         type: {
-          connect: { id: Number(productData.typeId) }
+          connect: { id: Number(productData.type) }
         }
       }
     })
 
     const newProduct = await prisma.product.create({
       data: {
-        code: productData.code,
+        code: Number(productData.code),
         stock: productData.stock,
         salePrice: productData.salePrice,
         iva: productData.iva,
-        isOnSale: productData.isOnSale,
+        isOnSale: productData.onSale,
         purchasePrice: productData.purchasePrice,
         minimumPrice: productData.minimumPrice,
         productInfo: {

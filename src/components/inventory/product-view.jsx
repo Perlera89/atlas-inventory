@@ -14,25 +14,20 @@ import UploadItem from '../ui/entry/upload'
 const { Text } = Typography
 
 export default function ProductViewItem () {
-  const product = useInventoryStore((state) => state.product)
+  const setAction = useInventoryStore((state) => state.setAction)
   const action = useInventoryStore((state) => state.action)
-
-  // states
-  const [name, setName] = useState('')
-  const [isOnSale, setIsOnSale] = useState(true)
-  const [thumbnail, setThumbnail] = useState('')
-  const [code, setCode] = useState(null)
-  const [stock, setStock] = useState(null)
-
-  useEffect(() => {
-    if (action !== 'add') {
-      setName(product.productInfo.name)
-      setIsOnSale(product.isOnSale)
-      setThumbnail(product.productInfo.thumbnail)
-      setCode(product.code)
-      setStock(product.stock)
-    }
-  }, [action])
+  const name = useInventoryStore((state) => state.name)
+  const code = useInventoryStore((state) => state.code)
+  const stock = useInventoryStore((state) => state.stock)
+  const onSale = useInventoryStore((state) => state.onSale)
+  const handleNameChange = useInventoryStore((state) => state.handleNameChange)
+  const handleCodeChange = useInventoryStore((state) => state.handleCodeChange)
+  const handleStockChange = useInventoryStore(
+    (state) => state.handleStockChange
+  )
+  const handleOnSaleChange = useInventoryStore(
+    (state) => state.handleOnSaleChange
+  )
 
   return (
     <div>
@@ -41,13 +36,19 @@ export default function ProductViewItem () {
           placeholder="Product name"
           maxLength={30}
           value={name}
+          handleChange={handleNameChange}
           showCount={false}
+          focus
         />
-        <div className="flex gap-4 align-middle justify-center">
-          <UploadItem />
+        <div className="flex gap-8 align-middle justify-center">
+          <Image src="/fallback.png" width={150} className="rounded-md" />
           <div className="flex flex-col gap-2 w-full align-middle">
             <div className="flex gap-2 items-center">
-              <Checkbox defaultChecked checked={isOnSale} />
+              <Checkbox
+                defaultChecked
+                checked={onSale}
+                onChange={handleOnSaleChange}
+              />
               <Text className="ml-3">On sale</Text>
             </div>
             <div className="flex gap-2 items-center">
@@ -56,11 +57,16 @@ export default function ProductViewItem () {
                 maxLength={30}
                 placeholder="Code"
                 value={code}
+                handleChange={handleCodeChange}
               />
             </div>
             <div className="flex gap-2 items-center">
-              <FaBox className="text-xl" />
-              <InputNumberItem placeholder="Stock" value={stock} />
+              <FaBox className="text-xl" title="Stock" />
+              <InputNumberItem
+                placeholder="Stock"
+                value={stock}
+                handleChange={handleStockChange}
+              />
             </div>
           </div>
         </div>

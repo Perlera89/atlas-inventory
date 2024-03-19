@@ -10,15 +10,18 @@ const SelectItem = ({
   placeholder,
   options,
   handleSelect,
+  defaultValue,
   disabled,
   bordered = 'bordered'
 }) => (
   <Select
-    variant={bordered}
     showSearch
+    variant={bordered}
+    suffixIcon
     disabled={disabled}
     allowClear
     value={value}
+    defaultValue={defaultValue}
     onSelect={handleSelect}
     placeholder={placeholder || 'Select'}
     options={options}

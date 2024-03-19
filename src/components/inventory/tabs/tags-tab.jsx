@@ -5,36 +5,46 @@ import { useInventoryStore } from '@/store/inventory'
 import { Typography } from 'antd'
 import { useEffect, useState } from 'react'
 
-const { Text } = Typography
+const options = [
+  { value: 1, label: 'Consumable' },
+  { value: 2, label: 'Storable' },
+  { value: 3, label: 'Service' }
+]
 
 export default function TagsTab () {
   const product = useInventoryStore((state) => state.product)
   const action = useInventoryStore((state) => state.action)
 
-  const [type, setType] = useState(null)
-  const [category, setCategory] = useState(null)
-  const [brand, setBrand] = useState(null)
-  const [area, setArea] = useState(null)
-  const [tags, setTags] = useState([])
+  const type = useInventoryStore((state) => state.type)
+  const category = useInventoryStore((state) => state.category)
+  const brand = useInventoryStore((state) => state.brand)
+  const area = useInventoryStore((state) => state.area)
+  const selectedTags = useInventoryStore((state) => state.selectedTags)
 
-  const info = product && product.productInfo
+  const categories = useInventoryStore((state) => state.categories)
+  const brands = useInventoryStore((state) => state.brands)
+  const areas = useInventoryStore((state) => state.areas)
+  const tags = useInventoryStore((state) => state.tagsCategory)
 
-  const options =
-    product &&
-    info.tagDetails.map((details) => ({
-      value: details.tag.id,
-      label: details.tag.name
-    }))
+  const handleTypeChange = useInventoryStore((state) => state.handleTypeChange)
+  const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
+  const handleBrandChange = useInventoryStore((state) => state.handleBrandChange)
+  const handleAreaChange = useInventoryStore((state) => state.handleAreaChange)
+  const handleTagsChange = useInventoryStore((state) => state.handleTagsChange)
+
+  const fetchBrands = useInventoryStore((state) => state.fetchBrands)
+  const fetchCategories = useInventoryStore((state) => state.fetchCategories)
+  const fetchAreas = useInventoryStore((state) => state.fetchAreas)
+  const fetchTags = useInventoryStore((state) => state.fetchTags)
 
   useEffect(() => {
-    if (action !== 'add') {
-      setType(info.type.id)
-      setCategory(info.category.name)
-      setBrand(info.brand.name)
-      setArea(info?.area?.name)
-      setTags(info.tagDetails.map((details) => details.tag.id))
-    }
-  }, [action])
+    fetchBrands()
+    fetchCategories()
+    fetchAreas()
+    fetchTags()
+  }, [])
+
+  console.log('tags', tags)
 
   return (
     <div>
@@ -42,18 +52,18 @@ export default function TagsTab () {
         <SelectItem
           placeholder="Select type"
           value={type}
-          options={[
-            { value: 1, label: 'Consumable' },
-            { value: 2, label: 'Storable' },
-            { value: 3, label: 'Service' }
-          ]}
-        />
-        <CustomSelectItem placeholder="Select category" value={category} />
-        <CustomSelectItem placeholder="Select brand" value={brand} />
-        <CustomSelectItem placeholder="Select area" value={area} />
-        <MultipleSelectItem
+          defaultValue={1}
+          handleSelect={handleTypeChange}
           options={options}
-          value={tags}
+        />
+        <CustomSelectItem placeholder="Select category" value={category} items={categories} handleSelect={handleCategoryChange} />
+        <CustomSelectItem placeholder="Select brand" value={brand} items={brands} handleSelect={handleBrandChange} />
+        <CustomSelectItem placeholder="Select area" value={area} items={areas} handleSelect={handleAreaChange} />
+        <MultipleSelectItem
+          handleSelect={handleTagsChange}
+          readOnly={!category}
+          options={tags}
+          value={selectedTags}
           placeholder="Select tags"
         />
       </div>

@@ -4,7 +4,7 @@ import { Input } from 'antd'
 export default function InputTextItem ({
   placeholder,
   value,
-  handleChange = null,
+  handleChange,
   maxLength,
   focus = false
 }) {
@@ -16,15 +16,6 @@ export default function InputTextItem ({
     }
   }, [])
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value
-    const regex = /^[a-zA-Z\s]+$/
-
-    if (regex.test(inputValue) || inputValue === '') {
-      handleChange(inputValue)
-    }
-  }
-
   return (
     <Input
       ref={inputRef}
@@ -32,7 +23,7 @@ export default function InputTextItem ({
       maxLength={maxLength}
       className="w-full"
       placeholder={placeholder}
-      onChange={handleInputChange}
+      onChange={handleChange}
       value={value}
     />
   )

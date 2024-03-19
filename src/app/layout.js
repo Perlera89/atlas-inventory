@@ -1,6 +1,6 @@
 import { ConfigProvider as AntdProvider } from 'antd'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
-import theme from '@/themes/themeConfig'
+import theme from '@/theme/themeConfig'
 
 import { Inter } from 'next/font/google'
 import './globals.css'

@@ -1,12 +1,15 @@
 'use client'
 
 import React from 'react'
-import { Layout, theme, Avatar } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Layout, theme, Avatar, Breadcrumb } from 'antd'
+import { usePathname } from 'next/navigation'
+
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 
 const { Header } = Layout
 
 export default function HeaderLayout () {
+  const pathname = usePathname()
   const {
     token: { colorBgContainer }
   } = theme.useToken()
@@ -21,7 +24,17 @@ export default function HeaderLayout () {
         paddingRight: '16px'
       }}
     >
-      <p>Header</p>
+      <Breadcrumb
+        items={[
+          {
+            href: '/',
+            title: <HomeOutlined />
+          },
+          {
+            title: <span className='ml-2 text-[#adadad]'>{pathname}</span>
+          }
+        ]}
+      />
       <Avatar size={32} rootClassName="bg-white" icon={<UserOutlined />} />
     </Header>
   )

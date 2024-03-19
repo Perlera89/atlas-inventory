@@ -14,41 +14,63 @@ import {
 import React, { useState } from 'react'
 import { FloatButton, Layout, Menu } from 'antd'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
 const { Sider } = Layout
 
-const items = [
-  <Link href="/purchases" key="purchases">
-    Purchases
-  </Link>,
-  <Link href="/sales" key="sales">
-    Sales
-  </Link>,
-  <Link href="/inventory" key="inventory">
-    Inventory
-  </Link>,
-  <Link href="/clients" key="clients">
-    Clients
-  </Link>,
-  <Link href="/employees" key="employees">
-    Employees
-  </Link>
-].map((label, key) => ({
-  key,
-  label
-}))
+export default function SiderLayout () {
+  const pathname = usePathname()
+  const [selectedKey, setSelectedKey] = useState(pathname.split('/')[1])
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
-const siderItems = [LuShoppingCart, LuTag, LuPackage, LuUserCog, LuUser].map(
-  (icon, index) => {
+  const getItem = (label, key, icon, children, type) => {
     return {
-      key: index + 1,
-      icon: React.createElement(icon),
-      label: items[index].label
+      key,
+      icon,
+      children,
+      label,
+      type,
+      onClick: () => setSelectedKey(key)
     }
   }
-)
 
-export default function SiderLayout () {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const items = [
+    getItem(
+      <Link href="/purchases" key="purchases">
+        Purchases
+      </Link>,
+      'purchases',
+      <LuShoppingCart />
+    ),
+    getItem(
+      <Link href="/sales" key="sales">
+        Sales
+      </Link>,
+      'sales',
+      <LuTag />
+    ),
+    getItem(
+      <Link href="/inventory" key="inventory">
+        Inventory
+      </Link>,
+      'inventory',
+      <LuPackage />
+    ),
+    getItem(
+      <Link href="/clients" key="clients">
+        Clients
+      </Link>,
+      'clients',
+      <LuUser />
+    ),
+    getItem(
+      <Link href="/employees" key="employees">
+        Employees
+      </Link>,
+      'employees',
+      <LuUserCog />
+    )
+  ]
   return (
     <>
       <FloatButton
@@ -57,7 +79,7 @@ export default function SiderLayout () {
         icon={
           isCollapsed
             ? (
-            <LuAlignJustify targetX='Hola' className="w-full" />
+            <LuAlignJustify targetX="Hola" className="w-full" />
               )
             : (
             <LuX className="w-full" />
@@ -75,7 +97,7 @@ export default function SiderLayout () {
         className={`${isCollapsed && 'hidden'}`}
       >
         <img
-          src='logo.svg'
+          src="logo.svg"
           className={
             'w-full mx-auto px-6 py-3 border-r-[1px] border-[#2c2c2c] transition-all'
           }
@@ -83,8 +105,9 @@ export default function SiderLayout () {
         <Menu
           mode="inline"
           defaultSelectedKeys={['1']}
+          selectedKeys={[selectedKey]}
           defaultOpenKeys={['1']}
-          items={siderItems}
+          items={items}
           className="h-screen mt-4 bg-[#141414]"
         />
       </Sider>

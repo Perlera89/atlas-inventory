@@ -29,14 +29,11 @@ export default function InventoryPage () {
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const productCount = useInventoryStore((state) => state.productCount)
   const openProduct = useInventoryStore((state) => state.openProduct)
-  const handleCancelProduct = useInventoryStore(
-    (state) => state.handleCancelProduct
-  )
   const setAction = useInventoryStore((state) => state.setAction)
 
   const handleClick = () => {
+    setAction('edit')
     handleOpenProduct()
-    setAction('add')
   }
 
   return (
@@ -96,10 +93,6 @@ export default function InventoryPage () {
         <ProductModalItem
           width={600}
           isModalOpen={openProduct}
-          handleEdit={() => {
-            setAction('edit')
-          }}
-          handleCancel={handleCancelProduct}
         >
           <ProductViewItem />
         </ProductModalItem>

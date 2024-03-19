@@ -16,6 +16,7 @@ export default function MultipleSelectItem ({
   return (
     <Select
       allowClear
+      suffixIcon
       value={value}
       variant={bordered}
       mode="multiple"

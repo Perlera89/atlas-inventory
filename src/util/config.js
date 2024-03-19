@@ -2,10 +2,11 @@ const ROOT = 'http://localhost:3000/api'
 
 export const PRODUCTS_ROOT = `${ROOT}/product`
 export const ADDRESS_ROOT = `${ROOT}/addresses`
-export const AREAS_ROOT = `${ROOT}/areas`
-export const BRANDS_ROOT = `${ROOT}/brands`
+export const AREAS_ROOT = `${ROOT}/area`
+export const BRANDS_ROOT = `${ROOT}/brand`
 export const CASHS_ROOT = `${ROOT}/cashs`
-export const CATEGORIES_ROOT = `${ROOT}/categories`
+export const CATEGORIES_ROOT = `${ROOT}/category`
+export const TYPES_ROOT = `${ROOT}/type`
 export const CITIES_ROOT = `${ROOT}/cities`
 export const CLIENTS_ROOT = `${ROOT}/clients`
 export const CREDENTIALS_ROOT = `${ROOT}/credentials`
