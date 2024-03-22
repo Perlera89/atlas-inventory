@@ -3,7 +3,6 @@ import SelectItem from '@/components/ui/entry/select'
 import CustomSelectItem from '@/components/ui/entry/custom-select'
 import { useInventoryStore } from '@/store/inventory'
 import { Typography } from 'antd'
-import { useEffect, useState } from 'react'
 
 const options = [
   { value: 1, label: 'Consumable' },
@@ -24,27 +23,13 @@ export default function TagsTab () {
   const categories = useInventoryStore((state) => state.categories)
   const brands = useInventoryStore((state) => state.brands)
   const areas = useInventoryStore((state) => state.areas)
-  const tags = useInventoryStore((state) => state.tagsCategory)
+  const tags = useInventoryStore((state) => state.tags)
 
   const handleTypeChange = useInventoryStore((state) => state.handleTypeChange)
   const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
   const handleBrandChange = useInventoryStore((state) => state.handleBrandChange)
   const handleAreaChange = useInventoryStore((state) => state.handleAreaChange)
   const handleTagsChange = useInventoryStore((state) => state.handleTagsChange)
-
-  const fetchBrands = useInventoryStore((state) => state.fetchBrands)
-  const fetchCategories = useInventoryStore((state) => state.fetchCategories)
-  const fetchAreas = useInventoryStore((state) => state.fetchAreas)
-  const fetchTags = useInventoryStore((state) => state.fetchTags)
-
-  useEffect(() => {
-    fetchBrands()
-    fetchCategories()
-    fetchAreas()
-    fetchTags()
-  }, [])
-
-  console.log('tags', tags)
 
   return (
     <div>
@@ -61,7 +46,6 @@ export default function TagsTab () {
         <CustomSelectItem placeholder="Select area" value={area} items={areas} handleSelect={handleAreaChange} />
         <MultipleSelectItem
           handleSelect={handleTagsChange}
-          readOnly={!category}
           options={tags}
           value={selectedTags}
           placeholder="Select tags"

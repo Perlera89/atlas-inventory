@@ -10,15 +10,17 @@ export default function TextareaItem ({
 }) {
   return (
     <TextArea
+      placeholder={placeholder || 'Type a text here...'}
+      title={placeholder}
       value={value}
-      variant="borderless"
+      variant="filled"
       maxLength={maxLength || 500}
       style={{
         height: 75,
-        resize: 'none'
+        resize: 'none',
+        backgroundColor: 'transparent'
       }}
       onChange={handleChange}
-      placeholder={placeholder || 'Type a text here...'}
     />
   )
 }

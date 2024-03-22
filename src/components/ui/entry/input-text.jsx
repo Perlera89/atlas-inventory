@@ -1,30 +1,26 @@
 import React, { useRef, useEffect } from 'react'
 import { Input } from 'antd'
+import { Baseline } from 'lucide-react'
 
 export default function InputTextItem ({
   placeholder,
+  title,
+  icon = Baseline,
   value,
   handleChange,
   maxLength,
   focus = false
 }) {
-  const inputRef = useRef(null)
-
-  useEffect(() => {
-    if (focus) {
-      inputRef.current.focus()
-    }
-  }, [])
-
   return (
     <Input
-      ref={inputRef}
-      variant="borderless"
-      maxLength={maxLength}
-      className="w-full"
+      title={title}
       placeholder={placeholder}
-      onChange={handleChange}
+      prefix={React.createElement(icon, { size: 20 })}
+      variant="filled"
+      maxLength={maxLength}
+      style={{ width: '100%', backgroundColor: 'transparent' }}
       value={value}
+      onChange={handleChange}
     />
   )
 }

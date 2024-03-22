@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 
-const prisma = new PrismaClient()
 export async function GET () {
   const products = await prisma.product.findMany({
     select: {
@@ -15,7 +14,8 @@ export async function GET () {
           name: true,
           thumbnail: true
         }
-      }
+      },
+      isDeleted: true
     }
   })
   await prisma.$disconnect()

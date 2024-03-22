@@ -4,7 +4,8 @@ import React from 'react'
 import { Layout, theme, Avatar, Breadcrumb } from 'antd'
 import { usePathname } from 'next/navigation'
 
-import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import { UserOutlined } from '@ant-design/icons'
+import { BiHomeAlt2 } from 'react-icons/bi'
 
 const { Header } = Layout
 
@@ -28,7 +29,7 @@ export default function HeaderLayout () {
         items={[
           {
             href: '/',
-            title: <HomeOutlined />
+            title: <BiHomeAlt2 className='text-xl mt-[2px]' />
           },
           {
             title: <span className='ml-2 text-[#adadad]'>{pathname}</span>

@@ -10,7 +10,8 @@ const theme = {
     borderRadius: 3,
     colorTextBase: '#adadad',
     colorText: '#adadad',
-    colorTextSecondary: '#adadad'
+    colorTextSecondary: '#adadad',
+    contentBg: '#000'
   },
   algorithm: antdTheme.darkAlgorithm
 }

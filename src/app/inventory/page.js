@@ -5,6 +5,7 @@ import CardItem from '@/components/ui/display/card'
 import SearchItem from '@/components/ui/entry/search'
 import IconButtonItem from '@/components/ui/common/icon-buttom'
 import SelectItem from '@/components/ui/entry/select'
+import { Toaster } from 'react-hot-toast'
 
 // icons
 import {
@@ -20,16 +21,20 @@ import { useInventoryStore } from '@/store/inventory'
 import { ProductsItem } from '../../components/inventory/products'
 import ProductViewItem from '@/components/inventory/product-view'
 import ProductModalItem from '@/components/inventory/product-modal'
+import Result from '@/util/result'
 
 const { Text } = Typography
 
 export default function InventoryPage () {
-  const handleOpenProduct = useInventoryStore((state) => state.handleOpenProduct)
+  const setAction = useInventoryStore((state) => state.setAction)
   const view = useInventoryStore((state) => state.view)
+
+  const handleOpenProduct = useInventoryStore(
+    (state) => state.handleOpenProduct
+  )
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const productCount = useInventoryStore((state) => state.productCount)
   const openProduct = useInventoryStore((state) => state.openProduct)
-  const setAction = useInventoryStore((state) => state.setAction)
 
   const handleClick = () => {
     setAction('edit')
@@ -90,13 +95,20 @@ export default function InventoryPage () {
           </div>
         </div>
         <ProductsItem />
-        <ProductModalItem
-          width={600}
-          isModalOpen={openProduct}
-        >
+        <ProductModalItem width={600} isModalOpen={openProduct}>
           <ProductViewItem />
         </ProductModalItem>
       </div>
+      <Result />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1d1d1d',
+            color: 'white'
+          }
+        }}
+      />
     </>
   )
 }

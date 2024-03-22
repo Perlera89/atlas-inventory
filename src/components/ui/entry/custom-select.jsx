@@ -36,8 +36,9 @@ export default function CustomSelectItem ({
           <Space className="py-2 px-1 flex justify-between w-full">
             <Input
               allowClear
-              variant="borderless"
+              variant="filled"
               className="max-w-96"
+              style={{ backgroundColor: 'transparent' }}
               showCount
               maxLength={50}
               placeholder={placeholderInput || 'Type new item'}
@@ -47,7 +48,7 @@ export default function CustomSelectItem ({
               onKeyDown={(e) => e.stopPropagation()}
             />
             <Button
-              type="text"
+              type="primary"
               icon={<PlusOutlined />}
               onClick={() => handleAdd(inputValue)}
               disabled={!inputValue}

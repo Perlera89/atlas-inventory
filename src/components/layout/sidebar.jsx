@@ -99,7 +99,7 @@ export default function SiderLayout () {
         <img
           src="logo.svg"
           className={
-            'w-full mx-auto px-6 py-3 border-r-[1px] border-[#2c2c2c] transition-all'
+            'w-full px-6 py-2 mx-auto border-r-[1px] border-[#2c2c2c] transition-all'
           }
         />
         <Menu

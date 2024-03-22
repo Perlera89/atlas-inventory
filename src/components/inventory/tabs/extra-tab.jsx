@@ -21,15 +21,15 @@ export default function ExtraTab () {
     <div>
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          <Text className="w-28">Safety information</Text>
           <TextareaItem
+            placeholder="Safety information"
             value={safetyInfo}
             handleChange={handleSafetyInfoChange}
           />
         </div>
         <div className="flex gap-2">
-          <Text className="w-28">Description</Text>
           <TextareaItem
+            placeholder="Description"
             value={description}
             handleChange={handleDescriptionChange}
           />

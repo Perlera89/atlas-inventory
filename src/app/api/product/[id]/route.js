@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 
-const prisma = new PrismaClient()
 export async function GET (_, { params }) {
   const products = await prisma.product.findUnique({
     where: {
@@ -26,22 +25,19 @@ export async function GET (_, { params }) {
           brand: {
             select: {
               id: true,
-              name: true,
-              color: true
+              name: true
             }
           },
           area: {
             select: {
               id: true,
-              name: true,
-              color: true
+              name: true
             }
           },
           category: {
             select: {
               id: true,
-              name: true,
-              color: true
+              name: true
             }
           },
           type: {
@@ -55,8 +51,7 @@ export async function GET (_, { params }) {
               tag: {
                 select: {
                   id: true,
-                  name: true,
-                  color: true
+                  name: true
                 }
               }
             }
@@ -68,4 +63,58 @@ export async function GET (_, { params }) {
   await prisma.$disconnect()
 
   return NextResponse.json(products)
+}
+
+export async function PUT (restProduct, { params }) {
+  try {
+    const productData = await restProduct.json()
+
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id: Number(params.id)
+      },
+      data: {
+        code: productData.code,
+        salePrice: productData.price,
+        iva: productData.iva / 100,
+        purchasePrice: productData.cost,
+        minimumPrice: productData.minimumPrice,
+        isOnSale: productData.onSale,
+        stock: productData.stock,
+        productInfo: {
+          update: {
+            name: productData.name,
+            thumbnail: productData.thumbnail,
+            minimumStock: productData.minimumStock,
+            safetyInfo: productData.safetyInfo,
+            description: productData.description,
+            brand: {
+              connect: {
+                id: Number(productData.brand)
+              }
+            },
+            area: {
+              connect: {
+                id: Number(productData.area)
+              }
+            },
+            category: {
+              connect: {
+                id: Number(productData.category)
+              }
+            },
+            type: {
+              connect: {
+                id: Number(productData.type)
+              }
+            }
+          }
+        }
+      }
+    })
+
+    return NextResponse.json({ updatedProduct })
+  } catch (err) {
+    return NextResponse.json(err)
+  }
 }

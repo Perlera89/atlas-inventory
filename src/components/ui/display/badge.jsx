@@ -5,14 +5,15 @@ export default function BadgeItem ({ title, validate, children }) {
   return (
     <Badge
       count={
-        !validate && (
+        validate
+          ? null
+          : (
           <MdInfo
             title={title}
-            className={'text-red-500 z-50'}
           />
-        )
+            )
       }
-      className="w-full"
+      offset={[-40, 16]}
     >
       {children}
     </Badge>

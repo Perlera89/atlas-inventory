@@ -1,7 +1,8 @@
+import BadgeItem from '@/components/ui/display/badge'
 import InputNumberItem from '@/components/ui/entry/input-number'
 import { useInventoryStore } from '@/store/inventory'
 import { Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { DollarSign, Percent, Box } from 'lucide-react'
 
 const { Text } = Typography
 
@@ -28,33 +29,44 @@ export default function GeneralTab () {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between gap-2">
-        <div className="flex items-center">
-          <Text className="w-28">Price</Text>
-          <span>$</span>
-          <InputNumberItem value={price} handleChange={handlePriceChange} />
-        </div>
-        <div className="flex items-center">
-          <Text className="w-48">Minimun price</Text>
-          <span>$</span>
-          <InputNumberItem value={minimumPrice} handleChange={handleMinimumPriceChange} />
-        </div>
+        <InputNumberItem
+          icon={DollarSign}
+          placeholder="Price"
+          title="Price"
+          value={price}
+          handleChange={handlePriceChange}
+        />
+        <InputNumberItem
+          icon={DollarSign}
+          placeholder="Minimum price"
+          title="Minimum price"
+          value={minimumPrice}
+          handleChange={handleMinimumPriceChange}
+        />
       </div>
       <div className="flex justify-between gap-2">
-        <div className="flex items-center">
-          <Text className="w-28">Cost</Text>
-          <span>$</span>
-          <InputNumberItem value={cost} handleChange={handleCostChange} />
-        </div>
-        <div className="flex items-center">
-          <Text className="w-48">Minimum stock</Text>
-          <InputNumberItem value={minimumStock} handleChange={handleMinimumStockChange} />
-        </div>
+        <InputNumberItem
+          icon={DollarSign}
+          placeholder="Cost"
+          title="Cost"
+          value={cost}
+          handleChange={handleCostChange}
+        />
+        <InputNumberItem
+          icon={Percent}
+          placeholder="Iva"
+          title="Iva"
+          value={iva}
+          handleChange={handleIvaChange}
+        />
       </div>
-      <div className="flex items-center">
-        <Text className="w-[84px]">IVA</Text>
-        <span>%</span>
-        <InputNumberItem value={iva} handleChange={handleIvaChange} />
-      </div>
+      <InputNumberItem
+        placeholder="Minimum stock"
+        icon={Box}
+        title="Minimum stock"
+        value={minimumStock}
+        handleChange={handleMinimumStockChange}
+      />
     </div>
   )
 }
