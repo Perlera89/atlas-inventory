@@ -15,7 +15,7 @@ export default function ProductKanbanItem ({ products }) {
   }
 
   return (
-    <div className="grid grid-cols-5 gap-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
       {products.map((product, key) => (
         <Card
           key={key}
@@ -33,9 +33,7 @@ export default function ProductKanbanItem ({ products }) {
               src={product.productInfo?.thumbnail}
             />
             <div>
-              <h3 className="text-lg font-bold">
-                {product.productInfo?.name}
-              </h3>
+              <h3 className="text-lg font-bold">{product.productInfo?.name}</h3>
               <div className="flex gap-2">
                 <Text>Stock:</Text>
                 <Text type="secondary">{product.stock}</Text>

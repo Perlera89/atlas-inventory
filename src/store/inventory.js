@@ -17,8 +17,12 @@ export const useInventoryStore = create((set, get) => {
   }
 
   const initialState = {
+    allProducts: [],
     products: [],
     productCount: 0,
+    productOnSaleCount: 0,
+    productStorableCount: 0,
+    productServiceCount: 0,
     view: 'list',
     action: 'view',
     error: '',
@@ -249,7 +253,22 @@ export const useInventoryStore = create((set, get) => {
     },
     handleCancelProduct: () => set({ openProduct: false }),
     handleOpenResult: () => set({ openResult: true }),
-    handleCloseResult: () => set({ openResult: false })
+    handleCloseResult: () => set({ openResult: false }),
+    handleFilterByType: (type) => {
+      const allProducts = get().allProducts
+      switch (type) {
+        case 'all':
+          set({ products: allProducts })
+          break
+        case 'onSale':
+          set({
+            products: allProducts.filter((product) => product.isOnSale)
+          })
+          break
+        default:
+          break
+      }
+    }
   }
 
   const fetchFuctions = {
@@ -257,14 +276,21 @@ export const useInventoryStore = create((set, get) => {
       await axios
         .get(PRODUCTS_ROOT)
         .then((res) => {
-          const products = res.data.filter(
+          const allProducts = res.data.filter(
             (product) => product.isDeleted === false
           )
           set(
-            { products, productCount: products.length },
+            {
+              allProducts,
+              products: allProducts,
+              productCount: allProducts.length,
+              productOnSaleCount: allProducts.filter((product) => product.onSale)
+                .length
+            },
             false,
             'FETCH_PRODUCTS'
           )
+          console.log('products', allProducts)
         })
         .catch((err) => {
           get().setError(err)

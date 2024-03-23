@@ -10,10 +10,9 @@ import { Toaster } from 'react-hot-toast'
 // icons
 import {
   LuBoxes,
-  LuAlignJustify,
-  LuLayoutGrid,
-  LuChevronLeft,
-  LuChevronRight
+  LuShapes,
+  LuHelpingHand,
+  LuShoppingCart
 } from 'react-icons/lu'
 
 // hooks
@@ -23,76 +22,28 @@ import ProductViewItem from '@/components/inventory/product-view'
 import ProductModalItem from '@/components/inventory/product-modal'
 import Result from '@/util/result'
 
-const { Text } = Typography
-
 export default function InventoryPage () {
-  const setAction = useInventoryStore((state) => state.setAction)
-  const view = useInventoryStore((state) => state.view)
-
-  const handleOpenProduct = useInventoryStore(
-    (state) => state.handleOpenProduct
-  )
-  const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const productCount = useInventoryStore((state) => state.productCount)
+  const productOnSaleCount = useInventoryStore((state) => state.productOnSaleCount)
   const openProduct = useInventoryStore((state) => state.openProduct)
-
-  const handleClick = () => {
-    setAction('edit')
-    handleOpenProduct()
-  }
+  const handleFilterByType = useInventoryStore((state) => state.handleFilterByType)
 
   return (
     <>
       <div className="flex flex-col gap-4">
-        <CardItem title="Total products">
-          <div className="flex items-center gap-2">
-            <LuBoxes size="24px" />
-            <h3 className="text-2xl font-semibold">{productCount}</h3>
-          </div>
-        </CardItem>
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2">
-            <Button onClick={handleClick}>Add product</Button>
-            <SearchItem />
-            <SelectItem placeholder="Select filter" />
-          </div>
-          <div className="flex gap-2 items-center">
-            {view === 'kanban' && (
-              <div className="flex items-center gap-1">
-                <Text>1-50</Text>
-                <Text>/</Text>
-                <Text type="secondary">300</Text>
-                <div>
-                  <IconButtonItem
-                    icon={
-                      <LuChevronLeft
-                        title="Previous products"
-                        className="text-2xl"
-                      />
-                    }
-                    size={48}
-                  />
-                  <IconButtonItem
-                    icon={
-                      <LuChevronRight
-                        title="Next products"
-                        className="text-2xl"
-                      />
-                    }
-                    size={48}
-                  />
-                </div>
-              </div>
-            )}
-            <Radio.Group value={view} onChange={handleChangeView}>
-              <Radio.Button value="list">
-                <LuAlignJustify title="List" className="h-full" />
-              </Radio.Button>
-              <Radio.Button value="kanban">
-                <LuLayoutGrid title="Kanban" className="h-full" />
-              </Radio.Button>
-            </Radio.Group>
-          </div>
+        <div className="flex gap-2 w-full">
+          <CardItem title="Total products" filterItems={() => handleFilterByType('all')}>
+            <div className="flex items-center gap-2">
+              <LuBoxes size="24px" />
+              <h3 className="text-2xl font-semibold">{productCount}</h3>
+            </div>
+          </CardItem>
+          <CardItem title="Total on sale" filterItems={() => handleFilterByType('onSale')}>
+            <div className="flex items-center gap-2">
+              <LuShoppingCart size="24px" />
+              <h3 className="text-2xl font-semibold">{productOnSaleCount}</h3>
+            </div>
+          </CardItem>
         </div>
         <ProductsItem />
         <ProductModalItem width={600} isModalOpen={openProduct}>

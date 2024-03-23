@@ -6,13 +6,15 @@ export async function GET () {
     select: {
       id: true,
       code: true,
+      isOnSale: true,
       salePrice: true,
       purchasePrice: true,
       stock: true,
       productInfo: {
         select: {
           name: true,
-          thumbnail: true
+          thumbnail: true,
+          typeId: true
         }
       },
       isDeleted: true

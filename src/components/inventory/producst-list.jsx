@@ -36,7 +36,8 @@ export default function ProductListItem ({ products }) {
     {
       title: 'Stock',
       dataIndex: 'stock',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.stock - b.stock
     }
   ]
 

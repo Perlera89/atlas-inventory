@@ -1,8 +1,8 @@
 import { Card } from 'antd'
 
 // icons
-import { RiFilter3Fill } from 'react-icons/ri'
-
+import { ListFilter } from 'lucide-react'
+import IconButtonItem from '../common/icon-buttom'
 export default function CardItem ({ title, children, filterItems }) {
   return (
     <Card
@@ -10,10 +10,7 @@ export default function CardItem ({ title, children, filterItems }) {
       size="small"
       extra={
         filterItems && (
-          <RiFilter3Fill
-            onClick={filterItems}
-            className="text-3xl hover:bg-poor-black  rounded-xl p-1 cursor-pointer active:bg-secondary-light/70 transition-colors"
-          />
+          <IconButtonItem icon={<ListFilter />} handleClick={filterItems} />
         )
       }
       style={{

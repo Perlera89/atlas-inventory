@@ -48,10 +48,10 @@ export default function CustomSelectItem ({
               onKeyDown={(e) => e.stopPropagation()}
             />
             <Button
-              type="primary"
+              type="text"
               icon={<PlusOutlined />}
               onClick={() => handleAdd(inputValue)}
-              disabled={!inputValue}
+              // disabled={!inputValue}
             >
               Add
             </Button>

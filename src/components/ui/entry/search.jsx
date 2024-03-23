@@ -28,7 +28,7 @@ const SearchItem = ({ text, onSearch, options, update }) => {
         variant="outlined"
         allowClear
         placeholder={text || 'Search'}
-        className="w-full min-w-[400px]"
+        className="w-[250px]"
         onSearch={handleSearch}
         onChange={(e) => handleSearch(e.target.value)}
         enterButton
