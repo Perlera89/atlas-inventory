@@ -1,34 +1,20 @@
 'use client'
 
-import React from 'react'
-import { Layout, theme } from 'antd'
-import HeaderLayout from './header'
-import SiderLayout from './sidebar'
-const { Content } = Layout
+import { Button } from '@/components/ui/button'
 
-const ContentLayout = ({ children }) => {
-  const {
-    token: { colorBgContainer }
-  } = theme.useToken()
+import SidebarLayout from './sidebar'
+import HeaderLayout from './header'
+
+export default function ContentLayout ({ children }) {
   return (
-    <Layout className="flex flex-col overflow-hidden">
-      <SiderLayout />
-      <Layout className="flex flex-col h-min-screen">
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <SidebarLayout />
+      <div className="flex flex-col">
         <HeaderLayout />
-        <Content
-          className="text-font-color h-screen"
-          style={{
-            padding: 16,
-            margin: 0,
-            minHeight: 280,
-            background: colorBgContainer
-          }}
-        >
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
-        </Content>
-      </Layout>
-    </Layout>
+        </main>
+      </div>
+    </div>
   )
 }
-
-export default ContentLayout

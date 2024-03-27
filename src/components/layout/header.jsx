@@ -1,42 +1,76 @@
 'use client'
+import { CircleUser, Menu } from 'lucide-react'
 
-import React from 'react'
-import { Layout, theme, Avatar, Breadcrumb } from 'antd'
+import { Button } from '@/components/ui/button'
+
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import NavBar from './nav'
 import { usePathname } from 'next/navigation'
 
-import { UserOutlined } from '@ant-design/icons'
-import { BiHomeAlt2 } from 'react-icons/bi'
-
-const { Header } = Layout
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 
 export default function HeaderLayout () {
   const pathname = usePathname()
-  const {
-    token: { colorBgContainer }
-  } = theme.useToken()
+
   return (
-    <Header
-      className="border-b-[1px] border-[#2c2c2c] justify-between"
-      style={{
-        backgroundColor: colorBgContainer,
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: '16px',
-        paddingRight: '16px'
-      }}
-    >
-      <Breadcrumb
-        items={[
-          {
-            href: '/',
-            title: <BiHomeAlt2 className='text-xl mt-[2px]' />
-          },
-          {
-            title: <span className='ml-2 text-[#adadad]'>{pathname}</span>
-          }
-        ]}
-      />
-      <Avatar size={32} rootClassName="bg-white" icon={<UserOutlined />} />
-    </Header>
+    <header className="flex bg-background h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle navigation menu</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="flex flex-col">
+          <NavBar />
+        </SheetContent>
+      </Sheet>
+      <div className="w-full flex-1">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink className='text-foreground/70' href="/" >Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink className="capitalize" href={pathname}>
+                {pathname.split('/')[1]}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="secondary" size="icon" className="rounded-full">
+            <CircleUser className="h-5 w-5" />
+            <span className="sr-only">Toggle user menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Logout</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </header>
   )
 }

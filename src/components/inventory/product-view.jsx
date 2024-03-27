@@ -1,17 +1,14 @@
-import { Image, Typography, Checkbox, Badge } from 'antd'
 import { useInventoryStore } from '@/store/inventory'
 
-// icons
-import { ScanBarcode, Package2 } from 'lucide-react'
-
-import InputNumberItem from '../ui/entry/input-number'
-import TabsItem from '../ui/display/tabs'
-import InputTextItem from '../ui/entry/input-text'
 import GeneralTab from './tabs/general-tab'
 import TagsTab from './tabs/tags-tab'
 import ExtraTab from './tabs/extra-tab'
+import { Checkbox } from '@/components/ui/checkbox'
 
-const { Text } = Typography
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function ProductViewItem () {
   const name = useInventoryStore((state) => state.name)
@@ -19,14 +16,10 @@ export default function ProductViewItem () {
   const code = useInventoryStore((state) => state.code)
   const stock = useInventoryStore((state) => state.stock)
   const onSale = useInventoryStore((state) => state.onSale)
-  const handleNameChange = useInventoryStore((state) => state.handleNameChange)
-  const handleCodeChange = useInventoryStore((state) => state.handleCodeChange)
-  const handleStockChange = useInventoryStore(
-    (state) => state.handleStockChange
+  const handleInputChange = useInventoryStore(
+    (state) => state.handleInputChange
   )
-  const handleOnSaleChange = useInventoryStore(
-    (state) => state.handleOnSaleChange
-  )
+  const handleSelect = useInventoryStore((state) => state.handleSelect)
 
   const validation = useInventoryStore((state) => state.validation)
 
@@ -34,73 +27,76 @@ export default function ProductViewItem () {
 
   return (
     <div>
-      <div className="flex gap-2 mb-4 mt-8">
-        <div className="flex flex-col gap-4">
-          <div className='flex gap-2'>
-            <Image
-              src={thumbnail}
-              fallback="/fallback.png"
-              width={165}
-              className="rounded-md"
-            />
-            <div className="flex flex-col gap-2 w-full align-middle">
-              <InputTextItem
-                placeholder="Product name"
-                maxLength={30}
-                value={name}
-                handleChange={handleNameChange}
-                showCount={false}
-                focus
+      <div className="flex gap-4 mb-4 mt-8">
+        <div className="flex flex-col gap-4 w-full">
+          <div className="flex gap-4">
+            <div className="grid gap-4">
+              <img
+                src={thumbnail || '/fallback.png'}
+                className="rounded-md w-[380px] "
               />
               <div className="flex gap-2 items-center">
-                <InputTextItem
-                  icon={ScanBarcode}
-                  maxLength={30}
-                  placeholder="Code"
-                  value={code}
-                  handleChange={handleCodeChange}
+                <Checkbox
+                  id="onSale"
+                  defaultChecked
+                  checked={onSale}
+                  onCheckedChange={(value) => handleSelect('onSale', value)}
+                />
+                <Label htmlFor="onSale ">On sale</Label>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 w-full align-middle">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Product name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => handleInputChange('name', e)}
                 />
               </div>
-              <div className="flex gap-2 items-center">
-                <InputNumberItem
-                  icon={Package2}
-                  placeholder="Stock"
+              <div className="grid gap-2">
+                <Label htmlFor="code">Code</Label>
+                <Input
+                  id="code"
+                  type="number"
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) => handleInputChange('code', e)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="stock">Stock</Label>
+                <Input
+                  id="stock"
+                  type="number"
+                  placeholder="0"
                   value={stock}
-                  handleChange={handleStockChange}
+                  onChange={(e) => handleInputChange('stock', e)}
                 />
               </div>
             </div>
           </div>
-
-          <div>
-            <Checkbox
-              defaultChecked
-              checked={onSale}
-              onChange={handleOnSaleChange}
-            />
-            <Text className="ml-3">On sale</Text>
-          </div>
         </div>
       </div>
-      <TabsItem
-        items={[
-          {
-            label: 'General',
-            key: 1,
-            children: <GeneralTab />
-          },
-          {
-            label: 'Tags',
-            key: 2,
-            children: <TagsTab />
-          },
-          {
-            label: 'Extra',
-            key: 3,
-            children: <ExtraTab />
-          }
-        ]}
-      />
+      <Tabs defaultValue="general" className="w-full">
+        <TabsList>
+          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="tags">Tags</TabsTrigger>
+          <TabsTrigger value="extra">Extra</TabsTrigger>
+        </TabsList>
+        <TabsContent value="general">
+          <GeneralTab />
+        </TabsContent>
+        <TabsContent value="tags">
+          <TagsTab />
+        </TabsContent>
+        <TabsContent value="extra">
+          <ExtraTab />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

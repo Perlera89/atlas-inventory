@@ -29,47 +29,45 @@ export async function POST (restProduct) {
   const productData = await restProduct.json()
 
   // Inicia una transacción
-  const result = await prisma.$transaction(async (prisma) => {
-    const newProductInfo = await prisma.productInfo.create({
-      data: {
-        name: productData.name,
-        thumbnail: productData.thumbnail,
-        minimumStock: productData.minimumStock,
-        safetyInfo: productData.safetyInfo,
-        description: productData.description,
-        brand: {
-          connect: { id: Number(productData.brand) }
-        },
-        area: {
-          connect: { id: Number(productData.area) }
-        },
-        category: {
-          connect: { id: Number(productData.category) }
-        },
-        type: {
-          connect: { id: Number(productData.type) }
+  const result = await prisma.product.create({
+    data: {
+      code: Number(productData.code),
+      stock: Number(productData.stock),
+      salePrice: Number(productData.salePrice),
+      iva: Number(productData.iva),
+      isOnSale: productData.onSale,
+      purchasePrice: Number(productData.purchasePrice),
+      minimumPrice: Number(productData.minimumPrice),
+      productInfo: {
+        create: {
+          name: productData.name,
+          thumbnail: productData.thumbnail,
+          minimumStock: Number(productData.minimumStock),
+          safetyInfo: productData.safetyInfo,
+          description: productData.description,
+          brand: {
+            connect: {
+              id: Number(productData.brand)
+            }
+          },
+          area: {
+            connect: {
+              id: Number(productData.area)
+            }
+          },
+          category: {
+            connect: {
+              id: Number(productData.category)
+            }
+          },
+          type: {
+            connect: {
+              id: Number(productData.type)
+            }
+          }
         }
       }
-    })
-
-    const newProduct = await prisma.product.create({
-      data: {
-        code: Number(productData.code),
-        stock: productData.stock,
-        salePrice: productData.salePrice,
-        iva: productData.iva,
-        isOnSale: productData.onSale,
-        purchasePrice: productData.purchasePrice,
-        minimumPrice: productData.minimumPrice,
-        productInfo: {
-          connect: { id: Number(newProductInfo.id) }
-        }
-      }
-    })
-
-    console.log('newProductInfo', newProductInfo)
-
-    return { newProductInfo, newProduct }
+    }
   })
 
   await prisma.$disconnect()

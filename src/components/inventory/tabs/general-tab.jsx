@@ -1,10 +1,6 @@
-import BadgeItem from '@/components/ui/display/badge'
-import InputNumberItem from '@/components/ui/entry/input-number'
 import { useInventoryStore } from '@/store/inventory'
-import { Typography } from 'antd'
-import { DollarSign, Percent, Box } from 'lucide-react'
-
-const { Text } = Typography
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function GeneralTab () {
   const product = useInventoryStore((state) => state.product)
@@ -14,59 +10,66 @@ export default function GeneralTab () {
   const minimumPrice = useInventoryStore((state) => state.minimumPrice)
   const minimumStock = useInventoryStore((state) => state.minimumStock)
   const iva = useInventoryStore((state) => state.iva)
-  const handlePriceChange = useInventoryStore(
-    (state) => state.handlePriceChange
+  const handleInputChange = useInventoryStore(
+    (state) => state.handleInputChange
   )
-  const handleCostChange = useInventoryStore((state) => state.handleCostChange)
-  const handleMinimumPriceChange = useInventoryStore(
-    (state) => state.handleMinimumPriceChange
-  )
-  const handleMinimumStockChange = useInventoryStore(
-    (state) => state.handleMinimumStockChange
-  )
-  const handleIvaChange = useInventoryStore((state) => state.handleIvaChange)
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 mt-4">
       <div className="flex justify-between gap-2">
-        <InputNumberItem
-          icon={DollarSign}
-          placeholder="Price"
-          title="Price"
-          value={price}
-          handleChange={handlePriceChange}
-        />
-        <InputNumberItem
-          icon={DollarSign}
-          placeholder="Minimum price"
-          title="Minimum price"
-          value={minimumPrice}
-          handleChange={handleMinimumPriceChange}
-        />
+        <div className="grid gap-2">
+          <Label htmlFor="price">Sale price</Label>
+          <Input
+            id="price"
+            type="number"
+            placeholder="0.00"
+            value={price}
+            onChange={(e) => handleInputChange('price', e)}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="cost">Purchase price</Label>
+          <Input
+            id="cost"
+            type="number"
+            placeholder="0.00"
+            value={cost}
+            onChange={(e) => handleInputChange('cost', e)}
+          />
+        </div>
       </div>
       <div className="flex justify-between gap-2">
-        <InputNumberItem
-          icon={DollarSign}
-          placeholder="Cost"
-          title="Cost"
-          value={cost}
-          handleChange={handleCostChange}
-        />
-        <InputNumberItem
-          icon={Percent}
-          placeholder="Iva"
-          title="Iva"
-          value={iva}
-          handleChange={handleIvaChange}
+        <div className="grid gap-2">
+          <Label htmlFor="temperature">Minimum price</Label>
+          <Input
+            id="temperature"
+            type="number"
+            placeholder="0.00"
+            value={minimumPrice}
+            onChange={(e) => handleInputChange('minimumPrice', e)}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="temperature">IVA</Label>
+          <Input
+            id="temperature"
+            type="number"
+            placeholder="0%"
+            value={iva}
+            onChange={(e) => handleInputChange('iva', e)}
+          />
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="temperature">Minimum stock</Label>
+        <Input
+          id="temperature"
+          type="number"
+          placeholder="0"
+          value={minimumStock}
+          onChange={(e) => handleInputChange('minimumStock', e)}
         />
       </div>
-      <InputNumberItem
-        placeholder="Minimum stock"
-        icon={Box}
-        title="Minimum stock"
-        value={minimumStock}
-        handleChange={handleMinimumStockChange}
-      />
     </div>
   )
 }

@@ -1,29 +1,56 @@
 import { useInventoryStore } from '@/store/inventory'
 import ProductListItem from './producst-list'
 import ProductKanbanItem from './product-kanban'
-import { useEffect } from 'react'
-import { Button, Radio, Typography } from 'antd'
-import SearchItem from '../ui/entry/search'
-import SelectItem from '../ui/entry/select'
-import { LuAlignJustify, LuChevronLeft, LuChevronRight, LuLayoutGrid } from 'react-icons/lu'
-import IconButtonItem from '../ui/common/icon-buttom'
+import { useEffect, useState } from 'react'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-const { Text } = Typography
+import { Button } from '@/components/ui/button'
+import { Search, Menu, LayoutGrid, Trash } from 'lucide-react'
+import { Input } from '../ui/input'
+import Combobox from '@/components/ui/combobox'
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogFooter
+} from '../ui/dialog'
+
+import ProductViewItem from './product-view'
+import { PopConfirmItem } from '../ui/display/popconfirm'
 
 export function ProductsItem () {
+  const action = useInventoryStore((state) => state.action)
+  const name = useInventoryStore((state) => state.name)
   const products = useInventoryStore((state) => state.products)
+  const openProduct = useInventoryStore((state) => state.openProduct)
   const fetchProducts = useInventoryStore((state) => state.fetchProducts)
   const view = useInventoryStore((state) => state.view)
 
   const setAction = useInventoryStore((state) => state.setAction)
+  const handleSaveProduct = useInventoryStore(
+    (state) => state.handleSaveProduct
+  )
   const handleOpenProduct = useInventoryStore(
     (state) => state.handleOpenProduct
   )
+  const handleCloseProduct = useInventoryStore(
+    (state) => state.handleCloseProduct
+  )
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
+  const handleDeleteProduct = useInventoryStore(
+    (state) => state.handleDeleteProduct
+  )
+
+  const [openDialog, setOpenDialog] = useState(false)
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
 
   const handleClick = () => {
-    setAction('edit')
+    setOpenDialog(true)
     handleOpenProduct()
+    setAction('edit')
   }
 
   useEffect(() => {
@@ -31,51 +58,42 @@ export function ProductsItem () {
   }, [])
 
   return (
-    <div className='flex flex-col gap-4'>
-        <div className="flex justify-between items-center w-full">
-          <div className="flex gap-2">
-            <Button onClick={handleClick}>Add product</Button>
-            <SearchItem />
-            <SelectItem placeholder="Select filter" />
-          </div>
-          <div className="flex gap-2 items-center">
-            {view === 'kanban' && (
-              <div className="flex items-center gap-1">
-                <Text>1-50</Text>
-                <Text>/</Text>
-                <Text type="secondary">300</Text>
-                <div>
-                  <IconButtonItem
-                    icon={
-                      <LuChevronLeft
-                        title="Previous products"
-                        className="text-2xl"
-                      />
-                    }
-                    size={48}
-                  />
-                  <IconButtonItem
-                    icon={
-                      <LuChevronRight
-                        title="Next products"
-                        className="text-2xl"
-                      />
-                    }
-                    size={48}
-                  />
-                </div>
-              </div>
-            )}
-            <Radio.Group value={view} onChange={handleChangeView}>
-              <Radio.Button value="list">
-                <LuAlignJustify title="List" className="h-full" />
-              </Radio.Button>
-              <Radio.Button value="kanban">
-                <LuLayoutGrid title="Kanban" className="h-full" />
-              </Radio.Button>
-            </Radio.Group>
-          </div>
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex w-full">
+        <div className="flex gap-2 justify-start w-full items-center">
+          <Button className="w-auto" size="sm" onClick={handleClick}>
+            Add product
+          </Button>
+
+          <form className="w-full">
+            <div className="relative w-full">
+              <Search className="absolute left-2.5 top-[12px] h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+              />
+            </div>
+          </form>
+          <Combobox />
+          <Tabs defaultValue="list" size="small">
+            <TabsList>
+              <TabsTrigger
+                value="list"
+                onClick={() => handleChangeView('list')}
+              >
+                <Menu />
+              </TabsTrigger>
+              <TabsTrigger
+                value="kanban"
+                onClick={() => handleChangeView('kanban')}
+              >
+                <LayoutGrid />
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
+      </div>
       {view === 'list'
         ? (
         <ProductListItem products={products} />
@@ -83,6 +101,45 @@ export function ProductsItem () {
         : (
         <ProductKanbanItem products={products} />
           )}
+      <Dialog
+        className="relative"
+        open={openDialog || openProduct}
+        onOpenChange={setOpenDialog || handleOpenProduct}
+      >
+        <DialogContent>
+          <ProductViewItem />
+          <DialogFooter>
+            {action === 'view' && (
+              <PopConfirmItem
+                title={`Delete product ${name}`}
+                confirm={handleDeleteProduct}
+              >
+                <Trash
+                  className="absolute top-4 right-10 text-foreground/70 hover:text-foreground cursor-pointer"
+                  size={14}
+                />
+              </PopConfirmItem>
+            )}
+            {action === 'edit'
+              ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCloseDialog || handleCloseProduct}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveProduct}>Save</Button>
+              </div>
+                )
+              : (
+              <Button variant="outline" onClick={handleCloseProduct}>
+                Close
+              </Button>
+                )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,55 +1,19 @@
-import TableItem from '../ui/display/table'
 import { useInventoryStore } from '@/store/inventory'
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+
 export default function ProductListItem ({ products }) {
-  const handleOpenProduct = useInventoryStore((state) => state.handleOpenProduct)
+  const handleOpenProduct = useInventoryStore(
+    (state) => state.handleOpenProduct
+  )
   const setAction = useInventoryStore((state) => state.setAction)
-
-  const columns = [
-    {
-      title: '',
-      dataIndex: 'id',
-      width: '50px',
-      align: 'center',
-      sorter: (a, b) => a.id - b.id
-    },
-    {
-      title: 'Product name',
-      dataIndex: 'name'
-    },
-    {
-      title: 'Code',
-      dataIndex: 'code'
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      align: 'center',
-      render: (text) => `$ ${text}`
-    },
-    {
-      title: 'Cost',
-      dataIndex: 'cost',
-      align: 'center',
-      render: (text) => `$ ${text}`
-    },
-    {
-      title: 'Stock',
-      dataIndex: 'stock',
-      align: 'center',
-      sorter: (a, b) => a.stock - b.stock
-    }
-  ]
-
-  const dataSource = products.map((product) => ({
-    key: product.id,
-    id: product.id,
-    name: product.productInfo.name,
-    code: product.code,
-    stock: product.stock,
-    price: product.salePrice,
-    cost: product.purchasePrice
-  }))
 
   const handleRow = (record) => {
     handleOpenProduct(record.id)
@@ -57,10 +21,31 @@ export default function ProductListItem ({ products }) {
   }
 
   return (
-    <TableItem
-      columns={columns}
-      dataSource={dataSource}
-      handleRowClick={handleRow}
-    />
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Id</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead className="text-center">Code</TableHead>
+          <TableHead className="text-center">Price</TableHead>
+          <TableHead className="text-center">Cost</TableHead>
+          <TableHead className="text-right">Stock</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {products.map((record) => (
+          <TableRow key={record.id} onClick={() => handleRow(record)}>
+            <TableCell>{record.id}</TableCell>
+            <TableCell>
+              {record.productInfo.name}
+            </TableCell>
+            <TableCell className="text-center">{record.code}</TableCell>
+            <TableCell className="text-center">$ {record.salePrice}</TableCell>
+            <TableCell className="text-center">$ {record.purchasePrice}</TableCell>
+            <TableCell className="text-right">{record.stock}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

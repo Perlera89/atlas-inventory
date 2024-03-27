@@ -1,14 +1,20 @@
 import MultipleSelectItem from '@/components/ui/entry/multiple-select'
-import SelectItem from '@/components/ui/entry/select'
 import CustomSelectItem from '@/components/ui/entry/custom-select'
 import { useInventoryStore } from '@/store/inventory'
 import { Typography } from 'antd'
 
-const options = [
-  { value: 1, label: 'Consumable' },
-  { value: 2, label: 'Storable' },
-  { value: 3, label: 'Service' }
-]
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectLabel,
+  SelectGroup,
+  SelectItem,
+  SelectValue
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Plus } from 'lucide-react'
 
 export default function TagsTab () {
   const product = useInventoryStore((state) => state.product)
@@ -25,31 +31,112 @@ export default function TagsTab () {
   const areas = useInventoryStore((state) => state.areas)
   const tags = useInventoryStore((state) => state.tags)
 
-  const handleTypeChange = useInventoryStore((state) => state.handleTypeChange)
-  const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
-  const handleBrandChange = useInventoryStore((state) => state.handleBrandChange)
-  const handleAreaChange = useInventoryStore((state) => state.handleAreaChange)
-  const handleTagsChange = useInventoryStore((state) => state.handleTagsChange)
+  const handleSelect = useInventoryStore((state) => state.handleSelect)
 
   return (
     <div>
-      <div className="flex flex-col gap-2">
-        <SelectItem
-          placeholder="Select type"
-          value={type}
+      <div className="flex flex-col gap-2 mt-4">
+        <Select
           defaultValue={1}
-          handleSelect={handleTypeChange}
-          options={options}
-        />
-        <CustomSelectItem placeholder="Select category" value={category} items={categories} handleSelect={handleCategoryChange} />
-        <CustomSelectItem placeholder="Select brand" value={brand} items={brands} handleSelect={handleBrandChange} />
-        <CustomSelectItem placeholder="Select area" value={area} items={areas} handleSelect={handleAreaChange} />
-        <MultipleSelectItem
-          handleSelect={handleTagsChange}
-          options={tags}
+          onValueChange={(value) => handleSelect('type', value)}
+          value={type}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Types</SelectLabel>
+              <SelectItem value={1}>Consumable</SelectItem>
+              <SelectItem value={2}>Storable</SelectItem>
+              <SelectItem value={3}>Service</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          required
+          onValueChange={(value) => handleSelect('category', value)}
+          value={category}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Categories</SelectLabel>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          onValueChange={(value) => handleSelect('brand', value)}
+          value={brand}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select brand" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {brands.map((brand) => (
+                <SelectItem key={brand.id} value={brand.id}>
+                  {brand.name}
+                </SelectItem>
+              ))}
+              <hr className='my-4' />
+              <div className="flex items-center gap-2">
+                <Input placeholder="Add brand" className="bg-transparent" />
+                <Button>
+                  <Plus />
+                </Button>
+              </div>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          onValueChange={(value) => handleSelect('area', value)}
+          value={area}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select area" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Areas</SelectLabel>
+              {areas.map((area) => (
+                <SelectItem key={area.id} value={area.id}>
+                  {area.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          onValueChange={(value) => handleSelect('tags', value)}
           value={selectedTags}
-          placeholder="Select tags"
-        />
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select tags" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Tags</SelectLabel>
+              {tags.map((tag) => (
+                <SelectItem key={tag.id} value={tag.id}>
+                  {tag.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <MultipleSelectItem placeholder="Hola" options={brands} value={brand} />
       </div>
     </div>
   )

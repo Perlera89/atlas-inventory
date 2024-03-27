@@ -1,40 +1,27 @@
-import TextareaItem from '@/components/ui/entry/textarea'
+import { Textarea } from '@/components/ui/textarea'
 import { useInventoryStore } from '@/store/inventory'
-import { Typography } from 'antd'
-import { useEffect, useState } from 'react'
-
-const { Text } = Typography
 
 export default function ExtraTab () {
   const product = useInventoryStore((state) => state.product)
   const action = useInventoryStore((state) => state.action)
   const safetyInfo = useInventoryStore((state) => state.safetyInfo)
   const description = useInventoryStore((state) => state.description)
-  const handleSafetyInfoChange = useInventoryStore(
-    (state) => state.handleSafetyInfoChange
-  )
-  const handleDescriptionChange = useInventoryStore(
-    (state) => state.handleDescriptionChange
+  const handleInputChange = useInventoryStore(
+    (state) => state.handleInputChange
   )
 
   return (
-    <div>
-      <div className="flex flex-col gap-2">
-        <div className="flex gap-2">
-          <TextareaItem
-            placeholder="Safety information"
-            value={safetyInfo}
-            handleChange={handleSafetyInfoChange}
-          />
-        </div>
-        <div className="flex gap-2">
-          <TextareaItem
-            placeholder="Description"
-            value={description}
-            handleChange={handleDescriptionChange}
-          />
-        </div>
-      </div>
+    <div className="grid gap-2 mt-4">
+      <Textarea
+        placeholder="Safety information."
+        value={safetyInfo}
+        onChange={(e) => handleInputChange('safetyInfo', e)}
+      />
+      <Textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) => handleInputChange('description', e)}
+      />
     </div>
   )
 }

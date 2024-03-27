@@ -32,22 +32,22 @@ export const useInventoryStore = create((set, get) => {
     name: '',
     thumbnail: '/fallback.png',
     code: '',
-    stock: null,
+    stock: '',
     onSale: true,
-    price: null,
-    cost: null,
-    minimumPrice: null,
-    minimumStock: null,
-    iva: null,
+    price: '',
+    cost: '',
+    minimumPrice: '',
+    minimumStock: '',
+    iva: '',
     type: 1,
-    category: null,
+    category: '',
     categories: [],
-    brand: null,
+    brand: '',
     brands: [],
-    area: null,
+    area: '',
     areas: [],
     tags: [],
-    selectedTags: [],
+    selectedTags: '',
     safetyInfo: '',
     description: '',
     validation: false,
@@ -59,48 +59,23 @@ export const useInventoryStore = create((set, get) => {
   const clearState = () => set(initialStateWithoutProducts)
 
   const handlers = {
-    handleNameChange: (e) => {
-      editHandler({
-        name: trimStart(e.target.value)
-      })
+    handleInputChange: (field, event, isTrim = false) => {
+      const value = isTrim ? trimStart(event.target.value) : event.target.value
+      editHandler({ [field]: value })
     },
-    handleCodeChange: (e) => {
-      editHandler({
-        code: e.target.value
-      })
+    handleCategoryChange: (value) => {
+      const tagsCategory = get().tags.filter((tag) => tag.categoryId === value)
+      editHandler({ category: value, tagsCategory })
     },
-    handleStockChange: (value) => editHandler({ stock: value }),
-    handleOnSaleChange: (e) => editHandler({ onSale: e.target.checked }),
-    handlePriceChange: (value) =>
-      editHandler({ price: value, validation: { price: value > 0 } }),
-    handleCostChange: (value) => editHandler({ cost: value }),
-    handleMinimumPriceChange: (value) => editHandler({ minimumPrice: value }),
-    handleMinimumStockChange: (value) => editHandler({ minimumStock: value }),
-    handleIvaChange: (value) => editHandler({ iva: value }),
-    handleTypeChange: (value) => editHandler({ type: value }),
-    handleCategoryChange: (value) =>
-      editHandler({
-        category: value,
-        tagsCategory: get().tags.filter((tag) => tag.categoryId === value)
-      }),
-    handleBrandChange: (value) => editHandler({ brand: value }),
-    handleAreaChange: (value) => editHandler({ area: value }),
-    handleTagsChange: (value) => editHandler({ selectedTags: value }),
-    handleSafetyInfoChange: (e) =>
-      editHandler({ safetyInfo: trimStart(e.target.value) }),
-    handleDescriptionChange: (e) =>
-      editHandler({ description: trimStart(e.target.value) }),
-    handleChangeView: (e) => set({ view: e.target.value }),
+    handleSelect: (field, value) => editHandler({ [field]: value }),
+    handleChangeView: (value) => set({ view: value }),
     handleOpenProduct: async (id) => {
-      get().fetchBrands()
+      set({ openProduct: true })
       get().fetchCategories()
+      get().fetchBrands()
       get().fetchAreas()
       get().fetchTags()
-      if (!id) {
-        clearState()
-        get().fetchProducts()
-        set({ openProduct: true })
-      } else {
+      if (id) {
         await axios
           .get(`${PRODUCTS_ROOT}/${id}`)
           .then((res) => {
@@ -131,10 +106,16 @@ export const useInventoryStore = create((set, get) => {
             })
           })
           .catch((err) => {
-            get().setError(err)
-            get().handleOpenResult()
+            get().handleError(err)
           })
+      } else {
+        set({ openProduct: true })
+        clearState()
+        get().fetchProducts()
       }
+    },
+    handleCloseProduct: () => {
+      set({ openProduct: false })
     },
     handleSaveProduct: async () => {
       if (get().id) {
@@ -183,8 +164,7 @@ export const useInventoryStore = create((set, get) => {
             toast.success('Updated successfully')
           })
           .catch((err) => {
-            get().setError(err)
-            get().handleOpenResult()
+            get().handleError(err)
           })
       } else {
         const {
@@ -227,31 +207,30 @@ export const useInventoryStore = create((set, get) => {
         }
         await axios
           .post(PRODUCTS_ROOT, data)
-          .then(() => {
+          .then((res) => {
             toast.success('Created successfully')
           })
           .catch((err) => {
-            get().setError(err)
-            get().handleOpenResult()
+            console.log(err)
+            get().handleError(err)
           })
       }
       get().fetchProducts()
-      get().handleCancelProduct()
+      get().handleCloseProduct()
     },
     handleDeleteProduct: async () => {
+      console.log(get().id)
       await axios
         .put(`${PRODUCTS_ROOT}/${get().id}/delete`)
         .then(() => {
           toast.success('Deleted successfully')
         })
         .catch((err) => {
-          get().setError(err)
-          get().handleOpenResult()
+          get().handleError(err)
         })
       get().fetchProducts()
-      get().handleCancelProduct()
+      get().handleCloseProduct()
     },
-    handleCancelProduct: () => set({ openProduct: false }),
     handleOpenResult: () => set({ openResult: true }),
     handleCloseResult: () => set({ openResult: false }),
     handleFilterByType: (type) => {
@@ -268,6 +247,9 @@ export const useInventoryStore = create((set, get) => {
         default:
           break
       }
+    },
+    handleError: (err) => {
+      set({ openResult: true, error: err })
     }
   }
 
@@ -276,16 +258,15 @@ export const useInventoryStore = create((set, get) => {
       await axios
         .get(PRODUCTS_ROOT)
         .then((res) => {
-          const allProducts = res.data.filter(
-            (product) => product.isDeleted === false
-          )
+          const allProducts = res.data.filter((product) => !product.isDeleted)
           set(
             {
               allProducts,
               products: allProducts,
               productCount: allProducts.length,
-              productOnSaleCount: allProducts.filter((product) => product.onSale)
-                .length
+              productOnSaleCount: allProducts.filter(
+                (product) => product.isOnSale
+              ).length
             },
             false,
             'FETCH_PRODUCTS'
@@ -293,32 +274,28 @@ export const useInventoryStore = create((set, get) => {
           console.log('products', allProducts)
         })
         .catch((err) => {
-          get().setError(err)
-          get().handleOpenResult()
+          get().handleError(err)
         })
     },
     fetchBrands: async () => {
-      const res = await axios.get(BRANDS_ROOT)
-      const brands = await res.data.map((brand) => ({
-        value: brand.id,
-        label: brand.name
-      }))
-      set({ brands }, false, 'FETCH_BRANDS')
+      await axios
+        .get(BRANDS_ROOT)
+        .then((res) => {
+          const brands = res.data
+          set({ brands }, false, 'FETCH_BRANDS')
+        })
+        .catch((err) => {
+          get().handleError(err)
+        })
     },
     fetchAreas: async () => {
       const res = await axios.get(AREAS_ROOT)
-      const areas = await res.data.map((area) => ({
-        value: area.id,
-        label: area.name
-      }))
+      const areas = await res.data
       set({ areas }, false, 'FETCH_AREAS')
     },
     fetchCategories: async () => {
       const res = await axios.get(CATEGORIES_ROOT)
-      const categories = await res.data.map((category) => ({
-        value: category.id,
-        label: category.name
-      }))
+      const categories = await res.data
       set({ categories }, false, 'FETCH_CATEGORIES')
     },
     fetchTags: async () => {

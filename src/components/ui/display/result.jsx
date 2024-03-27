@@ -1,38 +1,39 @@
 import React from 'react'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog'
+import { Alert, AlertTitle } from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-react'
 
-import { Button, Modal, Result } from 'antd'
 export default function ResultItem ({
   title,
-  subtitle,
-  error,
+  alert,
   open,
+  handleOpen,
   handleClose
 }) {
   return (
-    <Modal
-      open={open}
-      width={800}
-      closable
-      onCancel={handleClose}
-      centered
-      className="z-50"
-      footer={[
-        <Button
-          key="save"
-          type="primary"
-          className="bg-tomato"
-          onClick={handleClose}
-        >
-          Close
-        </Button>
-      ]}
-    >
-      <Result
-        status="error"
-        title={title}
-        subTitle={subtitle}
-        className="px-0"
-      />
-    </Modal>
+    <AlertDialog open={open} onOpenChange={handleOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="mx-auto">{title}</AlertDialogTitle>
+          <AlertDialogDescription className="mx-auto">
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>{alert}</AlertTitle>
+            </Alert>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={handleClose}>Close</AlertDialogCancel>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
