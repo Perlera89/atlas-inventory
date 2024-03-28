@@ -231,6 +231,11 @@ export const useInventoryStore = create((set, get) => {
       get().fetchProducts()
       get().handleCloseProduct()
     },
+    handleSearchProduct: (products) => {
+      set({
+        products
+      })
+    },
     handleOpenResult: () => set({ openResult: true }),
     handleCloseResult: () => set({ openResult: false }),
     handleFilterByType: (type) => {
@@ -240,9 +245,9 @@ export const useInventoryStore = create((set, get) => {
           set({ products: allProducts })
           break
         case 'onSale':
-          set({
+          set((prevState) => ({
             products: allProducts.filter((product) => product.isOnSale)
-          })
+          }))
           break
         default:
           break

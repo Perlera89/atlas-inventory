@@ -37,7 +37,7 @@ export default function ProductListItem ({ products }) {
           <TableRow key={record.id} onClick={() => handleRow(record)}>
             <TableCell>{record.id}</TableCell>
             <TableCell>
-              {record.productInfo.name}
+              {record?.productInfo?.name}
             </TableCell>
             <TableCell className="text-center">{record.code}</TableCell>
             <TableCell className="text-center">$ {record.salePrice}</TableCell>

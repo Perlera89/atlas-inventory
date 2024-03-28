@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Search, Menu, LayoutGrid, Trash } from 'lucide-react'
 import { Input } from '../ui/input'
-import Combobox from '@/components/ui/combobox'
+import { ComboboxDropdownMenu } from '@/components/ui/combobox'
 import {
   Dialog,
   DialogContent,
@@ -17,11 +17,13 @@ import {
 
 import ProductViewItem from './product-view'
 import { PopConfirmItem } from '../ui/display/popconfirm'
+import { SearchItem } from '../ui/search'
 
 export function ProductsItem () {
   const action = useInventoryStore((state) => state.action)
   const name = useInventoryStore((state) => state.name)
   const products = useInventoryStore((state) => state.products)
+  const allProducts = useInventoryStore((state) => state.allProducts)
   const openProduct = useInventoryStore((state) => state.openProduct)
   const fetchProducts = useInventoryStore((state) => state.fetchProducts)
   const view = useInventoryStore((state) => state.view)
@@ -39,6 +41,9 @@ export function ProductsItem () {
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
   const handleDeleteProduct = useInventoryStore(
     (state) => state.handleDeleteProduct
+  )
+  const handleSearchProduct = useInventoryStore(
+    (state) => state.handleSearchProduct
   )
 
   const [openDialog, setOpenDialog] = useState(false)
@@ -66,16 +71,13 @@ export function ProductsItem () {
           </Button>
 
           <form className="w-full">
-            <div className="relative w-full">
-              <Search className="absolute left-2.5 top-[12px] h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-              />
-            </div>
+            <SearchItem
+              placeholder="Buscar producto..."
+              options={allProducts}
+              onSearch={handleSearchProduct}
+            />
           </form>
-          <Combobox />
+          <ComboboxDropdownMenu />
           <Tabs defaultValue="list" size="small">
             <TabsList>
               <TabsTrigger
