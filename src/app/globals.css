@@ -78,4 +78,13 @@
     user-select: none;
   }
 
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #535657;
+    border-radius: 15px;
+  }
+
 }

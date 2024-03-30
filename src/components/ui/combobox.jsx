@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { MoreHorizontal } from "lucide-react";
+import * as React from 'react'
+import { MoreHorizontal, ChevronDown, Trash } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 
 import {
   DropdownMenu,
@@ -11,76 +11,96 @@ import {
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ItemCombobox } from "./item-combobox";
-import { useInventoryStore } from "@/store/inventory";
+  DropdownMenuShortcut,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { ItemCombobox } from './item-combobox'
+import { useInventoryStore } from '@/store/inventory'
+import { Badge } from './badge'
 
-export function ComboboxDropdownMenu({ ...props }) {
-  const [value, setValue] = React.useState([]);
-  const categories = useInventoryStore((state) => state.categories);
-  const brands = useInventoryStore((state) => state.brands);
-  const areas = useInventoryStore((state) => state.areas);
-  const identifier = (item) => item.Categories || item.Brands || item.Areas;
-  const handlevalue = (res) => {
-    console.log("value", value);
-    const existItem = value.findIndex(
-      (item) => Object.keys(item)[0] === Object.keys(res)[0]
-    );
-    if (existItem !== -1) {
-      const itms = [...value];
-
-      itms[existItem][Object.keys(res)[0]].push(identifier(res));
-      setValue(itms);
-    } else {
-      console.log("no existe");
-      setValue([...value, { [Object.keys(res)[0]]: [identifier(res)] }]);
+export function ComboboxDropdownMenu ({ ...props }) {
+  const [filters, setFilters] = React.useState([])
+  const categories = useInventoryStore((state) => state.categories)
+  const handleFilterByFilters = useInventoryStore(
+    (state) => state.handleFilterByFilters
+  )
+  const brands = useInventoryStore((state) => state.brands)
+  const areas = useInventoryStore((state) => state.areas)
+  const handlevalue = (item) => {
+    const newItem = {
+      name: item.name,
+      value: Array.isArray(item.value) ? item.value : [item.value]
     }
-    console.log({ [Object.keys(res)[0]]: [identifier(res)] });
-  };
-  const [open, setOpen] = React.useState(false);
+
+    setFilters((prev) => {
+      const index = prev.findIndex((i) => i.name === item.name)
+      let newFilters
+      if (index !== -1) {
+        const updatedItem = { ...prev[index] }
+        // Verificar si el valor ya existe en el arreglo
+        if (!updatedItem.value.includes(item.value)) {
+          updatedItem.value = Array.isArray(updatedItem.value) ? [...updatedItem.value, item.value] : [updatedItem.value, item.value]
+        }
+        newFilters = [...prev.slice(0, index), updatedItem, ...prev.slice(index + 1)]
+      } else {
+        // Asegurarse de que value siempre sea un arreglo
+        const newItemWithArrayValue = { ...item, value: [item.value] }
+        newFilters = [...prev, newItemWithArrayValue]
+      }
+      // Llamar a handleFilterByFilters con el estado actualizado
+      handleFilterByFilters(newFilters)
+      return newFilters
+    })
+
+    // Estos logs no reflejarán inmediatamente los cambios debido a la naturaleza asíncrona de setState
+    console.log('item', newItem)
+    console.log('filters', filters)
+  }
+
+  const [open, setOpen] = React.useState(false)
 
   return (
-    <div className="flex w-full flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
-      <p className="text-sm font-medium leading-none">
-        {value.map((item) =>
-          item.forEach((element) => {
-            <span
-              key=""
-              className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground"
-            >
-              {identifier(element)}
-            </span>;
-          })
-        )}
-        <span className="text-muted-foreground">Select filters</span>
-      </p>
+    <div className="flex w-full flex-col items-start justify-start gap-2 rounded-md border px-4 sm:flex-row sm:items-center">
+      {filters.map((item, index) =>
+        item.value.map((value, key) => (
+          <Badge key={key} name={item.name}>
+            {value}
+          </Badge>
+        ))
+      )}
+      <p className="w-full">Select filters</p>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
-            <MoreHorizontal />
+            <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[200px]">
+        <DropdownMenuContent align="start" className="w-[200px]">
           <DropdownMenuLabel>Filter</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <ItemCombobox name={"Areas"} Items={areas} onSelect={handlevalue} />
+            {[
+              [categories, 'categories', 'Categories'],
+              [brands, 'brands', 'Brands'],
+              [areas, 'areas', 'Areas']
+            ].map(([items, name, label], key) => (
+              <ItemCombobox
+                key={key}
+                name={name}
+                label={label}
+                items={items}
+                onSelect={handlevalue}
+              />
+            ))}
             <DropdownMenuSeparator />
-            <ItemCombobox
-              name={"Categories"}
-              Items={categories}
-              onSelect={handlevalue}
-            />
-            <DropdownMenuSeparator />
-            <ItemCombobox
-              name={"Brands"}
-              Items={brands}
-              onSelect={handlevalue}
-            />
+            <DropdownMenuShortcut className="text-red-500 hover:bg-muted">
+              <div className="flex justify-between items-center px-2 py-2">
+                <p>Delete</p> <Trash size={12} />
+              </div>
+            </DropdownMenuShortcut>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }
