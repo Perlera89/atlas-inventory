@@ -255,6 +255,12 @@ export const useInventoryStore = create((set, get) => {
     },
     handleError: (err) => {
       set({ openResult: true, error: err })
+    },
+    fetchSelects: async () => {
+      await get().fetchAreas()
+      await get().fetchBrands()
+      await get().fetchCategories()
+      await get().fetchTags()
     }
   }
 

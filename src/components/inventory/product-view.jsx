@@ -19,6 +19,7 @@ export default function ProductViewItem () {
   const handleInputChange = useInventoryStore(
     (state) => state.handleInputChange
   )
+
   const handleSelect = useInventoryStore((state) => state.handleSelect)
 
   const validation = useInventoryStore((state) => state.validation)

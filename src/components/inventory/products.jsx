@@ -1,66 +1,68 @@
-import { useInventoryStore } from '@/store/inventory'
-import ProductListItem from './producst-list'
-import ProductKanbanItem from './product-kanban'
-import { useEffect, useState } from 'react'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useInventoryStore } from "@/store/inventory";
+import ProductListItem from "./producst-list";
+import ProductKanbanItem from "./product-kanban";
+import { useEffect, useState } from "react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { Button } from '@/components/ui/button'
-import { Search, Menu, LayoutGrid, Trash } from 'lucide-react'
-import { Input } from '../ui/input'
-import { ComboboxDropdownMenu } from '@/components/ui/combobox'
+import { Button } from "@/components/ui/button";
+import { Search, Menu, LayoutGrid, Trash } from "lucide-react";
+import { Input } from "../ui/input";
+import { ComboboxDropdownMenu } from "@/components/ui/combobox";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogFooter
-} from '../ui/dialog'
+  DialogFooter,
+} from "../ui/dialog";
 
-import ProductViewItem from './product-view'
-import { PopConfirmItem } from '../ui/display/popconfirm'
-import { SearchItem } from '../ui/search'
+import ProductViewItem from "./product-view";
+import { PopConfirmItem } from "../ui/display/popconfirm";
+import { SearchItem } from "../ui/search";
 
-export function ProductsItem () {
-  const action = useInventoryStore((state) => state.action)
-  const name = useInventoryStore((state) => state.name)
-  const products = useInventoryStore((state) => state.products)
-  const allProducts = useInventoryStore((state) => state.allProducts)
-  const openProduct = useInventoryStore((state) => state.openProduct)
-  const fetchProducts = useInventoryStore((state) => state.fetchProducts)
-  const view = useInventoryStore((state) => state.view)
+export function ProductsItem() {
+  const action = useInventoryStore((state) => state.action);
+  const name = useInventoryStore((state) => state.name);
+  const products = useInventoryStore((state) => state.products);
+  const allProducts = useInventoryStore((state) => state.allProducts);
+  const openProduct = useInventoryStore((state) => state.openProduct);
+  const fetchProducts = useInventoryStore((state) => state.fetchProducts);
+  const view = useInventoryStore((state) => state.view);
+  const fetchSelects = useInventoryStore((state) => state.fetchSelects);
 
-  const setAction = useInventoryStore((state) => state.setAction)
+  const setAction = useInventoryStore((state) => state.setAction);
   const handleSaveProduct = useInventoryStore(
     (state) => state.handleSaveProduct
-  )
+  );
   const handleOpenProduct = useInventoryStore(
     (state) => state.handleOpenProduct
-  )
+  );
   const handleCloseProduct = useInventoryStore(
     (state) => state.handleCloseProduct
-  )
-  const handleChangeView = useInventoryStore((state) => state.handleChangeView)
+  );
+  const handleChangeView = useInventoryStore((state) => state.handleChangeView);
   const handleDeleteProduct = useInventoryStore(
     (state) => state.handleDeleteProduct
-  )
+  );
   const handleSearchProduct = useInventoryStore(
     (state) => state.handleSearchProduct
-  )
+  );
 
-  const [openDialog, setOpenDialog] = useState(false)
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
-  }
+    setOpenDialog(false);
+  };
 
   const handleClick = () => {
-    setOpenDialog(true)
-    handleOpenProduct()
-    setAction('edit')
-  }
+    setOpenDialog(true);
+    handleOpenProduct();
+    setAction("edit");
+  };
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+    fetchSelects();
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -82,13 +84,13 @@ export function ProductsItem () {
             <TabsList>
               <TabsTrigger
                 value="list"
-                onClick={() => handleChangeView('list')}
+                onClick={() => handleChangeView("list")}
               >
                 <Menu />
               </TabsTrigger>
               <TabsTrigger
                 value="kanban"
-                onClick={() => handleChangeView('kanban')}
+                onClick={() => handleChangeView("kanban")}
               >
                 <LayoutGrid />
               </TabsTrigger>
@@ -96,13 +98,11 @@ export function ProductsItem () {
           </Tabs>
         </div>
       </div>
-      {view === 'list'
-        ? (
+      {view === "list" ? (
         <ProductListItem products={products} />
-          )
-        : (
+      ) : (
         <ProductKanbanItem products={products} />
-          )}
+      )}
       <Dialog
         className="relative"
         open={openDialog || openProduct}
@@ -111,7 +111,7 @@ export function ProductsItem () {
         <DialogContent>
           <ProductViewItem />
           <DialogFooter>
-            {action === 'view' && (
+            {action === "view" && (
               <PopConfirmItem
                 title={`Delete product ${name}`}
                 confirm={handleDeleteProduct}
@@ -122,8 +122,7 @@ export function ProductsItem () {
                 />
               </PopConfirmItem>
             )}
-            {action === 'edit'
-              ? (
+            {action === "edit" ? (
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -133,15 +132,14 @@ export function ProductsItem () {
                 </Button>
                 <Button onClick={handleSaveProduct}>Save</Button>
               </div>
-                )
-              : (
+            ) : (
               <Button variant="outline" onClick={handleCloseProduct}>
                 Close
               </Button>
-                )}
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

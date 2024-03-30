@@ -1,7 +1,5 @@
 import MultipleSelectItem from '@/components/ui/entry/multiple-select'
-import CustomSelectItem from '@/components/ui/entry/custom-select'
 import { useInventoryStore } from '@/store/inventory'
-import { Typography } from 'antd'
 
 import {
   Select,

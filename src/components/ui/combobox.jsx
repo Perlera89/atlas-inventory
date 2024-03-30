@@ -1,52 +1,59 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { Calendar, MoreHorizontal, Tags, Trash, User } from 'lucide-react'
+import * as React from "react";
+import { MoreHorizontal } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command'
+import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ItemCombobox } from "./item-combobox";
+import { useInventoryStore } from "@/store/inventory";
 
-const labels = [
-  'feature',
-  'bug',
-  'enhancement',
-  'documentation',
-  'design',
-  'question',
-  'maintenance'
-]
+export function ComboboxDropdownMenu({ ...props }) {
+  const [value, setValue] = React.useState([]);
+  const categories = useInventoryStore((state) => state.categories);
+  const brands = useInventoryStore((state) => state.brands);
+  const areas = useInventoryStore((state) => state.areas);
+  const identifier = (item) => item.Categories || item.Brands || item.Areas;
+  const handlevalue = (res) => {
+    console.log("value", value);
+    const existItem = value.findIndex(
+      (item) => Object.keys(item)[0] === Object.keys(res)[0]
+    );
+    if (existItem !== -1) {
+      const itms = [...value];
 
-export function ComboboxDropdownMenu () {
-  const [label, setLabel] = React.useState('feature')
-  const [open, setOpen] = React.useState(false)
+      itms[existItem][Object.keys(res)[0]].push(identifier(res));
+      setValue(itms);
+    } else {
+      console.log("no existe");
+      setValue([...value, { [Object.keys(res)[0]]: [identifier(res)] }]);
+    }
+    console.log({ [Object.keys(res)[0]]: [identifier(res)] });
+  };
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className="flex w-full flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
       <p className="text-sm font-medium leading-none">
-        <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">
-          {label}
-        </span>
-        <span className="text-muted-foreground">Create a new project</span>
+        {value.map((item) =>
+          item.forEach((element) => {
+            <span
+              key=""
+              className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground"
+            >
+              {identifier(element)}
+            </span>;
+          })
+        )}
+        <span className="text-muted-foreground">Select filters</span>
       </p>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
@@ -55,57 +62,25 @@ export function ComboboxDropdownMenu () {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Filter</DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              Assign to...
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Calendar className="mr-2 h-4 w-4" />
-              Set due date...
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <Tags className="mr-2 h-4 w-4" />
-                Apply label
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className="p-0">
-                <Command>
-                  <CommandInput
-                    placeholder="Filter label..."
-                    autoFocus={true}
-                  />
-                  <CommandList>
-                    <CommandEmpty>No label found.</CommandEmpty>
-                    <CommandGroup>
-                      {labels.map((label) => (
-                        <CommandItem
-                          key={label}
-                          value={label}
-                          onSelect={(value) => {
-                            setLabel(value)
-                            setOpen(false)
-                          }}
-                        >
-                          {label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
+            <ItemCombobox name={"Areas"} Items={areas} onSelect={handlevalue} />
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <ItemCombobox
+              name={"Categories"}
+              Items={categories}
+              onSelect={handlevalue}
+            />
+            <DropdownMenuSeparator />
+            <ItemCombobox
+              name={"Brands"}
+              Items={brands}
+              onSelect={handlevalue}
+            />
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
