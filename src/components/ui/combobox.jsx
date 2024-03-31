@@ -24,7 +24,7 @@ export function ComboboxDropdownMenu({ ...props }) {
   const handleFilterByFilters = useInventoryStore(
     (state) => state.handleFilterByFilters
   );
-  //{categoru : {value:{}}, brand:{value:{}}}
+  // {categoru : {value:{}}, brand:{value:{}}}
 
   const brands = useInventoryStore((state) => state.brands);
   const areas = useInventoryStore((state) => state.areas);
@@ -67,14 +67,16 @@ export function ComboboxDropdownMenu({ ...props }) {
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-2 rounded-md border px-4 sm:flex-row sm:items-center">
-      {Object.values(filters).some((fill) =>
-        fill.map((filter) => (
+      {Object.entries(filters).map(([filterName, filterValues]) =>
+        filterValues.map((filter) => (
           <Badge key={filter.id} name={filter.name}>
-            taff
+            {filter.name}
           </Badge>
         ))
       )}
-      <p className="w-full">Select filters</p>
+      {Object.keys(filters).length === 0 && (
+        <p className="w-full">Select filters</p>
+      )}
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
