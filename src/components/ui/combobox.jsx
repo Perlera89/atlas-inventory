@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { MoreHorizontal, ChevronDown, Trash } from 'lucide-react'
+import * as React from "react";
+import { MoreHorizontal, ChevronDown, Trash } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
@@ -12,59 +12,65 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { ItemCombobox } from './item-combobox'
-import { useInventoryStore } from '@/store/inventory'
-import { Badge } from './badge'
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ItemCombobox } from "./item-combobox";
+import { useInventoryStore } from "@/store/inventory";
+import { Badge } from "./badge";
 
-export function ComboboxDropdownMenu ({ ...props }) {
-  const [filters, setFilters] = React.useState([])
-  const categories = useInventoryStore((state) => state.categories)
+export function ComboboxDropdownMenu({ ...props }) {
+  const [filters, setFilters] = React.useState({});
+  const categories = useInventoryStore((state) => state.categories);
   const handleFilterByFilters = useInventoryStore(
     (state) => state.handleFilterByFilters
-  )
-  const brands = useInventoryStore((state) => state.brands)
-  const areas = useInventoryStore((state) => state.areas)
+  );
+  //{categoru : {value:{}}, brand:{value:{}}}
+
+  const brands = useInventoryStore((state) => state.brands);
+  const areas = useInventoryStore((state) => state.areas);
   const handlevalue = (item) => {
-    const newItem = {
-      name: item.name,
-      value: Array.isArray(item.value) ? item.value : [item.value]
-    }
+    // Crear un objeto con la estructura deseada para el nuevo valor
+    const newItem = { id: item.key, name: item.value };
 
     setFilters((prev) => {
-      const index = prev.findIndex((i) => i.name === item.name)
-      let newFilters
-      if (index !== -1) {
-        const updatedItem = { ...prev[index] }
-        // Verificar si el valor ya existe en el arreglo
-        if (!updatedItem.value.includes(item.value)) {
-          updatedItem.value = Array.isArray(updatedItem.value) ? [...updatedItem.value, item.value] : [updatedItem.value, item.value]
-        }
-        newFilters = [...prev.slice(0, index), updatedItem, ...prev.slice(index + 1)]
+      // Verificar si el filtro ya existe y tiene un arreglo, si no, inicializarlo como un arreglo vacío
+      const existingItems = prev[item.name] ? prev[item.name] : [];
+
+      // Determinar si el item ya existe en el arreglo
+      const existingItemIndex = existingItems.findIndex(
+        (v) => v.id === item.key
+      );
+
+      let updatedItems;
+      if (existingItemIndex !== -1) {
+        // Si el item ya existe, actualizarlo
+        updatedItems = existingItems.map((v, index) =>
+          index === existingItemIndex ? newItem : v
+        );
       } else {
-        // Asegurarse de que value siempre sea un arreglo
-        const newItemWithArrayValue = { ...item, value: [item.value] }
-        newFilters = [...prev, newItemWithArrayValue]
+        // Si el item no existe, agregarlo al arreglo
+        updatedItems = [...existingItems, newItem];
       }
+
+      // Crear o actualizar el objeto de filtros
+      const newFilters = {
+        ...prev,
+        [item.name]: updatedItems,
+      };
+
       // Llamar a handleFilterByFilters con el estado actualizado
-      handleFilterByFilters(newFilters)
-      return newFilters
-    })
-
-    // Estos logs no reflejarán inmediatamente los cambios debido a la naturaleza asíncrona de setState
-    console.log('item', newItem)
-    console.log('filters', filters)
-  }
-
-  const [open, setOpen] = React.useState(false)
+      handleFilterByFilters(newFilters);
+      return newFilters;
+    });
+  };
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-2 rounded-md border px-4 sm:flex-row sm:items-center">
-      {filters.map((item, index) =>
-        item.value.map((value, key) => (
-          <Badge key={key} name={item.name}>
-            {value}
+      {Object.values(filters).some((fill) =>
+        fill.map((filter) => (
+          <Badge key={filter.id} name={filter.name}>
+            taff
           </Badge>
         ))
       )}
@@ -80,9 +86,9 @@ export function ComboboxDropdownMenu ({ ...props }) {
           <DropdownMenuGroup>
             <DropdownMenuSeparator />
             {[
-              [categories, 'categories', 'Categories'],
-              [brands, 'brands', 'Brands'],
-              [areas, 'areas', 'Areas']
+              [categories, "categories", "Categories"],
+              [brands, "brands", "Brands"],
+              [areas, "areas", "Areas"],
             ].map(([items, name, label], key) => (
               <ItemCombobox
                 key={key}
@@ -94,7 +100,12 @@ export function ComboboxDropdownMenu ({ ...props }) {
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuShortcut className="text-red-500 hover:bg-muted">
-              <div className="flex justify-between items-center px-2 py-2">
+              <div
+                className="flex justify-between items-center px-2 py-2"
+                onClick={() => {
+                  setFilters({});
+                }}
+              >
                 <p>Delete</p> <Trash size={12} />
               </div>
             </DropdownMenuShortcut>
@@ -102,5 +113,5 @@ export function ComboboxDropdownMenu ({ ...props }) {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
