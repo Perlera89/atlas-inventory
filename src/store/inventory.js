@@ -254,36 +254,10 @@ export const useInventoryStore = create((set, get) => {
       }
     },
     handleFilterByFilters: (filters) => {
-      console.log('filtros', filters[0].name)
-      // filter.value es un arreglo
-      const allProducts = get().allProducts
-
-      switch (filters[0].name) {
-        case 'categories':
-          console.log('filters.value', filters[0].value)
-          set({
-            products: allProducts.filter((product) =>
-              product.productInfo.category.name.includes(filters[0].value)
-            )
-          })
-          break
-        case 'storable':
-          set((prevState) => ({
-            products: allProducts.filter(
-              (product) => product.productInfo.type.id === 1
-            )
-          }))
-          break
-        case 'service':
-          set((prevState) => ({
-            products: allProducts.filter(
-              (product) => product.productInfo.type.id === 2
-            )
-          }))
-          break
-        default:
-          break
-      }
+      console.log('filtros', filters)
+      Object.entries(filters).map(([filterName, filterValues]) =>
+        console.log('first', filterName, filterValues)
+      )
     },
     handleError: (err) => {
       set({ openResult: true, error: err })

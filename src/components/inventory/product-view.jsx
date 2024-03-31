@@ -1,30 +1,31 @@
-import { useInventoryStore } from '@/store/inventory'
+import { useInventoryStore } from "@/store/inventory";
 
-import GeneralTab from './tabs/general-tab'
-import TagsTab from './tabs/tags-tab'
-import ExtraTab from './tabs/extra-tab'
-import { Checkbox } from '@/components/ui/checkbox'
+import GeneralTab from "./tabs/general-tab";
+import TagsTab from "./tabs/tags-tab";
+import ExtraTab from "./tabs/extra-tab";
+import { Checkbox } from "@/components/ui/checkbox";
 
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageSave } from "../ui/display/imagedragdrop";
 
-export default function ProductViewItem () {
-  const name = useInventoryStore((state) => state.name)
-  const thumbnail = useInventoryStore((state) => state.thumbnail)
-  const code = useInventoryStore((state) => state.code)
-  const stock = useInventoryStore((state) => state.stock)
-  const onSale = useInventoryStore((state) => state.onSale)
+export default function ProductViewItem() {
+  const name = useInventoryStore((state) => state.name);
+  const thumbnail = useInventoryStore((state) => state.thumbnail);
+  const code = useInventoryStore((state) => state.code);
+  const stock = useInventoryStore((state) => state.stock);
+  const onSale = useInventoryStore((state) => state.onSale);
   const handleInputChange = useInventoryStore(
     (state) => state.handleInputChange
-  )
+  );
 
-  const handleSelect = useInventoryStore((state) => state.handleSelect)
+  const handleSelect = useInventoryStore((state) => state.handleSelect);
 
-  const validation = useInventoryStore((state) => state.validation)
+  const validation = useInventoryStore((state) => state.validation);
 
-  console.log('validation', validation)
+  console.log("validation", validation);
 
   return (
     <div>
@@ -32,16 +33,13 @@ export default function ProductViewItem () {
         <div className="flex flex-col gap-4 w-full">
           <div className="flex gap-4">
             <div className="grid gap-4">
-              <img
-                src={thumbnail || '/fallback.png'}
-                className="rounded-md w-[380px] "
-              />
+              <ImageSave src={thumbnail} />
               <div className="flex gap-2 items-center">
                 <Checkbox
                   id="onSale"
                   defaultChecked
                   checked={onSale}
-                  onCheckedChange={(value) => handleSelect('onSale', value)}
+                  onCheckedChange={(value) => handleSelect("onSale", value)}
                 />
                 <Label htmlFor="onSale ">On sale</Label>
               </div>
@@ -55,7 +53,7 @@ export default function ProductViewItem () {
                   type="text"
                   placeholder="Name"
                   value={name}
-                  onChange={(e) => handleInputChange('name', e)}
+                  onChange={(e) => handleInputChange("name", e)}
                 />
               </div>
               <div className="grid gap-2">
@@ -65,7 +63,7 @@ export default function ProductViewItem () {
                   type="number"
                   placeholder="123456"
                   value={code}
-                  onChange={(e) => handleInputChange('code', e)}
+                  onChange={(e) => handleInputChange("code", e)}
                 />
               </div>
               <div className="grid gap-2">
@@ -75,7 +73,7 @@ export default function ProductViewItem () {
                   type="number"
                   placeholder="0"
                   value={stock}
-                  onChange={(e) => handleInputChange('stock', e)}
+                  onChange={(e) => handleInputChange("stock", e)}
                 />
               </div>
             </div>
@@ -99,5 +97,5 @@ export default function ProductViewItem () {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

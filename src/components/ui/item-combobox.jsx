@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
-import { Tags } from 'lucide-react'
+import React, { useState } from "react";
+import { Tags } from "lucide-react";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
-} from '@/components/ui/command'
+  CommandList,
+} from "@/components/ui/command";
 import {
   DropdownMenuSub,
   DropdownMenuSubContent,
-  DropdownMenuSubTrigger
-} from '@/components/ui/dropdown-menu'
+  DropdownMenuSubTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const ItemCombobox = ({ name, label, items, onSelect }) => {
   return (
@@ -33,7 +33,7 @@ export const ItemCombobox = ({ name, label, items, onSelect }) => {
             <CommandGroup>
               {items.map((item) => (
                 <CommandItem
-                className='text-white'
+                  className="text-white"
                   key={item.id}
                   value={item.name}
                   onSelect={(value) => onSelect({ name, key: item.id, value })}
@@ -46,5 +46,5 @@ export const ItemCombobox = ({ name, label, items, onSelect }) => {
         </Command>
       </DropdownMenuSubContent>
     </DropdownMenuSub>
-  )
-}
+  );
+};
