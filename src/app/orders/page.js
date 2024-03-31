@@ -5,6 +5,8 @@ import CardItem from '@/components/ui/card-item'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { SearchItem } from '@/components/ui/search'
+import OrderList from '@/components/orders/order-list'
+import { Button } from '@/components/ui/button'
 
 const OptionItem = ({ children }) => (
   <div className="border p-2 flex items-center justify-center hover:bg-muted/50 transition-colors hover:cursor-pointer">
@@ -18,12 +20,19 @@ export default function PurchasesPage () {
   return (
     <div className="grid gap-4">
       <div className="flex">
-        <div className="relative w-1/3">
-          <ShoppingCart />
-          <Badge className="absolute bottom-6 left-4">3</Badge>
+        <div className="flex justify-between w-1/3 items-center">
+          <div className="relative">
+            <ShoppingCart />
+            <Badge className="absolute bottom-4 left-4">3</Badge>
+          </div>
+          <div className="flex gap-2">
+            <Button>Income / Expense</Button>
+            <Button>Orders</Button>
+          </div>
         </div>
-        <div className="w-2/3 ml-4">
+        <div className="w-2/3 ml-4 flex justify-between items-center">
           <SearchItem placeholder="Search products" />
+          <Button>Exit</Button>
         </div>
       </div>
       <div className="flex w-full h-[82vh]">
@@ -37,137 +46,23 @@ export default function PurchasesPage () {
               </div>
                 )
               : (
-              <div className="grid">
-                <div className="flex justify-between items-center p-2 bg-muted">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
+                  <OrderList />
                 </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2 ">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
-                </div>
-                <div className="flex justify-between items-center p-2">
-                  <div>
-                    <p className="text-sm font-bold">Product 1</p>
-                    <div className="flex gap-1">
-                      <p className="text-sm">2</p>
-                      <p className="text-sm">Units x $ 0.25</p>
-                    </div>
-                  </div>
-                  <p className="text-sm">$ 0.5</p>
+                <div className="text-right mr-2 mb-2">
+                  <p className="font-bold">Total: $ 10.00 </p>
+                  <p>Impuesto: $ 10.00 </p>
                 </div>
               </div>
                 )}
