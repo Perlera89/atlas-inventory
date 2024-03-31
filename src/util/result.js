@@ -1,4 +1,4 @@
-import ResultItem from '@/components/ui/display/result'
+import ResultItem from '@/components/display/result'
 import { useInventoryStore } from '@/store/inventory'
 
 export default function Result () {

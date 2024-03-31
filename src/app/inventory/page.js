@@ -8,8 +8,8 @@ import { LuBoxes, LuShoppingCart } from 'react-icons/lu'
 // hooks
 import { useInventoryStore } from '@/store/inventory'
 import { ProductsItem } from '../../components/inventory/products'
-import CardCountItem from '@/components/ui/display/card-count'
-import ResultItem from '@/components/ui/display/result'
+import CardCountItem from '@/components/display/card-count'
+import ResultItem from '@/components/display/result'
 
 export default function InventoryPage () {
   const productCount = useInventoryStore((state) => state.productCount)

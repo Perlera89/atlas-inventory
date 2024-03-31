@@ -13,6 +13,9 @@ export async function GET () {
       productInfo: {
         select: {
           name: true,
+          categoryId: true,
+          brandId: true,
+          areaId: true,
           thumbnail: true,
           typeId: true
         }

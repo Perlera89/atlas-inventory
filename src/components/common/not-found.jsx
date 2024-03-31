@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import { Button } from '../button'
+import { Button } from '../ui/button'
 export default function NotFoundItem () {
   const currentPage = usePathname()
   return (
@@ -28,7 +28,7 @@ export default function NotFoundItem () {
         className="mt-2"
         onClick={() => window.history.back()}
       >
-        Home
+        Back
       </Button>
     </div>
   )

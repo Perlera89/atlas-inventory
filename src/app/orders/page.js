@@ -9,7 +9,7 @@ import OrderList from '@/components/orders/order-list'
 import { Button } from '@/components/ui/button'
 
 const OptionItem = ({ children }) => (
-  <div className="border p-2 flex items-center justify-center hover:bg-muted/50 transition-colors hover:cursor-pointer">
+  <div className="border p-2 content-center text-center hover:bg-muted/50 transition-colors hover:cursor-pointer">
     {children}
   </div>
 )

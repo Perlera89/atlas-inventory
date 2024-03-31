@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import NavBar from './nav'
 import { usePathname } from 'next/navigation'
+import { ModeToggle } from '@/components/ui/dark-toogle'
 
 import {
   DropdownMenu,
@@ -20,7 +21,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 
@@ -55,6 +55,7 @@ export default function HeaderLayout () {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+      <ModeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

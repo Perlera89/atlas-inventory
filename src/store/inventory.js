@@ -12,8 +12,9 @@ import {
 import trimStart from '@/util/trimStart'
 
 export const useInventoryStore = create((set, get) => {
-  const editHandler = (state) => {
+  const editHandler = async (state) => {
     set({ ...state, action: 'edit' })
+    await get().handleValidation()
   }
 
   const initialState = {
@@ -50,8 +51,8 @@ export const useInventoryStore = create((set, get) => {
     selectedTags: '',
     safetyInfo: '',
     description: '',
-    validation: false,
-    allFieldsValidated: false
+    validationItems: {},
+    validationValues: false
   }
 
   const { products, action, ...initialStateWithoutProducts } = initialState
@@ -60,6 +61,7 @@ export const useInventoryStore = create((set, get) => {
 
   const handlers = {
     handleInputChange: (field, event, isTrim = false) => {
+      get().handleValidation()
       const value = isTrim ? trimStart(event.target.value) : event.target.value
       editHandler({ [field]: value })
     },
@@ -254,9 +256,17 @@ export const useInventoryStore = create((set, get) => {
       }
     },
     handleFilterByFilters: (filters) => {
-      console.log('filtros', filters)
       Object.entries(filters).map(([filterName, filterValues]) =>
-        console.log('first', filterName, filterValues)
+        filterValues.length > 0
+          ? set((prevState) => ({
+            ...prevState,
+            products: prevState.allProducts.filter((product) =>
+              filterValues.some((filter) => filter.id === product.productInfo[filterName])
+            )
+          }))
+          : set((prevState) => ({
+            products: prevState.allProducts
+          }))
       )
     },
     handleError: (err) => {
@@ -267,6 +277,38 @@ export const useInventoryStore = create((set, get) => {
       await get().fetchBrands()
       await get().fetchCategories()
       await get().fetchTags()
+    },
+    handleValidation: () => {
+      const {
+        name,
+        code,
+        stock,
+        price,
+        cost,
+        minimumPrice,
+        minimumStock,
+        iva,
+        category,
+        brand,
+        area
+      } = get()
+
+      const validationItems = {
+        name: name.length >= 3,
+        code: Number(code) > 0,
+        stock: Number(stock) > 0,
+        price: Number(price) > 0,
+        cost: Number(cost) > 0,
+        minimumPrice: Number(minimumPrice) > 0,
+        minimumStock: Number(minimumStock) > 0,
+        iva: Number(iva) > 0,
+        category: !!category,
+        brand: !!brand,
+        area: !!area
+      }
+
+      const validationValues = Object.values(validationItems).every(value => value)
+      set({ validationItems, validationValues })
     }
   }
 
@@ -332,6 +374,7 @@ export const useInventoryStore = create((set, get) => {
     ...fetchFuctions,
     setOnSale: (onSale) => set({ onSale }),
     setError: (error) => set({ error }),
+    setValidation: (validation) => set({ validation }),
     setAction: (action) => set({ action })
   }
 })

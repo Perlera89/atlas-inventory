@@ -18,7 +18,7 @@ export default function GeneralTab () {
     <div className="flex flex-col gap-2 mt-4">
       <div className="flex justify-between gap-2">
         <div className="grid gap-2">
-          <Label htmlFor="price">Sale price</Label>
+          <Label htmlFor="price">Sale price <span className="text-red-500">*</span></Label>
           <Input
             id="price"
             type="number"
@@ -28,7 +28,7 @@ export default function GeneralTab () {
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="cost">Purchase price</Label>
+          <Label htmlFor="cost">Purchase price <span className="text-red-500">*</span></Label>
           <Input
             id="cost"
             type="number"
@@ -40,7 +40,7 @@ export default function GeneralTab () {
       </div>
       <div className="flex justify-between gap-2">
         <div className="grid gap-2">
-          <Label htmlFor="temperature">Minimum price</Label>
+          <Label htmlFor="temperature">Minimum price <span className="text-red-500">*</span></Label>
           <Input
             id="temperature"
             type="number"
@@ -50,7 +50,7 @@ export default function GeneralTab () {
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="temperature">IVA</Label>
+          <Label htmlFor="temperature">IVA <span className="text-red-500">*</span></Label>
           <Input
             id="temperature"
             type="number"
@@ -61,7 +61,7 @@ export default function GeneralTab () {
         </div>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="temperature">Minimum stock</Label>
+        <Label htmlFor="temperature">Minimum stock <span className="text-red-500">*</span></Label>
         <Input
           id="temperature"
           type="number"

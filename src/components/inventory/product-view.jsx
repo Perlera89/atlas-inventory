@@ -1,31 +1,32 @@
-import { useInventoryStore } from "@/store/inventory";
+import { useInventoryStore } from '@/store/inventory'
 
-import GeneralTab from "./tabs/general-tab";
-import TagsTab from "./tabs/tags-tab";
-import ExtraTab from "./tabs/extra-tab";
-import { Checkbox } from "@/components/ui/checkbox";
+import GeneralTab from './tabs/general-tab'
+import TagsTab from './tabs/tags-tab'
+import ExtraTab from './tabs/extra-tab'
+import { Checkbox } from '@/components/ui/checkbox'
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageSave } from "../ui/display/imagedragdrop";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ImageSave } from '../display/imagedragdrop'
 
-export default function ProductViewItem() {
-  const name = useInventoryStore((state) => state.name);
-  const thumbnail = useInventoryStore((state) => state.thumbnail);
-  const code = useInventoryStore((state) => state.code);
-  const stock = useInventoryStore((state) => state.stock);
-  const onSale = useInventoryStore((state) => state.onSale);
+import { Info } from 'lucide-react'
+import Tooltip from '../ui/tooltip-validation'
+
+export default function ProductViewItem () {
+  const name = useInventoryStore((state) => state.name)
+  const thumbnail = useInventoryStore((state) => state.thumbnail)
+  const code = useInventoryStore((state) => state.code)
+  const stock = useInventoryStore((state) => state.stock)
+  const onSale = useInventoryStore((state) => state.onSale)
   const handleInputChange = useInventoryStore(
     (state) => state.handleInputChange
-  );
+  )
 
-  const handleSelect = useInventoryStore((state) => state.handleSelect);
+  const validationItems = useInventoryStore((state) => state.validationItems)
 
-  const validation = useInventoryStore((state) => state.validation);
-
-  console.log("validation", validation);
+  const handleSelect = useInventoryStore((state) => state.handleSelect)
 
   return (
     <div>
@@ -39,41 +40,47 @@ export default function ProductViewItem() {
                   id="onSale"
                   defaultChecked
                   checked={onSale}
-                  onCheckedChange={(value) => handleSelect("onSale", value)}
+                  onCheckedChange={(value) => handleSelect('onSale', value)}
                 />
                 <Label htmlFor="onSale ">On sale</Label>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 w-full align-middle">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Product name</Label>
+              <div className="grid gap-2 relative">
+                <Label htmlFor="name">
+                  Product name <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="name"
                   type="text"
                   placeholder="Name"
                   value={name}
-                  onChange={(e) => handleInputChange("name", e)}
+                  onChange={(e) => handleInputChange('name', e)}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="code">Code</Label>
+                <Label htmlFor="code">
+                  Code <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="code"
                   type="number"
                   placeholder="123456"
                   value={code}
-                  onChange={(e) => handleInputChange("code", e)}
+                  onChange={(e) => handleInputChange('code', e)}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="stock">Stock</Label>
+                <Label htmlFor="stock">
+                  Stock <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="stock"
                   type="number"
                   placeholder="0"
                   value={stock}
-                  onChange={(e) => handleInputChange("stock", e)}
+                  onChange={(e) => handleInputChange('stock', e)}
                 />
               </div>
             </div>
@@ -97,5 +104,5 @@ export default function ProductViewItem() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

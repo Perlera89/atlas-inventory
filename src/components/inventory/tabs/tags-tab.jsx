@@ -1,4 +1,3 @@
-import MultipleSelectItem from '@/components/ui/entry/multiple-select'
 import { useInventoryStore } from '@/store/inventory'
 
 import {
@@ -13,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus } from 'lucide-react'
+import { Label } from '@/components/ui/label'
 
 export default function TagsTab () {
   const product = useInventoryStore((state) => state.product)
@@ -33,108 +33,133 @@ export default function TagsTab () {
 
   return (
     <div>
-      <div className="flex flex-col gap-2 mt-4">
-        <Select
-          defaultValue={1}
-          onValueChange={(value) => handleSelect('type', value)}
-          value={type}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Types</SelectLabel>
-              <SelectItem value={1}>Consumable</SelectItem>
-              <SelectItem value={2}>Storable</SelectItem>
-              <SelectItem value={3}>Service</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          required
-          onValueChange={(value) => handleSelect('category', value)}
-          value={category}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Categories</SelectLabel>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          onValueChange={(value) => handleSelect('brand', value)}
-          value={brand}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select brand" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {brands.map((brand) => (
-                <SelectItem key={brand.id} value={brand.id}>
-                  {brand.name}
-                </SelectItem>
-              ))}
-              <hr className='my-4' />
-              <div className="flex items-center gap-2">
-                <Input placeholder="Add brand" className="bg-transparent" />
-                <Button>
-                  <Plus />
-                </Button>
-              </div>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          onValueChange={(value) => handleSelect('area', value)}
-          value={area}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select area" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Areas</SelectLabel>
-              {areas.map((area) => (
-                <SelectItem key={area.id} value={area.id}>
-                  {area.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          onValueChange={(value) => handleSelect('tags', value)}
-          value={selectedTags}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select tags" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Tags</SelectLabel>
-              {tags.map((tag) => (
-                <SelectItem key={tag.id} value={tag.id}>
-                  {tag.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <MultipleSelectItem placeholder="Hola" options={brands} value={brand} />
+      <div className="grid grid-cols-2 gap-2 mt-4">
+        <div className="col-span-1 grid gap-2">
+          <div className="grid gap-2">
+            <Label htmlFor="type">
+              Type <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              id="type"
+              defaultValue={1}
+              onValueChange={(value) => handleSelect('type', value)}
+              value={type}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={1}>Consumable</SelectItem>
+                  <SelectItem value={2}>Storable</SelectItem>
+                  <SelectItem value={3}>Service</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="category">
+              Category <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              id="category"
+              required
+              onValueChange={(value) => handleSelect('category', value)}
+              value={category}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categories</SelectLabel>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="col-span-1 grid gap-2">
+          <div className="grid gap-2">
+            <Label htmlFor="brand">
+              Brand <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              id="brand"
+              onValueChange={(value) => handleSelect('brand', value)}
+              value={brand}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select brand" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="area">
+              Area <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              id="area"
+              onValueChange={(value) => handleSelect('area', value)}
+              value={area}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select area" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {areas.map((area) => (
+                    <SelectItem key={area.id} value={area.id}>
+                      {area.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="grid gap-2 col-span-2">
+          <Label htmlFor="tags">
+            Tags <span className="text-red-500">*</span>
+          </Label>
+          <Select
+            id="tags"
+            onValueChange={(value) => handleSelect('tags', value)}
+            value={selectedTags}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select tags" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {tags > 0
+                  ? tags.map((tag) => (
+                  <SelectItem key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </SelectItem>
+                  ))
+                  : <p className='text-foreground/70 text-sm text-center py-2'>No tags</p>}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   )

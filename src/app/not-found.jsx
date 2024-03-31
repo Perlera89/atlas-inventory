@@ -1,4 +1,4 @@
-import NotFoundItem from '@/components/ui/common/not-found'
+import NotFoundItem from '@/components/common/not-found'
 
 const NotFoundPage = () => <NotFoundItem />
 

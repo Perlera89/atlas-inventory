@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useInventoryStore } from '@/store/inventory'
 
@@ -12,16 +13,24 @@ export default function ExtraTab () {
 
   return (
     <div className="grid gap-2 mt-4">
-      <Textarea
-        placeholder="Safety information."
-        value={safetyInfo}
-        onChange={(e) => handleInputChange('safetyInfo', e)}
-      />
-      <Textarea
-        placeholder="Description"
-        value={description}
-        onChange={(e) => handleInputChange('description', e)}
-      />
+      <div className="grid gap-2">
+        <Label htmlFor="safetyInfo">Description</Label>
+        <Textarea
+          id="safetyInfo"
+          placeholder="Emtpy"
+          value={safetyInfo}
+          onChange={(e) => handleInputChange('safetyInfo', e)}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="description">Safety info</Label>
+        <Textarea
+          id="description"
+          placeholder="Empty"
+          value={description}
+          onChange={(e) => handleInputChange('description', e)}
+        />
+      </div>
     </div>
   )
 }
