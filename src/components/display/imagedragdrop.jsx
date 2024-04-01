@@ -17,7 +17,7 @@ export function ImageSave ({ src }) {
 
   return (
     <>
-      {imagesUrl === undefined && src === '/fallback.png'
+      {imagesUrl === undefined && src === '/placeholder.svg'
         ? (
         <div className="group/item w-full h-full flex items-center justify-center align-top flex-wrap relative">
           <label

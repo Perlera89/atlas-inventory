@@ -13,7 +13,7 @@ export default function CardProduct ({ image, name, stock, price, onClick }) {
           width={75}
           height={75}
           preview={false}
-          fallback="/fallback.png"
+          fallback="/placeholder.svg"
           src={image}
         />
         <div>

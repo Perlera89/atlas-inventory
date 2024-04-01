@@ -39,10 +39,10 @@
     --background: 240, 10%, 3.92%;
     --foreground: 0 0% 70%;
 
-    --muted: 0 0% 20%;
+    --muted: 0 0% 15%;
     --muted-foreground: 0, 0%, 100%;
 
-    --accent: 240, 6.67%, 8.82%;
+    --accent: 0 0% 20%;
     --accent-foreground: 0 0% 70%;
 
     --popover: 0 0% 5%;
@@ -50,7 +50,7 @@
 
     --input: 0 0% 20%;
 
-    --card: 0 0% 0%;
+    --card: 0 0% 20%;
     --card-foreground: 0 0% 70%;
 
     --primary: 210 40% 98%;

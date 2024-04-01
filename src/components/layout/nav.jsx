@@ -1,46 +1,89 @@
 'use client'
 import {
-  Home,
-  LineChart,
-  Package,
+  Pyramid,
   ShoppingCart,
-  Users,
-  Triangle
+  Home,
+  Package,
+  LineChart,
+  Settings,
+  User
 } from 'lucide-react'
+
+import { ModeToggle } from '@/components/ui/dark-toogle'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import TooltipItem from '../display/tooltip'
+
 import Link from 'next/link'
 
 import { usePathname } from 'next/navigation'
+import { Button } from '../ui/button'
 
 export default function NavBar () {
   const router = usePathname()
 
   return (
-    <nav className="grid items-start px-2 text-sm gap-1 mt-2 font-medium lg:px-4">
-      <Link
-        href="#"
-        className="flex items-center gap-2 sm:block md:hidden pb-4 ml-2 text-lg font-semibold"
-      >
-        <Triangle className="h-6 w-6" />
-        <span className="sr-only">Atlas inventory</span>
-      </Link>
-      {[
-        [Home, 'Dashboard', '/'],
-        [ShoppingCart, 'Orders', '/orders'],
-        [Package, 'Inventory', '/inventory'],
-        [Users, 'Customers', '/customers'],
-        [LineChart, 'Analytics', '/analytics']
-      ].map(([Icon, label, href]) => (
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          key={label}
-          href={href}
-          className={`flex hover:text-muted-foreground items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-            router === href && 'bg-muted text-muted-foreground'
-          }`}
+          href="#"
+          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <Icon className="h-4 w-4" />
-          {label}
+          <Pyramid className="h-4 w-4 transition-all group-hover:scale-110" />
+          <span className="sr-only">Atlas Inv.</span>
         </Link>
-      ))}
-    </nav>
+        {[
+          ['/', 'Dashboard', Home],
+          ['/orders', 'Orders', ShoppingCart],
+          ['/inventory', 'Products', Package],
+          ['/analytics', 'Analytics', LineChart]
+        ].map(([href, label, Icon]) => (
+          <TooltipItem content={label} key={label}>
+            <Link
+              href={href}
+              className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 ${router === href ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'}`}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="sr-only">{label}</span>
+            </Link>
+          </TooltipItem>
+        ))}
+      </nav>
+      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+        <ModeToggle />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="rounded-full">
+              <User className="h-5 w-5 text-foreground/70" />
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <TooltipItem>
+          <Link
+            href="#"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+          >
+            <Settings className="h-5 w-5" />
+            <span className="sr-only">Settings</span>
+          </Link>
+        </TooltipItem>
+      </nav>
+    </aside>
   )
 }

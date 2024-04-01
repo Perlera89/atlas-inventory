@@ -41,19 +41,6 @@ export default function HeaderLayout () {
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink className='text-foreground/70' href="/" >Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink className="capitalize" href={pathname}>
-                {pathname.split('/')[1]}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
       </div>
       <ModeToggle />
       <DropdownMenu>

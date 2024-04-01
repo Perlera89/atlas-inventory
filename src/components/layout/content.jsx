@@ -7,14 +7,11 @@ import HeaderLayout from './header'
 
 export default function ContentLayout ({ children }) {
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="flex min-h-screen w-full bg-background">
       <SidebarLayout />
-      <div className="flex flex-col">
-        <HeaderLayout />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+      <main className="flex flex-1 flex-col gap-4 p-4 ml-14">
           {children}
         </main>
-      </div>
     </div>
   )
 }

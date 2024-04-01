@@ -5,15 +5,15 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip'
 
-export default function TooltipValidation ({ message, side = 'right', children, hidden = false }) {
+export default function TooltipItem ({ content, side = 'right', children }) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
             {children}
         </TooltipTrigger>
-        <TooltipContent side={side} hidden={hidden}>
-          <p>{message}</p>
+        <TooltipContent side={side}>
+          <p>{content}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

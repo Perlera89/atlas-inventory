@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ImageSave } from '../display/imagedragdrop'
 
 import { Info } from 'lucide-react'
-import Tooltip from '../ui/tooltip-validation'
+import Tooltip from '../display/tooltip'
 
 export default function ProductViewItem () {
   const name = useInventoryStore((state) => state.name)

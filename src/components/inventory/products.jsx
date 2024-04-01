@@ -5,13 +5,11 @@ import { useEffect, useState } from 'react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { Button } from '@/components/ui/button'
-import { Search, Menu, LayoutGrid, Trash } from 'lucide-react'
-import { Input } from '../ui/input'
+import { Menu, LayoutGrid, Trash } from 'lucide-react'
 import { ComboboxDropdownMenu } from '@/components/ui/combobox'
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
   DialogFooter
 } from '../ui/dialog'
 
@@ -22,7 +20,6 @@ import { SearchItem } from '../ui/search'
 export function ProductsItem () {
   const action = useInventoryStore((state) => state.action)
   const name = useInventoryStore((state) => state.name)
-  const code = useInventoryStore((state) => state.code)
   const products = useInventoryStore((state) => state.products)
   const allProducts = useInventoryStore((state) => state.allProducts)
   const openProduct = useInventoryStore((state) => state.openProduct)
@@ -63,8 +60,12 @@ export function ProductsItem () {
   }
 
   useEffect(() => {
-    fetchProducts()
-    fetchSelects()
+    const fetchData = async () => {
+      await fetchProducts()
+      await fetchSelects()
+    }
+
+    fetchData()
   }, [])
 
   return (
