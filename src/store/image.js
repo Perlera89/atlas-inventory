@@ -1,64 +1,59 @@
-import { useState } from 'react'
+import { create } from 'zustand'
 
-export function useImagePreview () {
-  const [imagesUrl, setImagesUrl] = useState()
-  const [file, setfile] = useState(null)
-  const [isDragging, setDragging] = useState(false)
-  const handleDragLeave = () => { setDragging(false) }
-  const handleDeletePreview = () => { generateImagePreview(null); setfile(null) }
-
-  const generateImagePreview = (files) => {
+export const useImageStore = create((set) => ({
+  imagesUrl: null,
+  file: null,
+  isDragging: false,
+  handleDragLeave: () => set({ isDragging: false }),
+  handleDeletePreview: () => {
+    set({ imagesUrl: null, file: null })
+  },
+  generateImagePreview: (files) => {
     if (!files || files.length === 0) {
-      setImagesUrl(undefined)
+      set({ imagesUrl: null })
       return
     }
-    const imagesPreview = URL.createObjectURL(files['0'])
-    setImagesUrl(imagesPreview)
-  }
-  const handleFiles = (fileList) => {
-    console.log('fileList', fileList['0'])
+    const imagesPreview = URL.createObjectURL(files[0])
+    set({ imagesUrl: imagesPreview })
+  },
+  handleFiles: (fileList) => {
     if (
       !fileList ||
-      !Array.from(fileList).every((file) => file.type.startsWith('image/png'))
+      !Array.from(fileList).every((file) => file.type.startsWith('image/'))
     ) {
-      generateImagePreview(null)
+      set({ imagesUrl: null })
       return
     }
-    generateImagePreview(fileList)
-    setfile(fileList)
-  }
-
-  const handleChange = (event) => {
+    set({ imagesUrl: URL.createObjectURL(fileList[0]), file: fileList })
+  },
+  handleChange: (event) => {
     event.preventDefault()
-    if (event.target?.files) handleFiles(event.target.files)
-  }
-
-  const handleDragOver = (event) => {
-    event.preventDefault()
-    setDragging(true)
-  }
-
-  const handleDrop = (event) => {
-    event.preventDefault()
-    setDragging(false)
-    handleFiles(event.dataTransfer.files)
-  }
-
-  const handleUploadImage = async () => {
-    if (file != null) {
-      const fg = new FormData()
-      fg.set('file', file['0'])
-      fetch('/api/upload', {
-        method: 'POST',
-        body: fg
-      })
-      generateImagePreview(null)
-      setfile(null)
-      return
+    if (event.target?.files) {
+      set((state) => state.handleFiles(event.target.files))
     }
-
-    console.log('pos no hago nada washo')
+  },
+  handleDragOver: (event) => {
+    event.preventDefault()
+    set({ isDragging: true })
+  },
+  handleDrop: (event) => {
+    event.preventDefault()
+    set({ isDragging: false })
+    set((state) => state.handleFiles(event.dataTransfer.files))
+  },
+  handleUploadImage: async () => {
+    set((state) => {
+      if (state.file != null) {
+        const fg = new FormData()
+        fg.set('file', state.file[0])
+        fetch('/api/upload', {
+          method: 'POST',
+          body: fg
+        })
+        set({ imagesUrl: null, file: null })
+        return
+      }
+      console.log('pos no hago nada washo')
+    })
   }
-
-  return { imagesUrl, handleChange, handleDeletePreview, isDragging, handleDragLeave, handleDragOver, handleDrop, handleUploadImage }
-}
+}))

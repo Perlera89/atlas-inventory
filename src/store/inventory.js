@@ -31,7 +31,7 @@ export const useInventoryStore = create((set, get) => {
     openProduct: false,
     id: null,
     name: '',
-    thumbnail: '/fallback.png',
+    thumbnail: '/placeholder.svg',
     code: '',
     stock: '',
     onSale: true,

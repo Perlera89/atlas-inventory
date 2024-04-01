@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ImageSave } from '../display/imagedragdrop'
+import { ImageSave } from '../display/drag-image'
 
 import { Info } from 'lucide-react'
 import Tooltip from '../display/tooltip'

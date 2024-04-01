@@ -78,7 +78,7 @@ export function ProductsItem () {
 
           <form className="w-full">
             <SearchItem
-              placeholder="Buscar producto..."
+              placeholder="Search product..."
               options={allProducts}
               onSearch={handleSearchProduct}
             />
