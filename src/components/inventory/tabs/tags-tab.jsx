@@ -9,21 +9,16 @@ import {
   SelectItem,
   SelectValue
 } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 
 export default function TagsTab () {
   const product = useInventoryStore((state) => state.product)
   const action = useInventoryStore((state) => state.action)
-
   const type = useInventoryStore((state) => state.type)
   const category = useInventoryStore((state) => state.category)
   const brand = useInventoryStore((state) => state.brand)
   const area = useInventoryStore((state) => state.area)
   const selectedTags = useInventoryStore((state) => state.selectedTags)
-
   const categories = useInventoryStore((state) => state.categories)
   const brands = useInventoryStore((state) => state.brands)
   const areas = useInventoryStore((state) => state.areas)
@@ -37,7 +32,7 @@ export default function TagsTab () {
         <div className="col-span-1 grid gap-2">
           <div className="grid gap-2">
             <Label htmlFor="type">
-              Type <span className="text-red-500">*</span>
+              Type
             </Label>
             <Select
               id="type"
@@ -60,13 +55,13 @@ export default function TagsTab () {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="category">
-              Category <span className="text-red-500">*</span>
+              Category
             </Label>
             <Select
               id="category"
-              required
               onValueChange={(value) => handleSelect('category', value)}
               value={category}
+              required
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
@@ -87,7 +82,7 @@ export default function TagsTab () {
         <div className="col-span-1 grid gap-2">
           <div className="grid gap-2">
             <Label htmlFor="brand">
-              Brand <span className="text-red-500">*</span>
+              Brand
             </Label>
             <Select
               id="brand"
@@ -111,7 +106,7 @@ export default function TagsTab () {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="area">
-              Area <span className="text-red-500">*</span>
+              Area
             </Label>
             <Select
               id="area"
@@ -136,7 +131,7 @@ export default function TagsTab () {
         </div>
         <div className="grid gap-2 col-span-2">
           <Label htmlFor="tags">
-            Tags <span className="text-red-500">*</span>
+            Tags
           </Label>
           <Select
             id="tags"

@@ -87,3 +87,11 @@
     border-radius: 15px;
   }
 }
+
+label:has(+ [required]) {
+  &::after {
+    content: "*";
+    color: rgb(239 68 68);
+    margin-left: 4px;
+  }
+}

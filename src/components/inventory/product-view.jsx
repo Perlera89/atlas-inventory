@@ -49,7 +49,7 @@ export default function ProductViewItem () {
             <div className="flex flex-col gap-2 w-full align-middle">
               <div className="grid gap-2 relative">
                 <Label htmlFor="name">
-                  Product name <span className="text-red-500">*</span>
+                  Product name
                 </Label>
                 <Input
                   id="name"
@@ -57,11 +57,12 @@ export default function ProductViewItem () {
                   placeholder="Name"
                   value={name}
                   onChange={(e) => handleInputChange('name', e)}
+                  required
                 />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="code">
-                  Code <span className="text-red-500">*</span>
+                  Code
                 </Label>
                 <Input
                   id="code"
@@ -69,11 +70,12 @@ export default function ProductViewItem () {
                   placeholder="123456"
                   value={code}
                   onChange={(e) => handleInputChange('code', e)}
+                  required
                 />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="stock">
-                  Stock <span className="text-red-500">*</span>
+                  Stock
                 </Label>
                 <Input
                   id="stock"
@@ -81,6 +83,7 @@ export default function ProductViewItem () {
                   placeholder="0"
                   value={stock}
                   onChange={(e) => handleInputChange('stock', e)}
+                  required
                 />
               </div>
             </div>
