@@ -55,7 +55,8 @@ const ImagePreview = ({ src, handleDeletePreview }) => (
 )
 
 export function ImageSave ({ src }) {
-  const imagesUrl = useImageStore((state) => state.imagesUrl)
+  const imagesUrl = useImageStore((state) => state.imagesUrl) || src
+
   const handleChange = useImageStore((state) => state.handleChange)
   const handleDeletePreview = useImageStore(
     (state) => state.handleDeletePreview
@@ -67,10 +68,10 @@ export function ImageSave ({ src }) {
 
   return (
     <>
-      {imagesUrl === null && src === '/placeholder.svg'
-        ? (
+      {imagesUrl === '/placeholder.svg'
+        ? (console.log('first', imagesUrl),
         <ImageChooser
-          src={src}
+          src={imagesUrl}
           handleDragOver={handleDragOver}
           handleDragLeave={handleDragLeave}
           handleDrop={handleDrop}
@@ -79,8 +80,9 @@ export function ImageSave ({ src }) {
         />
           )
         : (
+            console.log('second', imagesUrl),
         <ImagePreview
-          src={imagesUrl || src}
+          src={imagesUrl}
           handleDeletePreview={handleDeletePreview}
         />
           )}

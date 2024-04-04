@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
-export const useImageStore = create((set) => ({
-  imagesUrl: null,
+export const useImageStore = create((set, get) => ({
+  imagesUrl: '',
   file: null,
   isDragging: false,
   handleDragLeave: () => set({ isDragging: false }),
@@ -9,22 +9,26 @@ export const useImageStore = create((set) => ({
     set({ imagesUrl: null, file: null })
   },
   generateImagePreview: (files) => {
+    console.log('files', files)
     if (!files || files.length === 0) {
       set({ imagesUrl: null })
       return
     }
     const imagesPreview = URL.createObjectURL(files[0])
+
     set({ imagesUrl: imagesPreview })
   },
   handleFiles: (fileList) => {
+    console.log('event.dataTransfer.file', fileList[0])
     if (
       !fileList ||
       !Array.from(fileList).every((file) => file.type.startsWith('image/'))
     ) {
-      set({ imagesUrl: null })
+      set({ generateImagePreview: null })
       return
     }
-    set({ imagesUrl: URL.createObjectURL(fileList[0]), file: fileList })
+
+    set({ generateImagePreview: fileList, file: fileList })
   },
   handleChange: (event) => {
     event.preventDefault()
