@@ -1,9 +1,9 @@
 'use client'
 
-import ProductViewItem from '@/components/inventory/product-view'
+import ProductPage from '@/components/inventory/product'
 
 export default function AddProductPage () {
   return <>
-    <ProductViewItem />x
+    <ProductPage />
   </>
 }

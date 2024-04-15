@@ -13,7 +13,7 @@ export const metadata = {
 
 export default function RootLayout ({ children }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.svg" />
       </head>
@@ -25,7 +25,7 @@ export default function RootLayout ({ children }) {
           disableTransitionOnChange
         >
           <ContentLayout>{children}</ContentLayout>
-        </ThemeProvider>
+          </ThemeProvider>
       </body>
     </html>
   )

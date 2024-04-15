@@ -2,9 +2,10 @@ import { Search } from 'lucide-react'
 import React from 'react'
 import { Input } from './input'
 import Fuse from 'fuse.js'
+import { useDebouncedCallback } from 'use-debounce'
 
 export const SearchItem = ({ placeholder, onSearch, options }) => {
-  const handleSearch = (e) => {
+  const handleSearch = useDebouncedCallback((e) => {
     if (e.target.value) {
       const fuseOptions = {
         keys: ['productInfo.name'],
@@ -17,7 +18,8 @@ export const SearchItem = ({ placeholder, onSearch, options }) => {
     } else {
       onSearch(options)
     }
-  }
+  }, 500)
+
   return (
     <div className="relative w-full">
       <Search className="absolute left-2.5 top-[12px] h-4 w-4 text-muted-foreground" />

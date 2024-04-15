@@ -12,13 +12,9 @@ import {
 import trimStart from '@/util/trimStart'
 
 export const useInventoryStore = create((set, get) => {
-  const editHandler = async (state) => {
-    set({ ...state, action: 'edit' })
-    await get().handleValidation()
-  }
-
   const initialState = {
     allProducts: [],
+    lastProducts: [],
     products: [],
     productCount: 0,
     productOnSaleCount: 0,
@@ -28,10 +24,9 @@ export const useInventoryStore = create((set, get) => {
     action: 'view',
     error: '',
     openResult: false,
-    openProduct: false,
     id: null,
     name: '',
-    thumbnail: '/placeholder.svg',
+    thumbnail: '',
     code: '',
     stock: '',
     onSale: true,
@@ -55,6 +50,54 @@ export const useInventoryStore = create((set, get) => {
     validationValues: false
   }
 
+  const productData = () => {
+    const {
+      name,
+      code,
+      stock,
+      onSale,
+      thumbnail,
+      price,
+      cost,
+      minimumPrice,
+      minimumStock,
+      iva,
+      type,
+      category,
+      brand,
+      area,
+      tags,
+      safetyInfo,
+      description
+    } = get()
+
+    return {
+      name,
+      code,
+      stock,
+      onSale,
+      thumbnail: thumbnail.replace('blob:', ''),
+      salePrice: price,
+      purchasePrice: cost,
+      minimumPrice,
+      minimumStock,
+      iva,
+      type,
+      category,
+      brand,
+      area,
+      tags,
+      safetyInfo,
+      description
+    }
+  }
+
+  const editHandler = async (state) => {
+    set({ ...state, action: 'edit' })
+    await get().handleValidation()
+    console.log('productData()', productData())
+  }
+
   const { products, action, ...initialStateWithoutProducts } = initialState
 
   const clearState = () => set(initialStateWithoutProducts)
@@ -71,94 +114,9 @@ export const useInventoryStore = create((set, get) => {
     },
     handleSelect: (field, value) => editHandler({ [field]: value }),
     handleChangeView: (value) => set({ view: value }),
-    handleOpenProduct: async (id) => {
-      set({ openProduct: true })
-      get().fetchCategories()
-      get().fetchBrands()
-      get().fetchAreas()
-      get().fetchTags()
-      if (id) {
-        await axios
-          .get(`${PRODUCTS_ROOT}/${id}`)
-          .then((res) => {
-            const productData = res.data
-            set({
-              openProduct: true,
-              id: productData.id,
-              infoId: productData.productInfo.id,
-              name: productData.productInfo.name,
-              thumbnail: productData.productInfo.thumbnail,
-              code: productData.code,
-              stock: productData.stock,
-              onSale: productData.isOnSale,
-              price: productData.salePrice,
-              cost: productData.purchasePrice,
-              minimumPrice: productData.minimumPrice,
-              minimumStock: productData.productInfo.minimumStock,
-              iva: productData.iva * 100,
-              type: productData.productInfo.type.id,
-              category: productData.productInfo.category.id,
-              brand: productData.productInfo.brand.id,
-              area: productData.productInfo.area.id,
-              selectedTags: productData.productInfo.tagDetails.map(
-                (tagDetail) => tagDetail.tag.id
-              ),
-              safetyInfo: productData.productInfo.safetyInfo,
-              description: productData.productInfo.description
-            })
-          })
-          .catch((err) => {
-            get().handleError(err)
-          })
-      } else {
-        set({ openProduct: true })
-        clearState()
-        get().fetchProducts()
-      }
-    },
-    handleCloseProduct: () => {
-      set({ openProduct: false })
-    },
     handleSaveProduct: async () => {
+      const data = productData()
       if (get().id) {
-        const {
-          name,
-          code,
-          stock,
-          onSale,
-          thumbnail,
-          price,
-          cost,
-          minimumPrice,
-          minimumStock,
-          iva,
-          type,
-          category,
-          brand,
-          area,
-          selectedTags,
-          safetyInfo,
-          description
-        } = get()
-        const data = {
-          name,
-          code,
-          stock,
-          onSale,
-          thumbnail,
-          salePrice: price,
-          purchasePrice: cost,
-          minimumPrice,
-          minimumStock,
-          iva,
-          type,
-          category,
-          brand,
-          area,
-          tagDetails: selectedTags.map((tag) => ({ tag })),
-          safetyInfo,
-          description
-        }
         await axios
           .put(`${PRODUCTS_ROOT}/${get().id}`, data)
           .then((res) => {
@@ -169,44 +127,6 @@ export const useInventoryStore = create((set, get) => {
             get().handleError(err)
           })
       } else {
-        const {
-          name,
-          code,
-          stock,
-          onSale,
-          thumbnail,
-          price,
-          cost,
-          minimumPrice,
-          minimumStock,
-          iva,
-          type,
-          category,
-          brand,
-          area,
-          tags,
-          safetyInfo,
-          description
-        } = get()
-        const data = {
-          name,
-          code,
-          stock,
-          onSale,
-          thumbnail,
-          salePrice: price,
-          purchasePrice: cost,
-          minimumPrice,
-          minimumStock,
-          iva,
-          type,
-          category,
-          brand,
-          area,
-          tags,
-          safetyInfo,
-          description
-        }
         await axios
           .post(PRODUCTS_ROOT, data)
           .then((res) => {
@@ -218,7 +138,7 @@ export const useInventoryStore = create((set, get) => {
           })
       }
       get().fetchProducts()
-      get().handleCloseProduct()
+      get().handleClearProduct()
     },
     handleDeleteProduct: async () => {
       console.log(get().id)
@@ -261,7 +181,9 @@ export const useInventoryStore = create((set, get) => {
           ? set((prevState) => ({
             ...prevState,
             products: prevState.allProducts.filter((product) =>
-              filterValues.some((filter) => filter.id === product.productInfo[filterName])
+              filterValues.some(
+                (filter) => filter.id === product.productInfo[filterName]
+              )
             )
           }))
           : set((prevState) => ({
@@ -271,12 +193,6 @@ export const useInventoryStore = create((set, get) => {
     },
     handleError: (err) => {
       set({ openResult: true, error: err })
-    },
-    fetchSelects: async () => {
-      await get().fetchAreas()
-      await get().fetchBrands()
-      await get().fetchCategories()
-      await get().fetchTags()
     },
     handleValidation: () => {
       const {
@@ -307,21 +223,27 @@ export const useInventoryStore = create((set, get) => {
         area: !!area
       }
 
-      const validationValues = Object.values(validationItems).every(value => value)
+      const validationValues = Object.values(validationItems).every(
+        (value) => value
+      )
       set({ validationItems, validationValues })
-    }
+    },
+    handleClearProduct: () => clearState()
   }
 
   const fetchFuctions = {
     fetchProducts: async () => {
+      const url = PRODUCTS_ROOT
+
       await axios
-        .get(PRODUCTS_ROOT)
+        .get(url)
         .then((res) => {
           const allProducts = res.data.filter((product) => !product.isDeleted)
           set(
             {
               allProducts,
               products: allProducts,
+              lastProducts: allProducts.reverse().slice(0, 10),
               productCount: allProducts.length,
               productOnSaleCount: allProducts.filter(
                 (product) => product.isOnSale
@@ -331,6 +253,40 @@ export const useInventoryStore = create((set, get) => {
             'FETCH_PRODUCTS'
           )
           console.log('products', allProducts)
+        })
+        .catch((err) => {
+          get().handleError(err)
+        })
+    },
+    fetchProduct: async (id) => {
+      await axios
+        .get(`${PRODUCTS_ROOT}/${id}`)
+        .then((res) => {
+          const productData = res.data
+          set({
+            openProduct: true,
+            id: productData.id,
+            infoId: productData.productInfo.id,
+            name: productData.productInfo.name,
+            thumbnail: productData.productInfo.thumbnail,
+            code: productData.code,
+            stock: productData.stock,
+            onSale: productData.isOnSale,
+            price: productData.salePrice,
+            cost: productData.purchasePrice,
+            minimumPrice: productData.minimumPrice,
+            minimumStock: productData.productInfo.minimumStock,
+            iva: productData.iva * 100,
+            type: productData.productInfo.type.id,
+            category: productData.productInfo.category.id,
+            brand: productData.productInfo.brand.id,
+            area: productData.productInfo.area.id,
+            selectedTags: productData.productInfo.tagDetails.map(
+              (tagDetail) => tagDetail.tag.id
+            ),
+            safetyInfo: productData.productInfo.safetyInfo,
+            description: productData.productInfo.description
+          })
         })
         .catch((err) => {
           get().handleError(err)
@@ -366,12 +322,26 @@ export const useInventoryStore = create((set, get) => {
           label: tag.name
         }))
       set({ tags }, false, 'FETCH_TAGS')
+    },
+    fetchSelects: async () => {
+      try {
+        await Promise.all([
+          get().fetchAreas(),
+          get().fetchBrands(),
+          get().fetchCategories(),
+          get().fetchTags()
+        ])
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
+
   return {
     ...initialState,
     ...handlers,
     ...fetchFuctions,
+    setThumbnail: (thumbnail) => set({ thumbnail }),
     setOnSale: (onSale) => set({ onSale }),
     setError: (error) => set({ error }),
     setValidation: (validation) => set({ validation }),

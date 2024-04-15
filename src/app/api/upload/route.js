@@ -1,4 +1,5 @@
 import { writeFile } from 'fs/promises'
+import { url } from 'inspector'
 import path from 'path'
 
 export async function POST (request) {
@@ -13,7 +14,11 @@ export async function POST (request) {
 
   return new Response(
     JSON.stringify({
-      messaje: 'archivo subido'
-    })
+      message: 'archivo subido',
+      filepath: URL.createObjectURL(filepath, Buffer)
+    }),
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
   )
 }

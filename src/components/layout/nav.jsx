@@ -20,13 +20,13 @@ export default function NavBar () {
     <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
       <Link
         href="#"
-        className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+        className="group flex h-8 w-8 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
       >
         <Pyramid className="h-4 w-4 transition-all group-hover:scale-110" />
         <span className="sr-only">Atlas Inv.</span>
       </Link>
       {[
-        ['/', 'Dashboard', Home],
+        ['/', 'Home', Home],
         ['/orders', 'Orders', ShoppingCart],
         ['/inventory', 'Products', Package],
         ['/analytics', 'Analytics', LineChart]
@@ -34,7 +34,7 @@ export default function NavBar () {
         <TooltipItem content={label} key={label}>
           <Link
             href={href}
-            className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 ${
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:text-foreground ${
               router === href
                 ? 'bg-accent text-accent-foreground'
                 : 'text-muted-foreground'

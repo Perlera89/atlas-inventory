@@ -160,7 +160,7 @@ model ProductInfo {
 
 model Product {
   id            Int           @id @default(autoincrement())
-  code          Int
+  code          String
   stock         Int
   purchasePrice Decimal
   minimumPrice  Decimal

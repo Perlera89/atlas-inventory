@@ -1,91 +1,61 @@
-import { useImageStore } from '@/store/image'
-import { Trash2, ImagePlus } from 'lucide-react'
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import { AspectRatio } from "../ui/aspect-ratio";
+import { ImagePlus, Upload } from "lucide-react";
+import { useImageStore } from "@/store/image";
+import { useInventoryStore } from "@/store/inventory";
 
-const ImageChooser = ({
-  src,
-  handleDragOver,
-  handleDragLeave,
-  handleDrop,
-  handleChange,
-  isDragging
-}) => (
-  <div className="group/item w-full h-full flex items-center justify-center align-top flex-wrap relative">
-    <label
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      htmlFor="imageChooser"
-      className={`rounded-md p-1 flex-1 flex justify-center items-center ${
-        isDragging ? 'text-gray-400 border-slate-800' : 'border-slate-800'
-      }`}
-    >
-      <img
-        src={src}
-        alt=""
-        className="w-96 rounded-md relative hover:opacity-90 transition-colors cursor-pointer"
-      />
-      <ImagePlus size={32} className="invisible rounded-full group-hover/item:visible bg-secondary text-primary p-2 absolute" />
-    </label>
-    <input
-      onChange={handleChange}
-      className="hidden"
-      id="imageChooser"
-      type="file"
-      accept="images/"
-      multiple
-    />
-  </div>
-)
+function App() {
+  const setAcceptedFiles = useImageStore((state) => state.setAcceptedFiles);
+  const thumbnail = useInventoryStore((state) => state.thumbnail);
 
-const ImagePreview = ({ src, handleDeletePreview }) => (
-  <div className="w-full h-full cursor-pointer flex justify-center align-top flex-wrap gap-1 relative bg-transparent hover:opacity-90 hover:transition-transform">
-    <img
-      src={src}
-      alt=""
-      className="w-96 rounded-md border relative transition-colors cursor-pointer"
-    />
-    <div className="group/item w-full h-full absolute content-center items-center justify-center flex flex-row gap-7">
-      <Trash2
-        size={32}
-        onClick={handleDeletePreview}
-        className="invisible group-hover/item:visible bg-secondary text-primary absolut rounded-full p-2"
-      />
-    </div>
-  </div>
-)
-
-export function ImageSave ({ src }) {
-  const imagesUrl = useImageStore((state) => state.imagesUrl) || src
-
-  const handleChange = useImageStore((state) => state.handleChange)
-  const handleDeletePreview = useImageStore(
-    (state) => state.handleDeletePreview
-  )
-  const isDragging = useImageStore((state) => state.isDragging)
-  const handleDragLeave = useImageStore((state) => state.handleDragLeave)
-  const handleDragOver = useImageStore((state) => state.handleDragOver)
-  const handleDrop = useImageStore((state) => state.handleDrop)
+  const onDrop = useCallback((acceptedFiles) => {
+    setAcceptedFiles(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
+    useDropzone({ onDrop });
 
   return (
-    <>
-      {imagesUrl === '/placeholder.svg'
-        ? (console.log('first', imagesUrl),
-        <ImageChooser
-          src={imagesUrl}
-          handleDragOver={handleDragOver}
-          handleDragLeave={handleDragLeave}
-          handleDrop={handleDrop}
-          handleChange={handleChange}
-          isDragging={isDragging}
-        />
-          )
-        : (
-            console.log('second', imagesUrl),
-        <ImagePreview
-          src={imagesUrl}
-          handleDeletePreview={handleDeletePreview}
-        />
+    <div>
+      <>
+        <AspectRatio {...getRootProps()}>
+          <input {...getInputProps()} />
+          {thumbnail && (
+            <img
+              alt="Product image"
+              className="aspect-square w-full rounded-md object-cover hover:opacity-90 hover:cursor-pointer"
+              height="300"
+              src={thumbnail}
+              width="300"
+            />
           )}
-    </>
-  )
+          {acceptedFiles[0] && (
+            <img
+              alt="Product image"
+              className="aspect-square w-full rounded-md object-cover hover:opacity-90 hover:cursor-pointer"
+              height="300"
+              src={URL.createObjectURL(acceptedFiles[0])}
+              width="300"
+            />
+          )}
+
+          {!acceptedFiles[0] &&
+            !thumbnail &&
+            (isDragActive ? (
+              <div className="flex flex-col gap-2 aspect-square w-full items-center justify-center rounded-md border border-dashed">
+                <ImagePlus className="h-4 w-4 text-foreground" />
+                <span>Drap files here</span>
+              </div>
+            ) : (
+              <button className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
+                <Upload className="h-4 w-4 text-muted-foreground" />
+                <span className="sr-only">Upload</span>
+              </button>
+            ))}
+        </AspectRatio>
+      </>
+    </div>
+  );
 }
+
+export default App;

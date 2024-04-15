@@ -20,7 +20,8 @@ export async function GET () {
           typeId: true
         }
       },
-      isDeleted: true
+      isDeleted: true,
+      updatedAt: true
     }
   })
   await prisma.$disconnect()

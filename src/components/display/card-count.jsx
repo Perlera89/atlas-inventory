@@ -11,7 +11,7 @@ export default function CardCountItem ({ title, icon, count, handleFilter }) {
   return (
     <Card className="w-full sm:w-1/2 cursor-pointer hover:bg-muted/50 bg-transparent transition-colors" onClick={handleFilter}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-md text-foreground font-medium">{title}</CardTitle>
+        <CardTitle className="text-lg text-primary font-medium">{title}</CardTitle>
         {React.createElement(icon, { size: 20 })}
       </CardHeader>
       <CardContent>

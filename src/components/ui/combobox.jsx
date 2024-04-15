@@ -96,7 +96,7 @@ export function ComboboxDropdownMenu ({ ...props }) {
               )
             )
           : (
-          <p className="w-full hidden md:block">Select filters</p>
+          <p className="w-full text-sm text-foreground/70 hidden md:block">Select filters</p>
             )}
       </div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
