@@ -139,7 +139,7 @@ model TagDetail {
 model ProductInfo {
   id           Int         @id @default(autoincrement())
   name         String
-  thumbnail    String
+  thumbnail    String @default("/placeholder.svg")
   minimumStock Int
   safetyInfo   String @default("Empty")
   description  String @default("Empty")
@@ -161,13 +161,14 @@ model ProductInfo {
 model Product {
   id            Int           @id @default(autoincrement())
   code          String
-  stock         Int
+  stock         Int @default(0)
   purchasePrice Decimal
   minimumPrice  Decimal
   salePrice     Decimal
-  iva           Decimal
+  iva           Decimal @default(0)
   productInfoId Int?          @unique
   isOnSale      Boolean       @default(true)
+  isBlocked     Boolean       @default(false)
   isDeleted     Boolean       @default(false)
   purshase      Purchase?
   createdAt     DateTime      @default(now())

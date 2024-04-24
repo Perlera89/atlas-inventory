@@ -76,7 +76,7 @@ export async function PUT (restProduct, { params }) {
       data: {
         code: productData.code,
         salePrice: productData.price,
-        iva: productData.iva / 100,
+        iva: productData.iva,
         purchasePrice: productData.cost,
         minimumPrice: productData.minimumPrice,
         isOnSale: productData.onSale,

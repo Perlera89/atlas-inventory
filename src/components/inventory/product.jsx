@@ -34,8 +34,11 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '../ui/checkbox'
 import ImageSave from '../display/drag-image'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { PopConfirmItem } from '../display/popconfirm'
+import axios from 'axios'
+import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT } from '@/util/config'
+import MultipleSelect from '../ui/multiple-select'
 
 const ProductDetails = () => {
   const name = useInventoryStore((state) => state.name)
@@ -147,7 +150,10 @@ const ProductGeneral = () => {
               value={minimumPrice}
               onChange={(e) => handleInputChange('minimumPrice', e)}
               step=".01"
-              className="w-full"
+              className={`w-full ${
+                minimumPrice < cost &&
+                'border-red-500 focus-visible:ring-offset-[.0px]'
+              }`}
               required
             />
           </div>
@@ -160,7 +166,9 @@ const ProductGeneral = () => {
               value={iva}
               onChange={(e) => handleInputChange('iva', e)}
               step=".01"
-              className="w-full"
+              className={`w-full ${
+                iva > 100 && 'border-red-500 focus-visible:ring-offset-[.0px]'
+              }`}
               required
             />
           </div>
@@ -191,10 +199,15 @@ const ProductTags = () => {
   const categories = useInventoryStore((state) => state.categories)
   const brands = useInventoryStore((state) => state.brands)
   const areas = useInventoryStore((state) => state.areas)
-  const tags = useInventoryStore((state) => state.tags)
+  const tags = useInventoryStore((state) => state.tagsCategory)
+
+  console.log('tags', tags)
 
   const fetchSelects = useInventoryStore((state) => state.fetchSelects)
   const handleSelect = useInventoryStore((state) => state.handleSelect)
+  const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
+
+  const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -215,7 +228,7 @@ const ProductTags = () => {
             <Label htmlFor="category">Category</Label>
             <Select
               id="category"
-              onValueChange={(value) => handleSelect('category', value)}
+              onValueChange={handleCategoryChange}
               value={category}
             >
               <SelectTrigger>
@@ -229,6 +242,21 @@ const ProductTags = () => {
                       {category.name}
                     </SelectItem>
                   ))}
+                  <Input
+                    placeholder="Type new category"
+                    className="mt-2 bg-transparent"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={async (e) => {
+                      if (e.key === 'Enter') {
+                        await axios.post(CATEGORIES_ROOT, {
+                          name: e.target.value
+                        })
+                        setInputValue('')
+                        await fetchSelects()
+                      }
+                    }}
+                  />
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -251,6 +279,21 @@ const ProductTags = () => {
                       {brand.name}
                     </SelectItem>
                   ))}
+                  <Input
+                    placeholder="Type new brand"
+                    className="mt-2 bg-transparent"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={async (e) => {
+                      if (e.key === 'Enter') {
+                        await axios.post(BRANDS_ROOT, {
+                          name: e.target.value
+                        })
+                        setInputValue('')
+                        await fetchSelects()
+                      }
+                    }}
+                  />
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -273,31 +316,38 @@ const ProductTags = () => {
                       {area.name}
                     </SelectItem>
                   ))}
+                  <Input
+                    placeholder="Type new area"
+                    className="mt-2 bg-transparent"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={async (e) => {
+                      if (e.key === 'Enter') {
+                        await axios.post(AREAS_ROOT, {
+                          name: e.target.value
+                        })
+                        setInputValue('')
+                        await fetchSelects()
+                      }
+                    }}
+                  />
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
           <div className="col-span-1 grid gap-2">
             <Label htmlFor="tags">Tags</Label>
-            <Select
-              id="tags"
-              onValueChange={(value) => handleSelect('tags', value)}
-              value={selectedTags}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select tags" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Tags</SelectLabel>
-                  {tags.map((tag) => (
-                    <SelectItem key={tag.id} value={tag.id}>
-                      {tag.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <MultipleSelect
+              className='text-foreground/70 mt-2'
+              creatable
+              defaultOptions={tags}
+              placeholder="Select tags..."
+              emptyIndicator={
+                <p className="text-center text-md text-gray-600 dark:text-gray-400">
+                  No tags
+                </p>
+              }
+            />
           </div>
         </div>
       </CardContent>

@@ -11,3 +11,16 @@ export async function GET () {
 
   return NextResponse.json(categories)
 }
+
+export async function POST (resCategories) {
+  const categoryData = await resCategories.json()
+
+  const category = await prisma.category.create({
+    data: {
+      name: categoryData.name
+    }
+  })
+  await prisma.$disconnect()
+
+  return NextResponse.json(category)
+}

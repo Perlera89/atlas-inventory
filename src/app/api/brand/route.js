@@ -7,3 +7,16 @@ export async function GET () {
 
   return NextResponse.json(brands)
 }
+
+export async function POST (resBrand) {
+  const brandData = await resBrand.json()
+
+  const brand = await prisma.brand.create({
+    data: {
+      name: brandData.name
+    }
+  })
+  await prisma.$disconnect()
+
+  return NextResponse.json(brand)
+}

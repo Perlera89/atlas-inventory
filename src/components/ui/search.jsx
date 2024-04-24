@@ -4,11 +4,11 @@ import { Input } from './input'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
 
-export const SearchItem = ({ placeholder, onSearch, options }) => {
+export const SearchItem = ({ keys, placeholder, onSearch, options, className }) => {
   const handleSearch = useDebouncedCallback((e) => {
     if (e.target.value) {
       const fuseOptions = {
-        keys: ['productInfo.name'],
+        keys: [keys],
         threshold: 0.3
       }
 
@@ -26,7 +26,7 @@ export const SearchItem = ({ placeholder, onSearch, options }) => {
       <Input
         type="Search"
         placeholder={placeholder}
-        className="w-full appearance-none bg-background pl-8 shadow-none"
+        className={`${className} w-full appearance-none bg-background pl-8 shadow-none`}
         onChange={handleSearch}
       />
     </div>

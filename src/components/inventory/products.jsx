@@ -103,8 +103,8 @@ export function ProductsItem () {
 
   const setAction = useInventoryStore((state) => state.setAction)
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
-  const handleSearchProduct = useInventoryStore(
-    (state) => state.handleSearchProduct
+  const handleSearch = useInventoryStore(
+    (state) => state.handleSearch
   )
   const handleClearProduct = useInventoryStore(
     (state) => state.handleClearProduct
@@ -121,8 +121,6 @@ export function ProductsItem () {
 
     fetchData()
   }, [])
-
-  console.log('products', products)
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -142,9 +140,10 @@ export function ProductsItem () {
 
           <form className="w-full">
             <SearchItem
+              keys="productInfo.name"
               placeholder="Search product..."
               options={allProducts}
-              onSearch={handleSearchProduct}
+              onSearch={(value) => handleSearch(value, 'products')}
             />
           </form>
           <ComboboxDropdownMenu />

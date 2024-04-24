@@ -43,7 +43,8 @@ export const useInventoryStore = create((set, get) => {
     area: '',
     areas: [],
     tags: [],
-    selectedTags: '',
+    tagsCategory: [],
+    selectedTags: [],
     safetyInfo: '',
     description: '',
     validationItems: {},
@@ -76,7 +77,7 @@ export const useInventoryStore = create((set, get) => {
       code,
       stock,
       onSale,
-      thumbnail: thumbnail.replace('blob:', ''),
+      thumbnail,
       salePrice: price,
       purchasePrice: cost,
       minimumPrice,
@@ -109,7 +110,10 @@ export const useInventoryStore = create((set, get) => {
       editHandler({ [field]: value })
     },
     handleCategoryChange: (value) => {
-      const tagsCategory = get().tags.filter((tag) => tag.categoryId === value)
+      console.log('value', value)
+      console.log('get().tags', get().tags)
+      const tagsCategory = get().tags.filter((tag) => tag.categoryId === Number(value))
+      console.log('tagsCategory', tagsCategory)
       editHandler({ category: value, tagsCategory })
     },
     handleSelect: (field, value) => editHandler({ [field]: value }),
@@ -153,9 +157,9 @@ export const useInventoryStore = create((set, get) => {
       get().fetchProducts()
       get().handleCloseProduct()
     },
-    handleSearchProduct: (products) => {
+    handleSearch: (value, field) => {
       set({
-        products
+        [field]: value
       })
     },
     handleOpenResult: () => set({ openResult: true }),
@@ -215,9 +219,10 @@ export const useInventoryStore = create((set, get) => {
         stock: Number(stock) > 0,
         price: Number(price) > 0,
         cost: Number(cost) > 0,
-        minimumPrice: Number(minimumPrice) > 0,
+        minimumPrice:
+          Number(minimumPrice) > 0 && Number(minimumPrice) > Number(cost),
         minimumStock: Number(minimumStock) > 0,
-        iva: Number(iva) > 0,
+        iva: Number(iva) > 0 && Number(iva) <= 100,
         category: !!category,
         brand: !!brand,
         area: !!area
@@ -241,7 +246,7 @@ export const useInventoryStore = create((set, get) => {
           const allProducts = res.data.filter((product) => !product.isDeleted)
           set(
             {
-              allProducts,
+              allProducts: allProducts.reverse(),
               products: allProducts,
               lastProducts: allProducts.reverse().slice(0, 10),
               productCount: allProducts.length,
@@ -276,7 +281,7 @@ export const useInventoryStore = create((set, get) => {
             cost: productData.purchasePrice,
             minimumPrice: productData.minimumPrice,
             minimumStock: productData.productInfo.minimumStock,
-            iva: productData.iva * 100,
+            iva: productData.iva,
             type: productData.productInfo.type.id,
             category: productData.productInfo.category.id,
             brand: productData.productInfo.brand.id,
@@ -315,12 +320,10 @@ export const useInventoryStore = create((set, get) => {
     },
     fetchTags: async () => {
       const res = await axios.get(TAGS_ROOT)
-      const tags = await res.data
-        .filter((tag) => tag.categoryId === get().category)
-        .map((tag) => ({
-          value: tag.id,
-          label: tag.name
-        }))
+      const tags = await res.data.filter((tag) => tag.categoryId === get().category).map((tag) => ({
+        label: tag.name,
+        value: tag.id
+      }))
       set({ tags }, false, 'FETCH_TAGS')
     },
     fetchSelects: async () => {

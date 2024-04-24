@@ -67,7 +67,7 @@ export function ComboboxDropdownMenu ({ ...props }) {
   const [open, setOpen] = React.useState(false)
 
   return (
-    <div className="flex w-full flex-col items-center justify-between gap-2 rounded-md border pl-4 sm:flex-row sm:items-center">
+    <div className="flex w-full flex-col items-center justify-between gap-2 rounded-md border h-10 pl-4 sm:flex-row sm:items-center">
       <div className="flex items-center">
         {Object.keys(filters).length > 0
           ? (
