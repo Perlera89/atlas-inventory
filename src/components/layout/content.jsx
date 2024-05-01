@@ -1,4 +1,5 @@
 'use client'
+import { usePathname } from 'next/navigation'
 
 import { PanelRight } from 'lucide-react'
 import { Button } from '../ui/button'
@@ -6,6 +7,12 @@ import SidebarLayout from './sidebar'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 export default function ContentLayout ({ children }) {
+  const path = usePathname()
+  if (path === '/auth/login' || path === '/auth/register') {
+    return children
+  }
+  console.log('path', path)
+
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sheet>

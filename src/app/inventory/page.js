@@ -11,14 +11,15 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card'
 
 // icons
 import { LuBoxes, LuShoppingCart } from 'react-icons/lu'
 
 // hooks & stores
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useInventoryStore } from '@/store/inventory'
+import { Button } from '@/components/ui/button'
+import { useEffect } from 'react'
 
 const Products = () => {
   const productCount = useInventoryStore((state) => state.productCount)
@@ -82,6 +83,7 @@ const Products = () => {
 // }
 
 export default function InventoryPage () {
+  const productCount = useInventoryStore((state) => state.productCount)
   const pathname = usePathname()
   const error = useInventoryStore((state) => state.error)
   const openResult = useInventoryStore((state) => state.openResult)
@@ -89,6 +91,18 @@ export default function InventoryPage () {
   const handleCloseResult = useInventoryStore(
     (state) => state.handleCloseResult
   )
+  const setAction = useInventoryStore((state) => state.setAction)
+  const fetchProducts = useInventoryStore((state) => state.fetchProducts)
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchProducts()
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -109,8 +123,31 @@ export default function InventoryPage () {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="gap-4">
-          <Products />
-          {/* <Lastproducts /> */}
+          {productCount > 0
+            ? (
+            <Products />
+              )
+            : (
+            <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  You have no products
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  You can start selling as soon as you add a product.
+                </p>
+                <Button
+                  className="mt-4"
+                  onClick={() => {
+                    setAction('edit')
+                    router.push('/inventory/add')
+                  }}
+                >
+                  Add Product
+                </Button>
+              </div>
+            </div>
+              )}
         </div>
       </div>
       <ResultItem

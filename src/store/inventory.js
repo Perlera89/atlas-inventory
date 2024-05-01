@@ -24,7 +24,7 @@ export const useInventoryStore = create((set, get) => {
     action: 'view',
     error: '',
     openResult: false,
-    id: null,
+    id: '',
     name: '',
     thumbnail: '',
     code: '',
@@ -43,7 +43,7 @@ export const useInventoryStore = create((set, get) => {
     area: '',
     areas: [],
     tags: [],
-    tagsCategory: [],
+    tagsCategory: get()?.tags.filter((tag) => tag.value === get().category) || [],
     selectedTags: [],
     safetyInfo: '',
     description: '',
@@ -99,7 +99,7 @@ export const useInventoryStore = create((set, get) => {
     console.log('productData()', productData())
   }
 
-  const { products, action, ...initialStateWithoutProducts } = initialState
+  const { products, allProducts, action, ...initialStateWithoutProducts } = initialState
 
   const clearState = () => set(initialStateWithoutProducts)
 
@@ -111,8 +111,7 @@ export const useInventoryStore = create((set, get) => {
     },
     handleCategoryChange: (value) => {
       console.log('value', value)
-      console.log('get().tags', get().tags)
-      const tagsCategory = get().tags.filter((tag) => tag.categoryId === Number(value))
+      const tagsCategory = get().tags.filter((tag) => tag.value === Number(value))
       console.log('tagsCategory', tagsCategory)
       editHandler({ category: value, tagsCategory })
     },
@@ -257,7 +256,6 @@ export const useInventoryStore = create((set, get) => {
             false,
             'FETCH_PRODUCTS'
           )
-          console.log('products', allProducts)
         })
         .catch((err) => {
           get().handleError(err)
@@ -286,12 +284,14 @@ export const useInventoryStore = create((set, get) => {
             category: productData.productInfo.category.id,
             brand: productData.productInfo.brand.id,
             area: productData.productInfo.area.id,
-            selectedTags: productData.productInfo.tagDetails.map(
-              (tagDetail) => tagDetail.tag.id
-            ),
+            selectedTags: productData.productInfo.tagDetails.map(tag => ({
+              label: tag.tag.name,
+              value: tag.tag.id
+            })),
             safetyInfo: productData.productInfo.safetyInfo,
             description: productData.productInfo.description
           })
+          console.log('get().selectedTags', get().selectedTags)
         })
         .catch((err) => {
           get().handleError(err)
@@ -320,10 +320,11 @@ export const useInventoryStore = create((set, get) => {
     },
     fetchTags: async () => {
       const res = await axios.get(TAGS_ROOT)
-      const tags = await res.data.filter((tag) => tag.categoryId === get().category).map((tag) => ({
+      const tags = await res.data.map((tag) => ({
         label: tag.name,
         value: tag.id
       }))
+      console.log('tags', tags)
       set({ tags }, false, 'FETCH_TAGS')
     },
     fetchSelects: async () => {

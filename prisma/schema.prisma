@@ -32,35 +32,46 @@ model Position {
   employees   Employee[]
 }
 
+model Department {
+    id        Int        @id @default(autoincrement())
+    name      String
+    address   Address?
+    districts District[]
+    isDeleted Boolean    @default(false)
+}
+
 model District {
-  id        Int      @id @default(autoincrement())
-  name      String
-  note      String
-  address   Address?
-  isDeleted Boolean  @default(false)
+    id          Int        @id @default(autoincrement())
+    name        String
+    departmentId Int
+    address     Address?
+    department  Department @relation(fields: [departmentId], references: [id])
+    cities      City[]
+    isDeleted   Boolean    @default(false)
 }
 
 model City {
-  id        Int      @id @default(autoincrement())
-  name      String
-  note      String
-  address   Address?
-  isDeleted Boolean  @default(false)
+    id        Int      @id @default(autoincrement())
+    name      String
+    districtId Int
+    address   Address?
+    district  District @relation(fields: [districtId], references: [id])
+    isDeleted Boolean  @default(false)
 }
 
 model Address {
   id           Int        @id @default(autoincrement())
   departmentId Int        @unique
-  cityId       Int        @unique
   districtId   Int        @unique
-  profile      Profile?
-  client       Client?
-  isDeleted    Boolean    @default(false)
+  cityId       Int        @unique
   department   Department @relation(fields: [departmentId], references: [id])
   city         City       @relation(fields: [cityId], references: [id])
   district     District   @relation(fields: [districtId], references: [id])
+  profile      Profile?
+  clients       Client[]
   employees    Employee[]
   providers    Provider[]
+  isDeleted    Boolean    @default(false)
 }
 
 model Provider {
@@ -115,6 +126,7 @@ model Category {
   tags         Tag[]
   productInfos ProductInfo[]
 }
+
 
 model Tag {
   id         Int         @id @default(autoincrement())
@@ -200,7 +212,6 @@ model Employee {
   salary     Decimal
   positionId Int         @unique
   addressId  Int
-  user       User?
   isDeleted  Boolean     @default(false)
   genre      Genre       @relation(fields: [genreId], references: [id])
   position   Position    @relation(fields: [positionId], references: [id])
@@ -210,16 +221,22 @@ model Employee {
 
 model User {
   id         Int      @id @default(autoincrement())
-  sale       Sale?
-  userName   String
-  pass       String
-  date       DateTime
-  lastDate   DateTime
-  typeId     Int      @unique
-  employeeId Int      @unique
+  email      String   @unique
+  username   String   @unique
+  password   String
+  typeId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
   isDeleted  Boolean  @default(false)
   type       TypeUser @relation(fields: [typeId], references: [id])
-  employee   Employee @relation(fields: [employeeId], references: [id])
+  sale       Sale?
+}
+
+model TypeUser {
+  id        Int     @id @default(autoincrement())
+  name      String
+  users     User[]
+  isDeleted Boolean @default(false)
 }
 
 model Profile {
@@ -261,22 +278,17 @@ model SalePoint {
 model Client {
   id           Int     @id @default(autoincrement())
   sale         Sale?
-  firts_name   String
-  last_name    String
-  dui          Int
-  tel          Int
-  email        String
+  firstName   String
+  lastName    String
+  dui          String
+  phone        String?
+  email        String?
   relevantInfo String
   addressId    Int     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   isDeleted    Boolean @default(false)
   address      Address @relation(fields: [addressId], references: [id])
-}
-
-model Department {
-  id        Int      @id @default(autoincrement())
-  name      String
-  address   Address?
-  isDeleted Boolean  @default(false)
 }
 
 model State {
@@ -298,11 +310,4 @@ model Genre {
   name       String
   employeeId Employee?
   isDeleted  Boolean   @default(false)
-}
-
-model TypeUser {
-  id        Int     @id @default(autoincrement())
-  name      String
-  user      User?
-  isDeleted Boolean @default(false)
 }

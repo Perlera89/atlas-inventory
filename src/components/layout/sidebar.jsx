@@ -1,18 +1,7 @@
 'use client'
-import { UserRound } from 'lucide-react'
-
 import { ModeToggle } from '@/components/ui/dark-toogle'
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Button } from '../ui/button'
 import NavBar from './nav'
+import UserOptions from '../user/user-options'
 
 export default function SidebarLayout (isCollapsed) {
   return (
@@ -20,24 +9,7 @@ export default function SidebarLayout (isCollapsed) {
       <NavBar />
       <nav className="fixed bottom-5 sm:static mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <ModeToggle />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              size="icon"
-              className="overflow-hidden rounded-full w-8 h-8"
-            >
-              <UserRound size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" side="right">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <UserOptions />
       </nav>
     </aside>
   )

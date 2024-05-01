@@ -5,6 +5,7 @@ import {
   Home,
   Package,
   LineChart
+  , Users
 } from 'lucide-react'
 
 import TooltipItem from '../display/tooltip'
@@ -29,7 +30,7 @@ export default function NavBar () {
         ['/', 'Home', Home],
         ['/orders', 'Orders', ShoppingCart],
         ['/inventory', 'Products', Package],
-        ['/analytics', 'Analytics', LineChart]
+        ['/clients', 'clients', Users]
       ].map(([href, label, Icon]) => (
         <TooltipItem content={label} key={label}>
           <Link

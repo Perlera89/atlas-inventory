@@ -35,7 +35,7 @@ export async function POST (restProduct) {
   // Inicia una transacción
   const result = await prisma.product.create({
     data: {
-      code: Number(productData.code),
+      code: productData.code,
       stock: Number(productData.stock),
       salePrice: Number(productData.salePrice),
       iva: Number(productData.iva),
@@ -70,7 +70,8 @@ export async function POST (restProduct) {
             }
           }
         }
-      }
+      },
+      updatedAt: new Date()
     }
   })
 

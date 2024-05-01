@@ -35,38 +35,40 @@ const ProductList = ({ products }) => {
   const setAction = useInventoryStore((state) => state.setAction)
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Id</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead className="text-center">Code</TableHead>
-          <TableHead className="text-center">Price</TableHead>
-          <TableHead className="text-center">Cost</TableHead>
-          <TableHead className="text-right">Stock</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {products.map((record) => (
-          <TableRow
-            key={record.id}
-            onClick={() => {
-              setAction('view')
-              router.push(`/inventory/${record.id}`)
-            }}
-          >
-            <TableCell>{record.id}</TableCell>
-            <TableCell>{record?.productInfo?.name}</TableCell>
-            <TableCell className="text-center">{record.code}</TableCell>
-            <TableCell className="text-center">$ {record.salePrice}</TableCell>
-            <TableCell className="text-center">
-              $ {record.purchasePrice}
-            </TableCell>
-            <TableCell className="text-right">{record.stock}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Id</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead className="text-center">Code</TableHead>
+              <TableHead className="text-center">Price</TableHead>
+              <TableHead className="text-center">Cost</TableHead>
+              <TableHead className="text-right">Stock</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {products.map((record) => (
+              <TableRow
+                key={record.id}
+                onClick={() => {
+                  setAction('view')
+                  router.push(`/inventory/${record.id}`)
+                }}
+              >
+                <TableCell>{record.id}</TableCell>
+                <TableCell>{record?.productInfo?.name}</TableCell>
+                <TableCell className="text-center">{record.code}</TableCell>
+                <TableCell className="text-center">
+                  $ {record.salePrice}
+                </TableCell>
+                <TableCell className="text-center">
+                  $ {record.purchasePrice}
+                </TableCell>
+                <TableCell className="text-right">{record.stock}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
   )
 }
 
@@ -103,15 +105,13 @@ export function ProductsItem () {
 
   const setAction = useInventoryStore((state) => state.setAction)
   const handleChangeView = useInventoryStore((state) => state.handleChangeView)
-  const handleSearch = useInventoryStore(
-    (state) => state.handleSearch
-  )
+  const handleSearch = useInventoryStore((state) => state.handleSearch)
   const handleClearProduct = useInventoryStore(
     (state) => state.handleClearProduct
   )
 
   const [page, setPage] = useState(0)
-  const itemsPerPage = 10
+  const itemsPerPage = 20
   const totalPages = Math.ceil(products.length / itemsPerPage)
 
   useEffect(() => {

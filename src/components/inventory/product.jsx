@@ -201,8 +201,6 @@ const ProductTags = () => {
   const areas = useInventoryStore((state) => state.areas)
   const tags = useInventoryStore((state) => state.tagsCategory)
 
-  console.log('tags', tags)
-
   const fetchSelects = useInventoryStore((state) => state.fetchSelects)
   const handleSelect = useInventoryStore((state) => state.handleSelect)
   const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
@@ -339,9 +337,11 @@ const ProductTags = () => {
             <Label htmlFor="tags">Tags</Label>
             <MultipleSelect
               className='text-foreground/70 mt-2'
+              value={selectedTags}
               creatable
               defaultOptions={tags}
               placeholder="Select tags..."
+              hidePlaceholderWhenSelected
               emptyIndicator={
                 <p className="text-center text-md text-gray-600 dark:text-gray-400">
                   No tags
