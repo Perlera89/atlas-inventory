@@ -8,7 +8,7 @@ export const SearchItem = ({ keys, placeholder, onSearch, options, className }) 
   const handleSearch = useDebouncedCallback((e) => {
     if (e.target.value) {
       const fuseOptions = {
-        keys: [keys],
+        keys,
         threshold: 0.3
       }
 

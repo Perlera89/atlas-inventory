@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import prisma from '@/lib/prisma'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 export const authOptions = {
   providers: [
@@ -19,8 +19,6 @@ export const authOptions = {
         })
 
         if (!userFound) throw new Error('No user found')
-
-        console.log(userFound)
 
         const matchPassword = await bcrypt.compare(credentials.password, userFound.password)
 

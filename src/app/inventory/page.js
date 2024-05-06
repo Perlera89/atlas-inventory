@@ -150,13 +150,13 @@ export default function InventoryPage () {
               )}
         </div>
       </div>
-      <ResultItem
+      {/* <ResultItem
         title={error ? error?.request?.statusText : null}
         alert={error ? error?.message : null}
         open={openResult}
         handleOpen={handleOpenResult}
         handleClose={handleCloseResult}
-      />
+      /> */}
       <Toaster
         position="top-center"
         toastOptions={{

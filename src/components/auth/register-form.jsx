@@ -20,7 +20,7 @@ export default function RegisterForm () {
 
   const onSubmit = handleSubmit(async (data) => {
     if (data.password !== data.confirmPassword) {
-      return console.log('Passwords do not match')
+      errors.confirmPassword.message = 'Passwords do not match'
     }
     const { confirmPassword, ...userData } = data
     await axios
@@ -116,6 +116,11 @@ export default function RegisterForm () {
                 required: {
                   value: true,
                   message: 'Password is required'
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                  message:
+                    'Password must contain 8 characters, at least one letter and one number'
                 }
               })}
             />
@@ -140,9 +145,22 @@ export default function RegisterForm () {
                 required: {
                   value: true,
                   message: 'Confirm password is required'
-                }
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                  message:
+                    'Password must contain at least one letter and one number'
+                },
+                validate: (value) =>
+                  value === document.getElementById('password').value ||
+                  'Passwords do not match'
               })}
             />
+            {errors.confirmPassword && (
+              <span className="text-red-500 text-sm">
+                {errors.confirmPassword.message}
+              </span>
+            )}
           </div>
           <div className="flex justify-end">
             <Button type="submit" className="w-full">

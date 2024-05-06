@@ -11,7 +11,6 @@ export default function ContentLayout ({ children }) {
   if (path === '/auth/login' || path === '/auth/register') {
     return children
   }
-  console.log('path', path)
 
   return (
     <div className="flex min-h-screen w-full bg-background">

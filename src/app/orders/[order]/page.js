@@ -1,11 +1,9 @@
 'use client'
 
-import { Delete, User, ChevronRight, ShoppingCart, Tag } from 'lucide-react'
+import { Delete, User, ChevronRight, ShoppingCart } from 'lucide-react'
 import CardItem from '@/components/ui/card-item'
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { SearchItem } from '@/components/ui/search'
-import OrderList from '@/components/orders/order-list'
 import { Button } from '@/components/ui/button'
 
 const OptionItem = ({ children }) => (
@@ -15,8 +13,6 @@ const OptionItem = ({ children }) => (
 )
 
 export default function SalePointPage () {
-  const [empty, isEmpty] = useState(false)
-
   return (
     <div className="grid gap-4">
       <div className="flex">
@@ -38,34 +34,10 @@ export default function SalePointPage () {
       <div className="flex w-full h-full">
         <div className="w-1/3 border-[1px]">
           <div className="h-2/3 border-b overflow-y-auto">
-            {empty
-              ? (
-              <div className="flex flex-col gap-2 text-foreground/70 items-center justify-center h-full">
-                <ShoppingCart size={64} />
-                <p className="text-xl">No products</p>
-              </div>
-                )
-              : (
-              <div className="flex flex-col justify-between h-full">
-                <div>
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                  <OrderList />
-                </div>
-                <div className="text-right mr-2 mb-2">
+          <div className="text-right mr-2 mb-2">
                   <p className="font-bold">Total: $ 10.00 </p>
                   <p>Impuesto: $ 10.00 </p>
                 </div>
-              </div>
-                )}
           </div>
           <div className="grid grid-cols-7 h-1/3">
             <div className="col-span-3 grid grid-rows-3">

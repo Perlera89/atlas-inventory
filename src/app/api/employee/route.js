@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export async function GET () {
-  const clients = await prisma.client.findMany({
+  const clients = await prisma.employee.findMany({
     select: {
       id: true,
       firstName: true,
@@ -10,6 +10,9 @@ export async function GET () {
       dui: true,
       email: true,
       phone: true,
+      genreId: true,
+      salary: true,
+      positionId: true,
       address: {
         select: {
           department: true,
@@ -17,7 +20,6 @@ export async function GET () {
           district: true
         }
       },
-      relevantInfo: true,
       isDeleted: true
     }
   })
@@ -36,13 +38,15 @@ export async function POST (body) {
     dui,
     email,
     phone,
+    genre,
+    salary,
+    position,
     department,
     district,
-    city,
-    relevantInfo
+    city
   } = clientData
 
-  const client = await prisma.client.create({
+  const employee = await prisma.employee.create({
     data: {
       firstName,
       lastName,
@@ -56,11 +60,21 @@ export async function POST (body) {
           cityId: Number(city)
         }
       },
-      relevantInfo
+      genre: {
+        connect: {
+          id: Number(genre)
+        }
+      },
+      position: {
+        connect: {
+          id: Number(position)
+        }
+      },
+      salary
     }
   })
 
   await prisma.$disconnect()
 
-  return NextResponse.json(client)
+  return NextResponse.json(employee)
 }

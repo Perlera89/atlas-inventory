@@ -100,7 +100,6 @@ export function ProductsItem () {
 
   const products = useInventoryStore((state) => state.products)
   const allProducts = useInventoryStore((state) => state.allProducts)
-  const fetchProducts = useInventoryStore((state) => state.fetchProducts)
   const view = useInventoryStore((state) => state.view)
 
   const setAction = useInventoryStore((state) => state.setAction)
@@ -113,14 +112,6 @@ export function ProductsItem () {
   const [page, setPage] = useState(0)
   const itemsPerPage = 20
   const totalPages = Math.ceil(products.length / itemsPerPage)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchProducts()
-    }
-
-    fetchData()
-  }, [])
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -140,7 +131,7 @@ export function ProductsItem () {
 
           <form className="w-full">
             <SearchItem
-              keys="productInfo.name"
+              keys={['productInfo.name', 'code']}
               placeholder="Search product..."
               options={allProducts}
               onSearch={(value) => handleSearch(value, 'products')}

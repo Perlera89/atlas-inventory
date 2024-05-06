@@ -1,28 +1,32 @@
 import { create } from 'zustand'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { CLIENTS_ROOT, DEPARTMENTS_ROOT } from '@/util/config'
+import { DEPARTMENTS_ROOT, EMPLOYEES_ROOT, GENRES_ROOT, POSITIONS_ROOT } from '@/util/config'
 
 import trimStart from '@/util/trimStart'
 
-export const useClientStore = create((set, get) => {
+export const useEmployeeStore = create((set, get) => {
   const initialState = {
-    clients: [],
-    allClients: [],
+    employees: [],
+    allEmployees: [],
     id: '',
     firstName: '',
     lastName: '',
     dui: '',
     email: '',
     phone: '',
+    genre: '',
+    genres: [],
+    salary: '',
+    position: '',
+    positions: [],
     city: '',
     cities: [],
     district: '',
     districts: [],
     department: '',
     departments: [],
-    relevantInfo: '',
-    clientsCount: 0,
+    employeesCount: 0,
     action: 'view',
     error: '',
     openResult: false,
@@ -35,10 +39,10 @@ export const useClientStore = create((set, get) => {
     get().handleValidation()
   }
 
-  const { clients, allClients, action, ...initialStateWithoutClients } =
+  const { employees, allEmployees, action, ...initialStateWithoutEmployees } =
     initialState
 
-  const clearState = () => set(initialStateWithoutClients)
+  const clearState = () => set(initialStateWithoutEmployees)
 
   const handlers = {
     handleInputChange: (field, event, isTrim = false) => {
@@ -60,50 +64,53 @@ export const useClientStore = create((set, get) => {
     handleSelectCity: (value) => {
       editHandler({ city: value })
     },
-    handleClientSave: async () => {
+    handleSelect: (field, value) => editHandler({ [field]: value }),
+    handleEmployeeSave: async () => {
       try {
         const data = {
           id: get().id,
           firstName: get().firstName,
           lastName: get().lastName,
+          genre: get().genre,
+          salary: get().salary,
+          position: get().position,
           dui: get().dui,
           email: get().email,
           phone: get().phone,
           department: get().department,
           district: get().district,
-          city: get().city,
-          relevantInfo: get().relevantInfo
+          city: get().city
         }
 
         if (get().id) {
-          await axios.put(`${CLIENTS_ROOT}/${get().id}`, data)
+          await axios.put(`${EMPLOYEES_ROOT}/${get().id}`, data)
           toast.success('Updated successfully')
         } else {
-          await axios.post(CLIENTS_ROOT, data)
+          await axios.post(EMPLOYEES_ROOT, data)
           toast.success('Created successfully')
           set({ openResult: true })
         }
       } catch (error) {
         console.log('error', error)
-        toast.error('Error creating client')
+        toast.error('Error creating employee')
       }
-      await get().handleClearClient()
-      await get().fetchClients()
+      await get().handleClearEmployee()
+      await get().fetchEmployees()
     },
-    handleClientDelete: async () => {
+    handleEmployeeDelete: async () => {
       console.log(get().id)
       await axios
-        .put(`${CLIENTS_ROOT}/${get().id}/delete`)
+        .put(`${EMPLOYEES_ROOT}/${get().id}/delete`)
         .then(() => {
           toast.success('Deleted successfully')
         })
         .catch((err) => {
           get().handleError(err)
         })
-      await get().handleClearClient()
-      await get().fetchClients()
+      await get().handleClearEmployee()
+      await get().fetchEmployees()
     },
-    handleClearClient: () => clearState(),
+    handleClearEmployee: () => clearState(),
     handleSearch: (value, field) => {
       set({
         [field]: value
@@ -118,6 +125,9 @@ export const useClientStore = create((set, get) => {
         dui,
         email,
         phone,
+        genre,
+        salary,
+        position,
         department,
         district,
         city
@@ -128,6 +138,9 @@ export const useClientStore = create((set, get) => {
         dui: !!dui,
         email: !!email,
         phone: !!phone,
+        genre: !!genre,
+        salary: !!salary,
+        position: !!position,
         department: !!department,
         district: !!district,
         city: !!city
@@ -140,55 +153,58 @@ export const useClientStore = create((set, get) => {
   }
 
   const fetchFunctions = {
-    fetchClient: async (id) => {
+    fetchEmployee: async (id) => {
       await axios
-        .get(`${CLIENTS_ROOT}/${id}`)
+        .get(`${EMPLOYEES_ROOT}/${id}`)
         .then((response) => {
-          const client = response.data
+          const employee = response.data
+          console.log('employee', employee)
           set({
-            id: client.id,
-            firstName: client.firstName,
-            lastName: client.lastName,
-            dui: client.dui,
-            email: client.email,
-            phone: client.phone,
-            department: client.address.department.id,
-            district: client.address.district.id,
-            districts: client.address.department.districts,
-            city: client.address.city.id,
-            cities: client.address.district.cities,
-            relevantInfo: client.relevantInfo
-          })
+            id: employee.id,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            dui: employee.dui,
+            email: employee.email,
+            phone: employee.phone,
+            genre: employee.genre.id,
+            salary: employee.salary,
+            position: employee.position.id,
+            department: employee.address.department.id,
+            district: employee.address.district.id,
+            districts: employee.address.department.districts,
+            city: employee.address.city.id,
+            cities: employee.address.district.cities
+          }, false, 'FETCH_EMPLOYEE')
         })
         .catch((error) => {
           console.log('error', error)
         })
     },
-    fetchClients: async () => {
-      const clients = get().clients
-      if (clients.length > 0) return
+    fetchEmployees: async () => {
+      const employees = get().employees
+      if (employees.length > 0) return
       else {
         await axios
-          .get(CLIENTS_ROOT)
+          .get(EMPLOYEES_ROOT)
           .then((response) => {
-            const allClients = response.data.filter(
-              (client) => !client.isDeleted
+            const allEmployees = response.data.filter(
+              (employee) => !employee.isDeleted
             )
+            console.log('allEmployees', allEmployees)
             set({
-              allClients,
-              clients: allClients,
-              clientsCount: allClients.length,
-              id: allClients.id,
-              firstName: allClients.firstName,
-              lastName: allClients.lastName,
-              dui: allClients.dui,
-              email: allClients.email,
-              phone: allClients.phone,
-              department: allClients?.address?.department.id,
-              district: allClients?.address?.district.id,
-              city: allClients?.address?.city.id,
-              relevantInfo: allClients.relevantInfo
-            })
+              allEmployees,
+              employees: allEmployees,
+              employeesCount: allEmployees.length,
+              id: allEmployees.id,
+              firstName: allEmployees.firstName,
+              lastName: allEmployees.lastName,
+              dui: allEmployees.dui,
+              email: allEmployees.email,
+              phone: allEmployees.phone,
+              department: allEmployees?.address?.department?.id,
+              district: allEmployees?.address?.district?.id,
+              city: allEmployees?.address?.city?.id
+            }, false, 'FETCH_EMPLOYEES')
           })
           .catch((error) => {
             console.log('error', error)
@@ -199,6 +215,18 @@ export const useClientStore = create((set, get) => {
       await axios.get(DEPARTMENTS_ROOT).then((response) => {
         const departments = response.data
         set({ departments })
+      })
+    },
+    fetchGenres: async () => {
+      await axios.get(GENRES_ROOT).then((response) => {
+        const genres = response.data
+        set({ genres })
+      })
+    },
+    fetchPositions: async () => {
+      await axios.get(POSITIONS_ROOT).then((response) => {
+        const positions = response.data
+        set({ positions })
       })
     }
   }

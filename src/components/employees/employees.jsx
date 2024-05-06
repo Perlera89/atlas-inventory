@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 
 // store
-import { useClientStore } from '@/store/client'
+import { useEmployeeStore } from '@/store/employee'
 
 // components
 import {
@@ -15,13 +15,13 @@ import {
 import { Button } from '../ui/button'
 import { SearchItem } from '../ui/search'
 
-export default function ClientList ({ clients }) {
+export default function EmployeeList ({ employees }) {
   const router = useRouter()
 
-  const allClients = useClientStore((state) => state.allClients)
-  const setAction = useClientStore((state) => state.setAction)
-  const handleClearClient = useClientStore((state) => state.handleClearClient)
-  const handleSearch = useClientStore((state) => state.handleSearch)
+  const allEmployees = useEmployeeStore((state) => state.allEmployees)
+  const setAction = useEmployeeStore((state) => state.setAction)
+  const handleClearEmployee = useEmployeeStore((state) => state.handleClearEmployee)
+  const handleSearch = useEmployeeStore((state) => state.handleSearch)
 
   return (
     <>
@@ -31,19 +31,19 @@ export default function ClientList ({ clients }) {
           size="sm"
           onClick={() => {
             setAction('edit')
-            router.push('/clients/add')
-            handleClearClient()
+            router.push('/employees/add')
+            handleClearEmployee()
           }}
         >
-          Add Client
+          Add Employee
         </Button>
 
         <form className="w-full">
           <SearchItem
-            keys="firstName,lastName,dui,email,phone,address,relevantInfo"
-            placeholder="Search client..."
-            options={allClients}
-            onSearch={(value) => handleSearch(value, 'clients')}
+            keys={['firstName', 'lastName', 'dui', 'email', 'phone']}
+            placeholder="Search employee..."
+            options={allEmployees}
+            onSearch={(value) => handleSearch(value, 'employees')}
           />
         </form>
       </div>
@@ -59,12 +59,12 @@ export default function ClientList ({ clients }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients.map((record) => (
+          {employees.map((record) => (
             <TableRow
               key={record.id}
               onClick={() => {
                 setAction('view')
-                router.push(`/clients/${record.id}`)
+                router.push(`/employees/${record.id}`)
               }}
             >
               <TableCell>{record.id}</TableCell>

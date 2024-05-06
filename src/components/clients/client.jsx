@@ -26,14 +26,24 @@ import {
   SelectValue,
   SelectLabel
 } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useEffect, useState } from 'react'
 import { PopConfirmItem } from '../display/popconfirm'
 import axios from 'axios'
-import { CATEGORIES_ROOT } from '@/util/config'
+import {
+  CITIES_ROOT,
+  DEPARTMENTS_ROOT,
+  DISTRICS_ROOT
+} from '@/util/config'
 
 const PersonalInformation = () => {
   const firstName = useClientStore((state) => state.firstName)
@@ -98,11 +108,19 @@ const ClientAddress = () => {
   const department = useClientStore((state) => state.department)
   const departments = useClientStore((state) => state.departments)
 
-  const handleSelect = useClientStore((state) => state.handleSelect)
+  const handleSelectDeparment = useClientStore(
+    (state) => state.handleSelectDeparment
+  )
+  const handleSelectDistrict = useClientStore(
+    (state) => state.handleSelectDistrict
+  )
+  const handleSelectCity = useClientStore((state) => state.handleSelectCity)
 
   const fetchDepartments = useClientStore((state) => state.fetchDepartments)
 
-  const [inputValue, setInputValue] = useState('')
+  const [inputDeparment, setInputDeparment] = useState('')
+  const [inputDistrict, setInputDistrict] = useState('')
+  const [inputCity, setInputCity] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,12 +134,19 @@ const ClientAddress = () => {
     <Card>
       <CardHeader>
         <CardTitle>Address</CardTitle>
+        <CardDescription className="text-foreground/70">
+          Select or add in the defined order
+        </CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="col-span-1 grid gap-2">
+        <div className="grid gap-2">
+          <div className="grid gap-2">
             <Label htmlFor="deparment">Department</Label>
-            <Select id="deparment" onValueChange={handleSelect} value={city}>
+            <Select
+              id="deparment"
+              onValueChange={handleSelectDeparment}
+              value={department}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select deparment" />
               </SelectTrigger>
@@ -136,14 +161,14 @@ const ClientAddress = () => {
                   <Input
                     placeholder="Type new department"
                     className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    value={inputDeparment}
+                    onChange={(e) => setInputDeparment(e.target.value)}
                     onKeyPress={async (e) => {
                       if (e.key === 'Enter') {
-                        await axios.post(CATEGORIES_ROOT, {
+                        await axios.post(DEPARTMENTS_ROOT, {
                           name: e.target.value
                         })
-                        setInputValue('')
+                        setInputDeparment('')
                         // await fetchSelects()
                       }
                     }}
@@ -153,31 +178,35 @@ const ClientAddress = () => {
             </Select>
           </div>
 
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="deparment">Department</Label>
-            <Select id="deparment" onValueChange={handleSelect} value={city}>
+          <div className="grid gap-2">
+            <Label htmlFor="district">Districts</Label>
+            <Select
+              id="district"
+              onValueChange={handleSelectDistrict}
+              value={district}
+            >
               <SelectTrigger>
-                <SelectValue placeholder="Select deparment" />
+                <SelectValue placeholder="Select district" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Deparments</SelectLabel>
-                  {departments.map((deparment) => (
-                    <SelectItem key={deparment.id} value={deparment.id}>
-                      {deparment.name}
+                  <SelectLabel>Districts</SelectLabel>
+                  {districts?.map((district) => (
+                    <SelectItem key={district.id} value={district.id}>
+                      {district.name}
                     </SelectItem>
                   ))}
                   <Input
-                    placeholder="Type new department"
+                    placeholder="Type new district"
                     className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    value={inputDistrict}
+                    onChange={(e) => setInputDistrict(e.target.value)}
                     onKeyPress={async (e) => {
                       if (e.key === 'Enter') {
-                        await axios.post(CATEGORIES_ROOT, {
+                        await axios.post(DISTRICS_ROOT, {
                           name: e.target.value
                         })
-                        setInputValue('')
+                        setInputDistrict('')
                         // await fetchSelects()
                       }
                     }}
@@ -187,31 +216,31 @@ const ClientAddress = () => {
             </Select>
           </div>
 
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="deparment">Department</Label>
-            <Select id="deparment" onValueChange={handleSelect} value={city}>
+          <div className="grid gap-2">
+            <Label htmlFor="city">City</Label>
+            <Select id="city" onValueChange={handleSelectCity} value={city}>
               <SelectTrigger>
-                <SelectValue placeholder="Select deparment" />
+                <SelectValue placeholder="Select city" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Deparments</SelectLabel>
-                  {departments.map((deparment) => (
-                    <SelectItem key={deparment.id} value={deparment.id}>
-                      {deparment.name}
+                  <SelectLabel>Cities</SelectLabel>
+                  {cities.map((city) => (
+                    <SelectItem key={city.id} value={city.id}>
+                      {city.name}
                     </SelectItem>
                   ))}
                   <Input
-                    placeholder="Type new department"
+                    placeholder="Type new city"
                     className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    value={inputCity}
+                    onChange={(e) => setInputCity(e.target.value)}
                     onKeyPress={async (e) => {
                       if (e.key === 'Enter') {
-                        await axios.post(CATEGORIES_ROOT, {
+                        await axios.post(CITIES_ROOT, {
                           name: e.target.value
                         })
-                        setInputValue('')
+                        setInputCity('')
                         // await fetchSelects()
                       }
                     }}
@@ -255,7 +284,7 @@ const ClientContact = () => {
             <Label htmlFor="phone">Phone number</Label>
             <Input
               id="phone"
-              type="text"
+              type="tel"
               placeholder="1234-5678"
               value={phone}
               onChange={(e) => handleInputChange('phone', e)}
@@ -267,6 +296,7 @@ const ClientContact = () => {
             <Label htmlFor="relevantInfo">Relevant info</Label>
             <Textarea
               id="relevantInfo"
+              rows="19"
               placeholder="Empty"
               value={relevantInfo}
               onChange={(e) => handleInputChange('relevantInfo', e)}
@@ -340,12 +370,22 @@ export default function ClientPage ({ clientId }) {
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
               </Button>
+              {clientId && (
+                <>
+                  <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                    {firstName} {lastName}
+                  </h1>
+                </>
+              )}
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 {id
                   ? (
                   <PopConfirmItem
-                    confirm={handleClientDelete}
-                    title={`Delete product ${firstName} ${lastName}`}
+                    confirm={() => {
+                      handleClientDelete()
+                      router.push('/clients')
+                    }}
+                    title={`Delete client ${firstName} ${lastName}`}
                   >
                     <Button variant="outline" size="sm">
                       Delete
@@ -365,11 +405,11 @@ export default function ClientPage ({ clientId }) {
                   size="sm"
                   disabled={!validationValues}
                   onClick={async () => {
+                    await handleClientSave()
                     router.push('/clients')
-                    handleClientSave()
                   }}
                 >
-                  Save Product
+                  Save Client
                 </Button>
               </div>
             </div>
@@ -383,18 +423,38 @@ export default function ClientPage ({ clientId }) {
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 md:hidden">
-              <Button variant="outline" size="sm" onClick={handleClearClient}>
-                Discard
-              </Button>
+            {id
+              ? (
+                  <PopConfirmItem
+                    confirm={() => {
+                      handleClientDelete()
+                      router.push('/clients')
+                    }}
+                    title={`Delete client ${firstName} ${lastName}`}
+                  >
+                    <Button variant="outline" size="sm">
+                      Delete
+                    </Button>
+                  </PopConfirmItem>
+                )
+              : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleClearClient}
+                  >
+                    Discard
+                  </Button>
+                )}
               <Button
                 size="sm"
                 disabled={!validationValues}
                 onClick={async () => {
-                  router.push('/clients')
                   handleClientSave()
+                  router.push('/clients')
                 }}
               >
-                Save Product
+                Save Client
               </Button>
             </div>
           </div>

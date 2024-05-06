@@ -1,7 +1,6 @@
 'use client'
 // components
 import { Toaster } from 'react-hot-toast'
-import { ProductsItem } from '../../components/inventory/products'
 import CardCountItem from '@/components/display/card-count'
 import ResultItem from '@/components/display/result'
 import {
@@ -16,22 +15,15 @@ import {
 import { Users } from 'lucide-react'
 
 // hooks & stores
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useClientStore } from '@/store/client'
 import ClientList from '@/components/clients/clients'
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 
 const Clients = () => {
   const clients = useClientStore((state) => state.clients)
   const clientsCount = useClientStore((state) => state.clientsCount)
-  const fetchClients = useClientStore((state) => state.fetchClients)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchClients()
-    }
-    fetchData()
-  }, [])
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -48,12 +40,27 @@ const Clients = () => {
 
 export default function ClientsPage () {
   const pathname = usePathname()
+  const router = useRouter()
+
   const error = useClientStore((state) => state.error)
   const openResult = useClientStore((state) => state.openResult)
+  const clientsCount = useClientStore((state) => state.clientsCount)
+  const setAction = useClientStore((state) => state.setAction)
+
   const handleOpenResult = useClientStore((state) => state.handleOpenResult)
   const handleCloseResult = useClientStore(
     (state) => state.handleCloseResult
   )
+
+  const fetchClients = useClientStore((state) => state.fetchClients)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchClients()
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -74,7 +81,28 @@ export default function ClientsPage () {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="gap-4">
-          <Clients />
+          {clientsCount > 0
+            ? <Clients />
+            : <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  You have no clients
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  You can add a client to get started
+                </p>
+                <Button
+                  className="mt-4"
+                  onClick={() => {
+                    setAction('edit')
+                    router.push('/clients/add')
+                  }}
+                >
+                  Add Client
+                </Button>
+              </div>
+            </div>}
+            <Clients />
         </div>
       </div>
       <ResultItem

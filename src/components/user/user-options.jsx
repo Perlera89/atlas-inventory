@@ -1,3 +1,7 @@
+// import { getServerSession } from 'next-auth/next'
+// import { authOptions } from '@/app/api/auth/[...nextauth]/route.js'
+import { signOut } from 'next-auth/react'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +14,9 @@ import { Button } from '../ui/button'
 import { UserRound } from 'lucide-react'
 
 export default function UserOptions () {
+  // const session = await getServerSession(authOptions)
+  // console.log('session', session)
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,7 +30,7 @@ export default function UserOptions () {
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

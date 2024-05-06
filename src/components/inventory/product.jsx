@@ -19,15 +19,6 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectGroup,
-  SelectItem,
-  SelectValue,
-  SelectLabel
-} from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -39,6 +30,7 @@ import { PopConfirmItem } from '../display/popconfirm'
 import axios from 'axios'
 import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT } from '@/util/config'
 import MultipleSelect from '../ui/multiple-select'
+import SelectInputItem from '../entry/select-input'
 
 const ProductDetails = () => {
   const name = useInventoryStore((state) => state.name)
@@ -54,7 +46,7 @@ const ProductDetails = () => {
         <CardTitle>Product Details</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
@@ -114,7 +106,7 @@ const ProductGeneral = () => {
         <CardTitle>General</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-4">
           <div className="grid col-span-1 gap-3">
             <Label htmlFor="cost">Purchase price</Label>
             <Input
@@ -201,15 +193,26 @@ const ProductTags = () => {
   const areas = useInventoryStore((state) => state.areas)
   const tags = useInventoryStore((state) => state.tagsCategory)
 
-  const fetchSelects = useInventoryStore((state) => state.fetchSelects)
   const handleSelect = useInventoryStore((state) => state.handleSelect)
-  const handleCategoryChange = useInventoryStore((state) => state.handleCategoryChange)
+  const handleCategoryChange = useInventoryStore(
+    (state) => state.handleCategoryChange
+  )
 
-  const [inputValue, setInputValue] = useState('')
+  const fetchCategories = useInventoryStore((state) => state.fetchCategories)
+  const fetchBrands = useInventoryStore((state) => state.fetchBrands)
+  const fetchAreas = useInventoryStore((state) => state.fetchAreas)
+  const fetchTags = useInventoryStore((state) => state.fetchTags)
+
+  const [inputCategory, setInputCategory] = useState('')
+  const [inputBrand, setInputBrand] = useState('')
+  const [inputArea, setInputArea] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchSelects()
+      await fetchAreas()
+      await fetchBrands()
+      await fetchCategories()
+      await fetchTags()
     }
 
     fetchData()
@@ -222,121 +225,65 @@ const ProductTags = () => {
       </CardHeader>
       <CardContent className="px-6 pb-6">
         <div className="grid grid-cols-2 gap-2">
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              id="category"
-              onValueChange={handleCategoryChange}
-              value={category}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Categories</SelectLabel>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new category"
-                    className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(CATEGORIES_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputValue('')
-                        await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="brand">Brand</Label>
-            <Select
-              id="brand"
-              onValueChange={(value) => handleSelect('brand', value)}
-              value={brand}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select brand" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Brands</SelectLabel>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new brand"
-                    className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(BRANDS_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputValue('')
-                        await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="area">Area</Label>
-            <Select
-              id="area"
-              onValueChange={(value) => handleSelect('area', value)}
-              value={area}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select area" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Areas</SelectLabel>
-                  {areas.map((area) => (
-                    <SelectItem key={area.id} value={area.id}>
-                      {area.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new area"
-                    className="mt-2 bg-transparent"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(AREAS_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputValue('')
-                        await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="col-span-1 grid gap-2">
-            <Label htmlFor="tags">Tags</Label>
+          <SelectInputItem
+            value={category}
+            options={categories}
+            onChange={handleCategoryChange}
+            valueTitle="Category"
+            optionsTitle="Categories"
+            inputValue={inputCategory}
+            onInputChange={(e) => setInputCategory(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios.post(CATEGORIES_ROOT, {
+                  name: e.target.value
+                })
+                setInputCategory('')
+                await fetchCategories()
+              }
+            }}
+          />
+          <SelectInputItem
+            value={brand}
+            options={brands}
+            onChange={(value) => handleSelect('brand', value)}
+            valueTitle="Brand"
+            optionsTitle="Brands"
+            inputValue={inputBrand}
+            onInputChange={(e) => setInputBrand(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios.post(BRANDS_ROOT, {
+                  name: e.target.value
+                })
+                setInputBrand('')
+                await fetchBrands()
+              }
+            }}
+          />
+          <SelectInputItem
+            value={area}
+            options={areas}
+            onChange={(value) => handleSelect('area', value)}
+            valueTitle="Area"
+            optionsTitle="Areas"
+            className='mt-2'
+            inputValue={inputArea}
+            onInputChange={(e) => setInputArea(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios.post(AREAS_ROOT, {
+                  name: e.target.value
+                })
+                setInputArea('')
+                await fetchAreas()
+              }
+            }}
+          />
+          <div className="grid gap-2">
+            <Label className='text-sm' htmlFor="tags">Tags</Label>
             <MultipleSelect
-              className='text-foreground/70 mt-2'
+              className="text-foreground/70 mt-2"
               value={selectedTags}
               creatable
               defaultOptions={tags}
@@ -378,23 +325,17 @@ const ProductType = () => {
         <CardTitle>Product Type</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <Select
-          id="type"
-          defaultValue={1}
-          onValueChange={(value) => handleSelect('type', value)}
+        <SelectInputItem
           value={type}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value={1}>Consumable</SelectItem>
-              <SelectItem value={2}>Storable</SelectItem>
-              <SelectItem value={3}>Service</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          options={[
+            { id: 1, name: 'Consumable' },
+            { id: 2, name: 'Storable' },
+            { id: 3, name: 'Service' }
+          ]}
+          onChange={(value) => handleSelect('type', value)}
+          valueTitle="Type"
+          optionsTitle="Types"
+        />
       </CardContent>
     </Card>
   )
@@ -412,7 +353,7 @@ const ProductExtra = () => {
         <CardTitle>Product Extra</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="safetyInfo">Description</Label>
             <Textarea
@@ -440,6 +381,7 @@ const ProductExtra = () => {
 export default function ProductPage ({ productId }) {
   const router = useRouter()
   const onSale = useInventoryStore((state) => state.onSale)
+  const isBlock = useInventoryStore((state) => state.isBlock)
   const handleSelect = useInventoryStore((state) => state.handleSelect)
   const name = useInventoryStore((state) => state.name)
   const fetchProduct = useInventoryStore((state) => state.fetchProduct)
@@ -521,6 +463,15 @@ export default function ProductPage ({ productId }) {
                   onCheckedChange={(value) => handleSelect('onSale', value)}
                 />
                 <Label htmlFor="onSale ">On sale</Label>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Checkbox
+                  id="isBlock"
+                  defaultChecked
+                  checked={isBlock}
+                  onCheckedChange={(value) => handleSelect('isBLock', value)}
+                />
+                <Label htmlFor="isBlock ">Is Block</Label>
               </div>
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 {id

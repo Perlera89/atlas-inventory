@@ -15,7 +15,6 @@ CREATE TABLE `Cash` (
 CREATE TABLE `Position` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
     `isDeleted` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
@@ -58,9 +57,6 @@ CREATE TABLE `Address` (
     `cityId` INTEGER NOT NULL,
     `isDeleted` BOOLEAN NOT NULL DEFAULT false,
 
-    UNIQUE INDEX `Address_departmentId_key`(`departmentId`),
-    UNIQUE INDEX `Address_districtId_key`(`districtId`),
-    UNIQUE INDEX `Address_cityId_key`(`cityId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -203,18 +199,18 @@ CREATE TABLE `ProductSale` (
 -- CreateTable
 CREATE TABLE `Employee` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(191) NOT NULL,
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
-    `tel` INTEGER NOT NULL,
+    `dui` VARCHAR(191) NULL,
+    `email` VARCHAR(191) NULL,
+    `phone` VARCHAR(191) NULL,
     `genreId` INTEGER NOT NULL,
     `salary` DECIMAL(65, 30) NOT NULL,
     `positionId` INTEGER NOT NULL,
     `addressId` INTEGER NOT NULL,
     `isDeleted` BOOLEAN NOT NULL DEFAULT false,
 
-    UNIQUE INDEX `Employee_genreId_key`(`genreId`),
-    UNIQUE INDEX `Employee_positionId_key`(`positionId`),
+    UNIQUE INDEX `Employee_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -294,13 +290,12 @@ CREATE TABLE `Client` (
     `dui` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
     `email` VARCHAR(191) NULL,
-    `relevantInfo` VARCHAR(191) NOT NULL,
+    `relevantInfo` VARCHAR(191) NOT NULL DEFAULT 'Empty',
     `addressId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `isDeleted` BOOLEAN NOT NULL DEFAULT false,
 
-    UNIQUE INDEX `Client_addressId_key`(`addressId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

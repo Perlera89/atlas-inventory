@@ -8,6 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "postgresql"
+//   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+// }
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -27,7 +33,6 @@ model Cash {
 model Position {
   id          Int        @id @default(autoincrement())
   name        String
-  description String
   isDeleted   Boolean    @default(false)
   employees   Employee[]
 }
@@ -35,7 +40,7 @@ model Position {
 model Department {
     id        Int        @id @default(autoincrement())
     name      String
-    address   Address?
+    addresses   Address[]
     districts District[]
     isDeleted Boolean    @default(false)
 }
@@ -44,7 +49,7 @@ model District {
     id          Int        @id @default(autoincrement())
     name        String
     departmentId Int
-    address     Address?
+    addresses     Address[]
     department  Department @relation(fields: [departmentId], references: [id])
     cities      City[]
     isDeleted   Boolean    @default(false)
@@ -54,16 +59,16 @@ model City {
     id        Int      @id @default(autoincrement())
     name      String
     districtId Int
-    address   Address?
+    addresses   Address[]
     district  District @relation(fields: [districtId], references: [id])
     isDeleted Boolean  @default(false)
 }
 
 model Address {
   id           Int        @id @default(autoincrement())
-  departmentId Int        @unique
-  districtId   Int        @unique
-  cityId       Int        @unique
+  departmentId Int
+  districtId   Int 
+  cityId       Int 
   department   Department @relation(fields: [departmentId], references: [id])
   city         City       @relation(fields: [cityId], references: [id])
   district     District   @relation(fields: [districtId], references: [id])
@@ -204,13 +209,14 @@ model ProductSale {
 
 model Employee {
   id         Int         @id @default(autoincrement())
-  email      String
   firstName  String
   lastName   String
-  tel        Int
-  genreId    Int         @unique
+  dui        String?
+  email      String?      @unique    
+  phone      String?
+  genreId    Int         
   salary     Decimal
-  positionId Int         @unique
+  positionId Int         
   addressId  Int
   isDeleted  Boolean     @default(false)
   genre      Genre       @relation(fields: [genreId], references: [id])
@@ -283,8 +289,8 @@ model Client {
   dui          String
   phone        String?
   email        String?
-  relevantInfo String
-  addressId    Int     @unique
+  relevantInfo String  @default("Empty")
+  addressId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   isDeleted    Boolean @default(false)
@@ -308,6 +314,6 @@ model Type {
 model Genre {
   id         Int       @id @default(autoincrement())
   name       String
-  employeeId Employee?
+  employees Employee[]
   isDeleted  Boolean   @default(false)
 }

@@ -105,7 +105,6 @@ export const useInventoryStore = create((set, get) => {
 
   const handlers = {
     handleInputChange: (field, event, isTrim = false) => {
-      get().handleValidation()
       const value = isTrim ? trimStart(event.target.value) : event.target.value
       editHandler({ [field]: value })
     },
@@ -154,7 +153,6 @@ export const useInventoryStore = create((set, get) => {
           get().handleError(err)
         })
       get().fetchProducts()
-      get().handleCloseProduct()
     },
     handleSearch: (value, field) => {
       set({
@@ -238,7 +236,6 @@ export const useInventoryStore = create((set, get) => {
   const fetchFuctions = {
     fetchProducts: async () => {
       const url = PRODUCTS_ROOT
-
       await axios
         .get(url)
         .then((res) => {
@@ -326,18 +323,6 @@ export const useInventoryStore = create((set, get) => {
       }))
       console.log('tags', tags)
       set({ tags }, false, 'FETCH_TAGS')
-    },
-    fetchSelects: async () => {
-      try {
-        await Promise.all([
-          get().fetchAreas(),
-          get().fetchBrands(),
-          get().fetchCategories(),
-          get().fetchTags()
-        ])
-      } catch (error) {
-        console.error(error)
-      }
     }
   }
 

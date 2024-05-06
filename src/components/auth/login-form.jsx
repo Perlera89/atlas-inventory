@@ -28,13 +28,12 @@ export default function RegisterForm () {
     if (res.ok) {
       toast.success('Logged in successfully')
       router.push('/')
+      router.refresh()
     } else {
       toast.error(res.error)
     }
     console.log(res)
   })
-
-  console.log(process.env.NEXTAUTH_URL)
 
   return (
     <>
@@ -73,7 +72,7 @@ export default function RegisterForm () {
               </span>
             )}
           </div>
-          <div className="mb-2">
+          <div className="mb-4">
             <Label
               htmlFor="password"
               className="block text-sm font-medium text-muted-foreground mb-1"
