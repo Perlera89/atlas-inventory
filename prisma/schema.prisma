@@ -31,49 +31,49 @@ model Cash {
 }
 
 model Position {
-  id          Int        @id @default(autoincrement())
-  name        String
-  isDeleted   Boolean    @default(false)
-  employees   Employee[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  isDeleted Boolean    @default(false)
+  employees Employee[]
 }
 
 model Department {
-    id        Int        @id @default(autoincrement())
-    name      String
-    addresses   Address[]
-    districts District[]
-    isDeleted Boolean    @default(false)
+  id        Int        @id @default(autoincrement())
+  name      String
+  addresses Address[]
+  districts District[]
+  isDeleted Boolean    @default(false)
 }
 
 model District {
-    id          Int        @id @default(autoincrement())
-    name        String
-    departmentId Int
-    addresses     Address[]
-    department  Department @relation(fields: [departmentId], references: [id])
-    cities      City[]
-    isDeleted   Boolean    @default(false)
+  id           Int        @id @default(autoincrement())
+  name         String
+  departmentId Int
+  addresses    Address[]
+  department   Department @relation(fields: [departmentId], references: [id])
+  cities       City[]
+  isDeleted    Boolean    @default(false)
 }
 
 model City {
-    id        Int      @id @default(autoincrement())
-    name      String
-    districtId Int
-    addresses   Address[]
-    district  District @relation(fields: [districtId], references: [id])
-    isDeleted Boolean  @default(false)
+  id         Int       @id @default(autoincrement())
+  name       String
+  districtId Int
+  addresses  Address[]
+  district   District  @relation(fields: [districtId], references: [id])
+  isDeleted  Boolean   @default(false)
 }
 
 model Address {
   id           Int        @id @default(autoincrement())
   departmentId Int
-  districtId   Int 
-  cityId       Int 
+  districtId   Int
+  cityId       Int
   department   Department @relation(fields: [departmentId], references: [id])
   city         City       @relation(fields: [cityId], references: [id])
   district     District   @relation(fields: [districtId], references: [id])
   profile      Profile?
-  clients       Client[]
+  clients      Client[]
   employees    Employee[]
   providers    Provider[]
   isDeleted    Boolean    @default(false)
@@ -97,16 +97,16 @@ model Provider {
 model Sale {
   id           Int           @id @default(autoincrement())
   code         Int
-  discount     Decimal
   note         String
-  stateId      Int           @unique
   isCancel     Boolean
+  statusId     Int           @unique
   userId       Int           @unique
-  clientId     Int           @unique
+  clientId     Int?           @unique
   isDeleted    Boolean       @default(false)
-  state        State         @relation(fields: [stateId], references: [id])
+  date         DateTime      @default(now())
+  status       Status        @relation(fields: [statusId], references: [id])
   user         User          @relation(fields: [userId], references: [id])
-  client       Client        @relation(fields: [clientId], references: [id])
+  client       Client?        @relation(fields: [clientId], references: [id])
   productSales ProductSale[]
 }
 
@@ -132,12 +132,11 @@ model Category {
   productInfos ProductInfo[]
 }
 
-
 model Tag {
   id         Int         @id @default(autoincrement())
   name       String
   categoryId Int
-  categories   Category    @relation(fields: [categoryId], references: [id])
+  categories Category    @relation(fields: [categoryId], references: [id])
   isDeleted  Boolean     @default(false)
   tagDetails TagDetail[]
 }
@@ -156,12 +155,12 @@ model TagDetail {
 model ProductInfo {
   id           Int         @id @default(autoincrement())
   name         String
-  thumbnail    String @default("/placeholder.svg")
+  thumbnail    String      @default("/placeholder.svg")
   minimumStock Int
-  safetyInfo   String @default("Empty")
-  description  String @default("Empty")
+  safetyInfo   String      @default("Empty")
+  description  String      @default("Empty")
   categoryId   Int
-  typeId       Int         
+  typeId       Int
   areaId       Int?
   brandId      Int
   createdAt    DateTime    @default(now())
@@ -178,11 +177,11 @@ model ProductInfo {
 model Product {
   id            Int           @id @default(autoincrement())
   code          String
-  stock         Int @default(0)
+  stock         Int           @default(0)
   purchasePrice Decimal
   minimumPrice  Decimal
   salePrice     Decimal
-  iva           Decimal @default(0)
+  iva           Decimal       @default(0)
   productInfoId Int?          @unique
   isOnSale      Boolean       @default(true)
   isBlocked     Boolean       @default(false)
@@ -198,6 +197,7 @@ model ProductSale {
   id        Int      @id @default(autoincrement())
   amount    Int
   price     Float
+  discount  Decimal
   saleId    Int
   productId Int
   createdAt DateTime @default(now())
@@ -212,11 +212,11 @@ model Employee {
   firstName  String
   lastName   String
   dui        String?
-  email      String?      @unique    
+  email      String?     @unique
   phone      String?
-  genreId    Int         
+  genreId    Int
   salary     Decimal
-  positionId Int         
+  positionId Int
   addressId  Int
   isDeleted  Boolean     @default(false)
   genre      Genre       @relation(fields: [genreId], references: [id])
@@ -226,16 +226,16 @@ model Employee {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique
-  username   String   @unique
-  password   String
-  typeId     Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  isDeleted  Boolean  @default(false)
-  type       TypeUser @relation(fields: [typeId], references: [id])
-  sale       Sale?
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  typeId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
+  type      TypeUser @relation(fields: [typeId], references: [id])
+  sale      Sale?
 }
 
 model TypeUser {
@@ -282,22 +282,22 @@ model SalePoint {
 }
 
 model Client {
-  id           Int     @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   sale         Sale?
-  firstName   String
-  lastName    String
+  firstName    String
+  lastName     String
   dui          String
   phone        String?
   email        String?
-  relevantInfo String  @default("Empty")
+  relevantInfo String   @default("Empty")
   addressId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  isDeleted    Boolean @default(false)
-  address      Address @relation(fields: [addressId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  isDeleted    Boolean  @default(false)
+  address      Address  @relation(fields: [addressId], references: [id])
 }
 
-model State {
+model Status {
   id        Int     @id @default(autoincrement())
   name      String
   sale      Sale?
@@ -312,8 +312,8 @@ model Type {
 }
 
 model Genre {
-  id         Int       @id @default(autoincrement())
-  name       String
+  id        Int        @id @default(autoincrement())
+  name      String
   employees Employee[]
-  isDeleted  Boolean   @default(false)
+  isDeleted Boolean    @default(false)
 }

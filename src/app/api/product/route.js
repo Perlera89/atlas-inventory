@@ -10,6 +10,7 @@ export async function GET () {
       salePrice: true,
       purchasePrice: true,
       stock: true,
+      iva: true,
       productInfo: {
         select: {
           name: true,

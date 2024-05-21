@@ -1,9 +1,9 @@
 'use client'
+import { Triangle } from 'react-loader-spinner'
 // components
 import { Toaster } from 'react-hot-toast'
 import { ProductsItem } from '../../components/inventory/products'
 import CardCountItem from '@/components/display/card-count'
-import ResultItem from '@/components/display/result'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,7 +19,7 @@ import { LuBoxes, LuShoppingCart } from 'react-icons/lu'
 import { usePathname, useRouter } from 'next/navigation'
 import { useInventoryStore } from '@/store/inventory'
 import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const Products = () => {
   const productCount = useInventoryStore((state) => state.productCount)
@@ -51,54 +51,46 @@ const Products = () => {
   )
 }
 
-// const Lastproducts = () => {
-//   const lastProducts = useInventoryStore((state) => state.lastProducts)
+const NoProducts = () => {
+  const setAction = useInventoryStore((state) => state.setAction)
 
-//   return (
-//     <Card>
-//       <CardHeader>
-//         <CardTitle>Recent Products</CardTitle>
-//       </CardHeader>
-//       <CardContent className="grid gap-8 px-6 pb-6">
-//         {lastProducts.map((product) => (
-//           <div className="flex items-center gap-4" key={product.id}>
-//             <img
-//               src={product.productInfo.thumbnail}
-//               className="h-9 w-9 sm:flex rounded-full"
-//             />
-//             <div className="grid gap-1">
-//               <p className="text-sm text-foreground font-medium leading-none">
-//                 {product.productInfo.name}
-//               </p>
-//               <p className="text-sm text-foreground/70">
-//                 Stock: {product.stock}
-//               </p>
-//             </div>
-//             <div className="ml-auto font-medium">$ {product.salePrice}</div>
-//           </div>
-//         ))}
-//       </CardContent>
-//     </Card>
-//   )
-// }
+  const router = useRouter()
+  return (
+    <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h3 className="text-2xl font-bold tracking-tight">
+          You have no products
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          You can start selling as soon as you add a product.
+        </p>
+        <Button
+          className="mt-4"
+          onClick={() => {
+            setAction('edit')
+            router.push('/inventory/add')
+          }}
+        >
+          Add Product
+        </Button>
+      </div>
+    </div>
+  )
+}
 
 export default function InventoryPage () {
   const productCount = useInventoryStore((state) => state.productCount)
+  const isLoading = useInventoryStore((state) => state.isLoading)
+  const setIsLoading = useInventoryStore((state) => state.setIsLoading)
   const pathname = usePathname()
-  const error = useInventoryStore((state) => state.error)
-  const openResult = useInventoryStore((state) => state.openResult)
-  const handleOpenResult = useInventoryStore((state) => state.handleOpenResult)
-  const handleCloseResult = useInventoryStore(
-    (state) => state.handleCloseResult
-  )
-  const setAction = useInventoryStore((state) => state.setAction)
-  const fetchProducts = useInventoryStore((state) => state.fetchProducts)
 
-  const router = useRouter()
+  const fetchProducts = useInventoryStore((state) => state.fetchProducts)
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
       await fetchProducts()
+      setIsLoading(false)
     }
 
     fetchData()
@@ -117,46 +109,15 @@ export default function InventoryPage () {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink className="capitalize" href={pathname}>
-                {pathname.split('/')[1]}
+                {pathname?.split('/')[1]}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <div className="gap-4">
-          {productCount > 0
-            ? (
-            <Products />
-              )
-            : (
-            <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  You have no products
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  You can start selling as soon as you add a product.
-                </p>
-                <Button
-                  className="mt-4"
-                  onClick={() => {
-                    setAction('edit')
-                    router.push('/inventory/add')
-                  }}
-                >
-                  Add Product
-                </Button>
-              </div>
-            </div>
-              )}
+          {!isLoading && productCount === 0 ? <NoProducts /> : <Products />}
         </div>
       </div>
-      {/* <ResultItem
-        title={error ? error?.request?.statusText : null}
-        alert={error ? error?.message : null}
-        open={openResult}
-        handleOpen={handleOpenResult}
-        handleClose={handleCloseResult}
-      /> */}
       <Toaster
         position="top-center"
         toastOptions={{

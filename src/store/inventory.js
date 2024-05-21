@@ -15,6 +15,7 @@ export const useInventoryStore = create((set, get) => {
   const initialState = {
     allProducts: [],
     lastProducts: [],
+    isLoading: true,
     products: [],
     productCount: 0,
     productOnSaleCount: 0,
@@ -43,7 +44,8 @@ export const useInventoryStore = create((set, get) => {
     area: '',
     areas: [],
     tags: [],
-    tagsCategory: get()?.tags.filter((tag) => tag.value === get().category) || [],
+    tagsCategory:
+      get()?.tags.filter((tag) => tag.value === get().category) || [],
     selectedTags: [],
     safetyInfo: '',
     description: '',
@@ -99,7 +101,14 @@ export const useInventoryStore = create((set, get) => {
     console.log('productData()', productData())
   }
 
-  const { products, allProducts, action, ...initialStateWithoutProducts } = initialState
+  const {
+    products,
+    allProducts,
+    productCount,
+    productOnSaleCount,
+    action,
+    ...initialStateWithoutProducts
+  } = initialState
 
   const clearState = () => set(initialStateWithoutProducts)
 
@@ -110,7 +119,9 @@ export const useInventoryStore = create((set, get) => {
     },
     handleCategoryChange: (value) => {
       console.log('value', value)
-      const tagsCategory = get().tags.filter((tag) => tag.value === Number(value))
+      const tagsCategory = get().tags.filter(
+        (tag) => tag.value === Number(value)
+      )
       console.log('tagsCategory', tagsCategory)
       editHandler({ category: value, tagsCategory })
     },
@@ -281,7 +292,7 @@ export const useInventoryStore = create((set, get) => {
             category: productData.productInfo.category.id,
             brand: productData.productInfo.brand.id,
             area: productData.productInfo.area.id,
-            selectedTags: productData.productInfo.tagDetails.map(tag => ({
+            selectedTags: productData.productInfo.tagDetails.map((tag) => ({
               label: tag.tag.name,
               value: tag.tag.id
             })),
@@ -334,6 +345,7 @@ export const useInventoryStore = create((set, get) => {
     setOnSale: (onSale) => set({ onSale }),
     setError: (error) => set({ error }),
     setValidation: (validation) => set({ validation }),
+    setIsLoading: (isLoading) => set({ isLoading }),
     setAction: (action) => set({ action })
   }
 })

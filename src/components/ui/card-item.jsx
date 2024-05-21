@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Image } from 'antd'
 
-export default function CardProduct ({ image, name, stock, price, onClick }) {
+export default function CardProduct ({ thumbnail, name, stock, price, onClick }) {
   return (
     <Card
       className="hover:cursor-pointer hover:bg-muted/50 transition-colors w-full"
@@ -9,15 +9,15 @@ export default function CardProduct ({ image, name, stock, price, onClick }) {
     >
       <CardContent className="flex gap-2 items-center">
         <Image
-          className="rounded-s-md"
+          className="rounded-s-md h-20 object-cover"
+          height={80}
           width={75}
-          height={75}
           preview={false}
           fallback="/placeholder.svg"
-          src={image}
+          src={thumbnail}
         />
         <div>
-          <h5 className="text-sm font-extrabold">{name}</h5>
+          <h5 className="text-sm font-bold">{name}</h5>
           <div className="flex gap-2">
             <p className='text-sm'>Stock:</p>
             <p className="text-sm text-foreground/70">{stock}</p>

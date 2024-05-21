@@ -75,17 +75,17 @@ export async function PUT (restProduct, { params }) {
       },
       data: {
         code: productData.code,
-        salePrice: productData.price,
-        iva: productData.iva,
-        purchasePrice: productData.cost,
-        minimumPrice: productData.minimumPrice,
+        salePrice: Number(productData.price),
+        iva: Number(productData.iva),
+        purchasePrice: Number(productData.cost),
+        minimumPrice: Number(productData.minimumPrice),
         isOnSale: productData.onSale,
-        stock: productData.stock,
+        stock: Number(productData.stock),
         productInfo: {
           update: {
             name: productData.name,
             thumbnail: productData.thumbnail,
-            minimumStock: productData.minimumStock,
+            minimumStock: Number(productData.minimumStock),
             safetyInfo: productData.safetyInfo,
             description: productData.description,
             brand: {

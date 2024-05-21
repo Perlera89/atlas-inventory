@@ -27,25 +27,52 @@ const Employees = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-        <CardCountItem
-          title="Total employees"
-          count={employeesCount}
-          icon={Briefcase}
-          handleFilter={null}
-        />
+      <CardCountItem
+        title="Total employees"
+        count={employeesCount}
+        icon={Briefcase}
+        handleFilter={null}
+      />
       <EmployeesList employees={employees} />
+    </div>
+  )
+}
+
+const NoEmployees = () => {
+  const router = useRouter()
+  const setAction = useEmployeeStore((state) => state.setAction)
+
+  return (
+    <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h3 className="text-2xl font-bold tracking-tight">
+          You have no employees
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          You can add a employee to get started
+        </p>
+        <Button
+          className="mt-4"
+          onClick={() => {
+            setAction('edit')
+            router.push('/employees/add')
+          }}
+        >
+          Add Employee
+        </Button>
+      </div>
     </div>
   )
 }
 
 export default function EmployeesPage () {
   const pathname = usePathname()
-  const router = useRouter()
 
   const error = useEmployeeStore((state) => state.error)
+  const isLoading = useEmployeeStore((state) => state.isLoading)
+  const setIsLoading = useEmployeeStore((state) => state.setIsLoading)
   const openResult = useEmployeeStore((state) => state.openResult)
   const employeesCount = useEmployeeStore((state) => state.employeesCount)
-  const setAction = useEmployeeStore((state) => state.setAction)
 
   const handleOpenResult = useEmployeeStore((state) => state.handleOpenResult)
   const handleCloseResult = useEmployeeStore(
@@ -56,7 +83,9 @@ export default function EmployeesPage () {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
       await fetchEmployees()
+      setIsLoading(false)
     }
 
     fetchData()
@@ -81,27 +110,7 @@ export default function EmployeesPage () {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="gap-4">
-          {employeesCount > 0
-            ? <Employees />
-            : <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm h-[93vh]">
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  You have no employees
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  You can add a employee to get started
-                </p>
-                <Button
-                  className="mt-4"
-                  onClick={() => {
-                    setAction('edit')
-                    router.push('/employees/add')
-                  }}
-                >
-                  Add Employee
-                </Button>
-              </div>
-            </div>}
+          {isLoading && employeesCount === 0 ? <NoEmployees /> : <Employees />}
         </div>
       </div>
       <ResultItem

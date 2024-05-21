@@ -9,6 +9,7 @@ export const useEmployeeStore = create((set, get) => {
   const initialState = {
     employees: [],
     allEmployees: [],
+    isLoading: true,
     id: '',
     firstName: '',
     lastName: '',
@@ -39,7 +40,7 @@ export const useEmployeeStore = create((set, get) => {
     get().handleValidation()
   }
 
-  const { employees, allEmployees, action, ...initialStateWithoutEmployees } =
+  const { employees, allEmployees, employeesCount, action, ...initialStateWithoutEmployees } =
     initialState
 
   const clearState = () => set(initialStateWithoutEmployees)
@@ -236,6 +237,7 @@ export const useEmployeeStore = create((set, get) => {
     ...handlers,
     ...fetchFunctions,
     setError: (error) => set({ error }),
+    setIsLoading: (isLoading) => set({ isLoading }),
     setValidation: (validation) => set({ validation }),
     setAction: (action) => set({ action })
   }

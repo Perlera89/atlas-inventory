@@ -9,6 +9,7 @@ export const useClientStore = create((set, get) => {
   const initialState = {
     clients: [],
     allClients: [],
+    isLoading: true,
     id: '',
     firstName: '',
     lastName: '',
@@ -35,7 +36,7 @@ export const useClientStore = create((set, get) => {
     get().handleValidation()
   }
 
-  const { clients, allClients, action, ...initialStateWithoutClients } =
+  const { clients, allClients, clientsCount, action, ...initialStateWithoutClients } =
     initialState
 
   const clearState = () => set(initialStateWithoutClients)
@@ -208,6 +209,7 @@ export const useClientStore = create((set, get) => {
     ...handlers,
     ...fetchFunctions,
     setError: (error) => set({ error }),
+    setIsLoading: (isLoading) => set({ isLoading }),
     setValidation: (validation) => set({ validation }),
     setAction: (action) => set({ action })
   }
