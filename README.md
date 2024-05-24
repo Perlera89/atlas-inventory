@@ -13,9 +13,3 @@ yarn dev
 pnpm dev
 # or
 bun dev
-
-# TODO: Primero necesito agregar el nuevo precio del producto restando el descuento
-
--- Al dar clic o cambiar el product (Cuando se actualiza el seletedProduct) se quita el descuento y si agrego uno nuevo se agrega el descuento del producto (se mantiene el descuento)
-
--- Mañana debo terminar la funcionalidad del teclado numerico y ademas de que pueda realizar el total de cada producto
