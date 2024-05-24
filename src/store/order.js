@@ -2,7 +2,13 @@ import { create } from 'zustand'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { CLIENTS_ROOT, PRODUCTS_ROOT } from '@/util/config'
+import {
+  CLIENTS_ROOT,
+  ORDER_ROOT,
+  PAYMENT_METHODS_ROOT,
+  PRODUCTS_ROOT
+} from '@/util/config'
+import { date } from 'zod'
 
 export const useOrderStore = create(
   persist(
@@ -21,12 +27,24 @@ export const useOrderStore = create(
         balance: 0,
         lasClosing: '',
         order: null,
+        note: '',
         orders: [],
+        client: null,
         clients: [],
-        selectedClient: null
+        paymentMethod: 1,
+        paymentMethods: [],
+        selectedClient: null,
+        openOrder: false,
+        isValidate: false
       }
 
       const handlers = {
+        handleSelectPaymentMethod: (value) => {
+          set({ paymentMethod: value })
+        },
+        handleSelectClient: (value) => {
+          set({ selectedClient: value })
+        },
         handleAddOrder: async (order) => {
           try {
             set((state) => ({
@@ -38,19 +56,44 @@ export const useOrderStore = create(
                 }
               ]
             }))
-            toast.success('Order added')
           } catch (error) {
-            toast.error('Error adding order')
+            console.log('error', error)
           }
+        },
+        handleNoteChange: (value) => {
+          set({ note: value })
         },
         handleNewOrder: async () => {
           try {
             get().handleAddOrder(get().order)
             get().createOrder()
-            toast.success('New order created')
           } catch (error) {
-            toast.error('Error creating new order')
+            console.log('Error creating new order')
           }
+        },
+        handleSaveOrder: async () => {
+          const order = {
+            code: get().order.code,
+            note: get().order.note,
+            status: get().order.status,
+            user: get().order.user,
+            client: get().selectedClient?.id,
+            paymentMethod: get().paymentMethod,
+            products: get().order.products
+          }
+
+          await axios
+            .post(ORDER_ROOT, order)
+            .then((res) => {
+              console.log('res', res)
+              get().handleDeleteOrder(get().order.id)
+              get().handleNewOrder()
+              get().fetchProductsToOrder()
+              set({ isValidate: true })
+            })
+            .catch((err) => {
+              console.log('Error saving order ' + err.message)
+            })
         },
         handleDeleteOrder: async (orderId) => {
           try {
@@ -64,29 +107,26 @@ export const useOrderStore = create(
         },
         handleAddProductToOrder: async (orderProduct) => {
           try {
+            // agrega una nueva orden si no existe
             if (!get().order) {
               get().createOrder()
             }
             set((state) => {
-              const productIndex = state.order.products.findIndex(
-                (product) => product.id === orderProduct.id
+              // Crear una copia de la orden actual
+              const newOrder = JSON.parse(JSON.stringify(state.order))
+
+              const productIndex = newOrder.products.findIndex(
+                (product) => product.product === orderProduct.product
               )
 
               if (productIndex !== -1) {
-                // Convierte la cantidad a un número antes de sumarla
-                state.order.products[productIndex].quantity = String(
-                  Number(state.order.products[productIndex].quantity) + 1
-                )
+                newOrder.products[productIndex].quantity += 1
               } else {
-                // Convierte la cantidad a un número antes de agregar el producto
-                state.order.products.push(orderProduct)
+                newOrder.products.push(orderProduct)
               }
 
               return {
-                order: {
-                  ...state.order,
-                  products: [...state.order.products]
-                }
+                order: newOrder
               }
             })
             get().totalOrder()
@@ -123,8 +163,12 @@ export const useOrderStore = create(
             order: {
               code:
                 'ORD-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
-              date: new Date().toISOString().slice(0, 10),
-              status: 'pending',
+              status: '1',
+              paymentMethod: '1',
+              date: new Date().toISOString(),
+              user: '1',
+              client: null,
+              note: null,
               total: 0,
               products: []
             },
@@ -139,7 +183,8 @@ export const useOrderStore = create(
                   total +
                   orderProduct.quantity *
                     orderProduct.price *
-                    (1 + orderProduct.iva / 100),
+                    (1 + orderProduct.iva / 100) *
+                    (1 - orderProduct.discount / 100),
                 0
               ) * 100
             ) / (100).toFixed(2)
@@ -222,13 +267,30 @@ export const useOrderStore = create(
                   id: client.id,
                   name: client.firstName + ' ' + client.lastName
                 }))
-              console.log('clients', clients)
               set(
                 {
                   clients
                 },
                 false,
                 'FETCH_CLIENTS'
+              )
+            })
+            .catch((err) => {
+              console.log('err', err)
+            })
+        },
+        fetchPaymentMethods: async () => {
+          const url = PAYMENT_METHODS_ROOT
+          await axios
+            .get(url)
+            .then((res) => {
+              const paymentMethods = res.data
+              set(
+                {
+                  paymentMethods
+                },
+                false,
+                'FETCH_PAYMENT_METHODS'
               )
             })
             .catch((err) => {
@@ -248,7 +310,8 @@ export const useOrderStore = create(
         setDiscount: (discount) => set({ discount }),
         setSelectedProduct: (selectedProduct) => set({ selectedProduct }),
         setSelectedButton: (selectedButton) => set({ selectedButton }),
-        setSelectedClient: (selectedClient) => set({ selectedClient })
+        setSelectedClient: (selectedClient) => set({ selectedClient }),
+        setOpenOrder: (openOrder) => set({ openOrder })
       }
     },
     { name: 'order-store', storage: createJSONStorage(() => sessionStorage) }

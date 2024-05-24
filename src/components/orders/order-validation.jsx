@@ -1,7 +1,87 @@
-import { Button } from '@/components/ui/button'
-import { Delete } from 'lucide-react'
+// hooks and store
+import { useOrderStore } from '@/store/order'
+import { useEffect, useState } from 'react'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { useToast } from '@/components/ui/use-toast'
 
-export default function Component () {
+// icons
+import { X, User, Delete } from 'lucide-react'
+
+// components
+import { Button } from '@/components/ui/button'
+import SelectValueItem from '../entry/select-item'
+import { Label } from '../ui/label'
+import { Textarea } from '../ui/textarea'
+import Invoice from '../invoice/invoice'
+import { ToastAction } from '@/components/ui/toast'
+
+export default function OrderValidation () {
+  const { toast } = useToast()
+
+  const [cash, setCash] = useState('0')
+  const [change, setChange] = useState('0')
+  const [note, setNote] = useState('')
+  const [remaining, setRemaining] = useState('0')
+
+  const order = useOrderStore((state) => state.order)
+  const iva = useOrderStore((state) => state.iva)
+  const paymentMethods = useOrderStore((state) => state.paymentMethods)
+  const paymentMethod = useOrderStore((state) => state.paymentMethod)
+  const fetchPaymentMethods = useOrderStore(
+    (state) => state.fetchPaymentMethods
+  )
+
+  const setOrder = useOrderStore((state) => state.setOrder)
+  const setOpenOrder = useOrderStore((state) => state.setOpenOrder)
+
+  const handleSelectPaymentMethod = useOrderStore(
+    (state) => state.handleSelectPaymentMethod
+  )
+  const handleSaveOrder = useOrderStore((state) => state.handleSaveOrder)
+
+  useEffect(() => {
+    const data = async () => {
+      await fetchPaymentMethods()
+    }
+    data()
+  }, [])
+
+  const handleNumberClick = (number) => {
+    const newCash = cash === '0' ? number : cash + number
+    setCash(newCash)
+
+    const totalOrder = parseFloat(order.total)
+    const newChange = parseFloat(newCash) - totalOrder
+    setChange(newChange < 0 ? '0.00' : newChange.toFixed(2))
+
+    const newRemaining = totalOrder - parseFloat(newCash)
+    setRemaining(newRemaining < 0 ? '0.00' : newRemaining.toFixed(2))
+  }
+
+  const handleDeleteClick = () => {
+    if (cash === '') {
+      setCash('0')
+      return
+    }
+    setCash(cash.slice(0, -1))
+  }
+
+  const handleClearCash = () => {
+    setCash('0')
+  }
+
+  const handleNoteChange = (value) => {
+    setNote(value)
+  }
+
+  const handleValidateClick = () => {
+    setOrder({ ...order, note })
+    handleSaveOrder()
+    setNote('')
+    setCash('0')
+    setOpenOrder(false)
+  }
+
   return (
     <div className="flex h-full bg-background">
       <aside className="w-1/2 border-r bg-background p-8">
@@ -9,157 +89,137 @@ export default function Component () {
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
             Order Validation
           </h3>
-          <h3 className="text-lg mt-4 font-semibold">Payment Method</h3>
           <div className="mt-4 space-y-4">
-            <Button className="flex items-center" variant="ghost">
-              <CurrencyIcon className="h-5 w-5 mr-2" />
-              Cash
-            </Button>
-            <Button className="flex items-center" variant="ghost">
-              <BanknoteIcon className="h-5 w-5 mr-2" />
-              Bank
-            </Button>
-            <h3 className="text-lg mt-4 font-semibold">Client</h3>
-            <Button className="flex items-center" variant="ghost">
-              <UserIcon className="h-5 w-5 mr-2" />
-              Client name
-            </Button>
+            <SelectValueItem
+              optionsTitle="Payment Methods"
+              options={paymentMethods}
+              value={paymentMethod}
+              valueTitle="Payment method"
+              onChange={(value) => handleSelectPaymentMethod(value)}
+            />
+            <h3 className="text-sm mt-4 font-semibold">Client</h3>
+            <div className="flex text-sm items-center">
+              <User className="h-5 w-5 mr-2" />
+              {order.client ? order.client.name : 'No client selected'}
+            </div>
           </div>
         </div>
         <div>
           <h3 className="text-lg font-semibold">Summary</h3>
           <div className="mt-4 flex items-center justify-between">
-            <span>Cash</span>
+            <span className="text-sm">Cash</span>
             <div className="flex items-center">
-              <span className="font-semibold">$ 45.00</span>
-              <Button className="ml-2" variant="ghost">
-                <XIcon className="h-4 w-4 text-gray-500" />
+              <span className="font-semibold">$ {cash}</span>
+              <Button
+                className="ml-2"
+                variant="ghost"
+                onClick={handleClearCash}
+              >
+                <X className="h-4 w-4 text-gray-500" />
               </Button>
             </div>
           </div>
         </div>
-        <Button className="mt-8 w-full h-16 py-4">Validate</Button>
+        <div className="grid gap-2 mt-2">
+          <Label className="text-sm font-semibold" htmlFor="description">
+            Note
+          </Label>
+          <Textarea
+            id="description"
+            placeholder="Empty"
+            value={note}
+            onChange={(e) => handleNoteChange(e.target.value)}
+          />
+        </div>
+        <Button
+          className="mt-8 w-full h-16 py-4"
+          disabled={cash === '0' || parseFloat(remaining) < 0}
+          onClick={() => {
+            handleValidateClick()
+            toast({
+              title: 'Order validated',
+              description: 'The order has been validated successfully',
+              action: (
+                <PDFDownloadLink
+                  document={<Invoice order={order} iva={iva} />}
+                  fileName={`invoice-${order.code}.pdf`}
+                >
+                  <ToastAction>Download invoice</ToastAction>
+                </PDFDownloadLink>
+              )
+            })
+          }}
+        >
+          Validate
+        </Button>
       </aside>
-      <div className="w-1/2 bg-background p-8">
-        <div className="flex justify-between mb-20">
-          <div className="grid gap-4">
-            <div>
-              <h3 className="text-xl font-semibold text-foreground">
-                Remaining
-              </h3>
-              <p className="font-semibold text-foreground/70">$ 0.00</p>
+      <div className="w-1/2 flex flex-col gap-4 bg-background p-8">
+        <div className="h-[35%] border rounded-lg">
+          {cash === '0'
+            ? (
+            <h3 className="text-3xl font-semibold tracking-tight text-center flex justify-center items-center h-full">
+              $ {order.total}
+            </h3>
+              )
+            : (
+            <div className="flex h-full justify-between p-4">
+              <div className="grid justify-between items-center gap-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground">
+                    Remaining
+                  </h3>
+                  <p className="font-semibold text-foreground/70">
+                    $ {remaining}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Pass
+                  </h3>
+                  <p className="font-semibold text-foreground/70">
+                    $ {order.total}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-foreground">
+                  Change
+                </h3>
+                <p className="font-semibold text-foreground/70">$ {change}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Pass</h3>
-              <p className="font-semibold text-foreground/70">$ 0.00</p>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-foreground">Change</h3>
-            <p className="font-semibold text-foreground/70">$ 0.00</p>
-          </div>
+              )}
         </div>
         <div className="grid grid-cols-3 gap-1">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((number) => (
-            <div
+            <Button
+              variant="outline"
               key={number}
-              className="p-2 m-0.5 rounded-md bg-muted/50 flex items-center justify-center h-16 text-center text-foreground hover:text-foreground/70 cursor-pointer transition-colors text-2xl"
+              className="m-0.5 h-16 text-xl"
+              onClick={() => handleNumberClick(number)}
             >
               {number}
-            </div>
+            </Button>
           ))}
-          <div className="p-2 m-0.5 rounded-md bg-muted/50 flex items-center justify-center h-16 text-center text-foreground hover:text-foreground/70 cursor-pointer transition-colors text-2xl col-span-2">
-            0
-          </div>
-          <Button className="py-8 text-3xl" variant="destructive">
+          {['0', '.'].map((number) => (
+            <Button
+              variant="outline"
+              key={number}
+              className="m-0.5 h-16 text-xl"
+              onClick={() => handleNumberClick(number)}
+            >
+              {number}
+            </Button>
+          ))}
+          <Button
+            className="py-8 text-2xl"
+            variant="destructive"
+            onClick={handleDeleteClick}
+          >
             <Delete />
           </Button>
         </div>
       </div>
     </div>
-  )
-}
-
-function BanknoteIcon (props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="20" height="12" x="2" y="6" rx="2" />
-      <circle cx="12" cy="12" r="2" />
-      <path d="M6 12h.01M18 12h.01" />
-    </svg>
-  )
-}
-
-function CurrencyIcon (props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="8" />
-      <line x1="3" x2="6" y1="3" y2="6" />
-      <line x1="21" x2="18" y1="3" y2="6" />
-      <line x1="3" x2="6" y1="21" y2="18" />
-      <line x1="21" x2="18" y1="21" y2="18" />
-    </svg>
-  )
-}
-
-function UserIcon (props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  )
-}
-
-function XIcon (props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
   )
 }

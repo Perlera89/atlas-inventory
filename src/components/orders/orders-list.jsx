@@ -4,7 +4,6 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger
@@ -18,15 +17,20 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger
+} from '@/components/ui/context-menu'
 
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { X } from 'lucide-react'
 
-export default function OrdersList ({ children }) {
-  const [open, setOpen] = useState(false)
-
+export default function OrdersList ({ open, setOpen, children }) {
   const setOrder = useOrderStore((state) => state.setOrder)
   const orders = useOrderStore((state) => state.orders)
+
+  const handleDeleteOrder = useOrderStore((state) => state.handleDeleteOrder)
 
   const handleClick = (newOrder) => {
     setOpen(false)
@@ -54,15 +58,34 @@ export default function OrdersList ({ children }) {
           <TableBody>
             {orders.map((order, index) => (
               <TableRow key={index} onClick={() => handleClick(order)}>
-                <TableCell>{order.code}</TableCell>
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <TableCell>{order.code}</TableCell>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem
+                      onClick={() => handleDeleteOrder(order.id)}
+                    >
+                      Delete Order
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
                 <TableCell>{order.date}</TableCell>
-                <TableCell>{order.client || 'No client'}</TableCell>
-                <TableCell>{order.products.length}</TableCell>
+                <TableCell>{order?.client?.name || 'No client'}</TableCell>
+                <TableCell>{order?.products?.length}</TableCell>
                 <TableCell>$ {order.total || 0}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        {orders.length === 0 && (
+          <div className="flex flex-col gap-4 justify-center items-center h-[80vh]">
+            <X className="h-12 w-12 text-gray-400" />
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+              No orders found
+            </h2>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   )

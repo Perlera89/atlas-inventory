@@ -467,11 +467,10 @@ export default function ProductPage ({ productId }) {
               <div className="flex gap-2 items-center">
                 <Checkbox
                   id="isBlock"
-                  defaultChecked
                   checked={isBlock}
                   onCheckedChange={(value) => handleSelect('isBLock', value)}
                 />
-                <Label htmlFor="isBlock ">Is Block</Label>
+                <Label htmlFor="isBlock ">Lock</Label>
               </div>
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 {id

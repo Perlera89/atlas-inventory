@@ -3,7 +3,7 @@ export default function OrderItem ({
   quantity,
   price,
   discount,
-  isClicked,
+  isSelected = false,
   onClick
 }) {
   const getTotal = () => {
@@ -15,7 +15,7 @@ export default function OrderItem ({
   return (
     <div
       className={`flex justify-between items-center p-2 transition-colors ${
-        isClicked ? 'bg-muted' : 'hover:bg-muted/50 active:bg-muted/70'
+        isSelected ? 'bg-muted' : 'hover:bg-muted/50 active:bg-muted/70'
       }`}
       onClick={onClick}
     >

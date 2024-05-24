@@ -27,7 +27,7 @@ model Cash {
   expensive   Decimal
   note        String
   isDeleted   Boolean
-  salePoint   SalePoint?
+  salePoint   SalePoint[]
 }
 
 model Position {
@@ -95,20 +95,32 @@ model Provider {
 }
 
 model Sale {
-  id           Int           @id @default(autoincrement())
-  code         Int
-  note         String
-  isCancel     Boolean
-  statusId     Int           @unique
-  userId       Int           @unique
-  clientId     Int?           @unique
-  isDeleted    Boolean       @default(false)
-  date         DateTime      @default(now())
-  status       Status        @relation(fields: [statusId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
-  client       Client?        @relation(fields: [clientId], references: [id])
-  productSales ProductSale[]
+  id              Int            @id @default(autoincrement())
+  code            String
+  note            String         @default("Empty")
+  isCancel        Boolean        @default(false)
+  statusId        Int            
+  paymentMethodId Int            
+  userId          Int            
+  clientId        Int?           
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  isDeleted       Boolean        @default(false)
+  status          Status         @relation(fields: [statusId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+  client          Client?        @relation(fields: [clientId], references: [id])
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  productSales    ProductSale[]
 }
+
+
+model PaymentMethod {
+  id        Int     @id @default(autoincrement())
+  name      String
+  isDeleted Boolean @default(false)
+  sales      Sale[]
+}
+
 
 model Area {
   id           Int           @id @default(autoincrement())
@@ -194,17 +206,28 @@ model Product {
 }
 
 model ProductSale {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   amount    Int
   price     Float
   discount  Decimal
   saleId    Int
   productId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  isDeleted Boolean  @default(false)
-  sale      Sale     @relation(fields: [saleId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  isDeleted Boolean @default(false)
+  sale      Sale    @relation(fields: [saleId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model SalePoint {
+  id         Int      @id @default(autoincrement())
+  name       String
+  code       Int
+  state      String
+  balance    Decimal
+  employeeId Int
+  cashId     Int      
+  isDeleted  Boolean  @default(false)
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  cash       Cash     @relation(fields: [cashId], references: [id])
 }
 
 model Employee {
@@ -235,7 +258,7 @@ model User {
   updatedAt DateTime @default(now())
   isDeleted Boolean  @default(false)
   type      TypeUser @relation(fields: [typeId], references: [id])
-  sale      Sale?
+  sales      Sale[]
 }
 
 model TypeUser {
@@ -268,22 +291,8 @@ model Purchase {
   provider   Provider @relation(fields: [providerId], references: [id])
 }
 
-model SalePoint {
-  id         Int      @id @default(autoincrement())
-  name       String
-  code       Int
-  state      String
-  balance    Decimal
-  employeeId Int
-  cashId     Int      @unique
-  isDeleted  Boolean  @default(false)
-  employee   Employee @relation(fields: [employeeId], references: [id])
-  cash       Cash     @relation(fields: [cashId], references: [id])
-}
-
 model Client {
   id           Int      @id @default(autoincrement())
-  sale         Sale?
   firstName    String
   lastName     String
   dui          String
@@ -294,13 +303,14 @@ model Client {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
   isDeleted    Boolean  @default(false)
+  sales         Sale[]
   address      Address  @relation(fields: [addressId], references: [id])
 }
 
 model Status {
   id        Int     @id @default(autoincrement())
   name      String
-  sale      Sale?
+  sales      Sale[]
   isDeleted Boolean @default(false)
 }
 

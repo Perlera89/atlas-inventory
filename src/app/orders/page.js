@@ -25,7 +25,7 @@ export default function SalePointsPage () {
   const ordersId = useOrderStore((state) => state.ordersId)
 
   const handleChangeView = (view) => {
-    // Add your logic here
+    // Agrregar logcia para cambiar la vista
   }
 
   return (
