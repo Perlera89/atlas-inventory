@@ -9,7 +9,7 @@ export async function POST (restOrder) {
     prisma.sale.create({
       data: {
         code: saleData.code,
-        note: saleData.note,
+        note: saleData.note || 'Empty',
         status: {
           connect: { id: Number(saleData.status) }
         },

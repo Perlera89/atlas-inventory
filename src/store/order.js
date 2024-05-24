@@ -8,7 +8,6 @@ import {
   PAYMENT_METHODS_ROOT,
   PRODUCTS_ROOT
 } from '@/util/config'
-import { date } from 'zod'
 
 export const useOrderStore = create(
   persist(
@@ -19,12 +18,13 @@ export const useOrderStore = create(
         productsToOrder: [],
         selectedProduct: '',
         filteredProducts: [],
-        price: 0,
-        quantity: 0,
-        discount: 0,
-        total: 0,
-        iva: 0,
-        balance: 0,
+        price: '',
+        quantity: '',
+        discount: '0',
+        subtotal: '',
+        total: '',
+        iva: '',
+        balance: '',
         lasClosing: '',
         order: null,
         note: '',
@@ -35,7 +35,8 @@ export const useOrderStore = create(
         paymentMethods: [],
         selectedClient: null,
         openOrder: false,
-        isValidate: false
+        isValidate: false,
+        isInvoiceVisible: false
       }
 
       const handlers = {
@@ -76,7 +77,7 @@ export const useOrderStore = create(
             code: get().order.code,
             note: get().order.note,
             status: get().order.status,
-            user: get().order.user,
+            user: get().order.user.id,
             client: get().selectedClient?.id,
             paymentMethod: get().paymentMethod,
             products: get().order.products
@@ -90,6 +91,8 @@ export const useOrderStore = create(
               get().handleNewOrder()
               get().fetchProductsToOrder()
               set({ isValidate: true })
+              set({ client: null })
+              set({ isInvoiceVisible: true })
             })
             .catch((err) => {
               console.log('Error saving order ' + err.message)
@@ -129,6 +132,7 @@ export const useOrderStore = create(
                 order: newOrder
               }
             })
+            get().subtotalOrder()
             get().totalOrder()
             get().totalIva()
           } catch (error) {
@@ -166,14 +170,30 @@ export const useOrderStore = create(
               status: '1',
               paymentMethod: '1',
               date: new Date().toISOString(),
-              user: '1',
+              user: {
+                id: 1,
+                name: 'Manuel Perlera'
+              },
               client: null,
               note: null,
+              subtotal: 0,
               total: 0,
               products: []
             },
             ordersCount: (parseInt(get().ordersCount) + 1).toString()
           })
+        },
+        subtotalOrder: () => {
+          const subtotal = get().order.products.reduce(
+            (total, orderProduct) =>
+              total +
+              orderProduct.quantity *
+                orderProduct.price *
+                (1 - orderProduct.discount / 100),
+            0
+          )
+
+          set({ subtotal })
         },
         totalOrder: () => {
           const total = parseFloat(
@@ -229,6 +249,7 @@ export const useOrderStore = create(
               }
             }
           })
+          get().subtotalOrder()
           get().totalOrder()
           get().totalIva()
         }
@@ -305,6 +326,7 @@ export const useOrderStore = create(
         ...functions,
         ...fetchs,
         setOrder: (order) => set({ order }),
+        setIsInvoiceVisible: (isInvoiceVisible) => set({ isInvoiceVisible }),
         setPrice: (price) => set({ price }),
         setQuantity: (quantity) => set({ quantity }),
         setDiscount: (discount) => set({ discount }),

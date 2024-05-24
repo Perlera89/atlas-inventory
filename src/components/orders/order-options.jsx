@@ -1,6 +1,6 @@
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useOrderStore } from '@/store/order'
-import { ChevronRight, User, Delete, Trash } from 'lucide-react'
+import { ChevronRight, User, Delete } from 'lucide-react'
 import OrderClient from './order-client'
 
 // components
@@ -21,6 +21,7 @@ export default function OrderOptions () {
   const quantity = useOrderStore((state) => state.quantity)
   const openOrder = useOrderStore((state) => state.openOrder)
   const order = useOrderStore((state) => state.order)
+  const subtotal = useOrderStore((state) => state.subtotal)
   const total = useOrderStore((state) => state.total)
   const selectedProduct = useOrderStore((state) => state.selectedProduct)
   const selectedClient = useOrderStore((state) => state.selectedClient)
@@ -43,13 +44,13 @@ export default function OrderOptions () {
   const handleNumberClick = (number) => {
     switch (selectedButton) {
       case 'Qty':
-        setQuantity(quantity + number)
+        setQuantity(quantity.toString() + number)
         break
       case 'Dsc':
         setDiscount(discount + number)
         break
       case 'Price':
-        setPrice(price + number)
+        setPrice(price.toString() + number)
         break
     }
     updateProduct()
@@ -59,21 +60,21 @@ export default function OrderOptions () {
     switch (selectedButton) {
       case 'Qty': {
         const newQuantity = String(quantity).slice(0, -1)
-        setQuantity(newQuantity === '' ? '' : parseInt(newQuantity))
+        setQuantity(newQuantity === '' ? '' : newQuantity)
         break
       }
       case 'Dsc': {
         const newDiscount = String(discount).slice(0, -1)
-        setDiscount(newDiscount === '' ? '' : parseFloat(newDiscount))
+        setDiscount(newDiscount === '' ? '' : newDiscount)
         break
       }
       case 'Price': {
         const newPrice = String(price).slice(0, -1)
-        setPrice(newPrice === '' ? '' : parseFloat(newPrice))
+        setPrice(newPrice === '' ? '' : newPrice)
         break
       }
     }
-    if (quantity === '' || price === '') {
+    if (quantity === '' || price === '' || discount === '') {
       handleDeleteProductToOrder(selectedProduct.id)
     }
     updateProduct()
@@ -82,19 +83,28 @@ export default function OrderOptions () {
   const handlePayOrder = () => {
     if (!order) return
     setOpenOrder(true)
-    setOrder({ ...order, total })
+    setOrder({ ...order, total, subtotal })
   }
 
-  useHotkeys('Enter', handlePayOrder)
-  useHotkeys('Backspace', handleDeleteClick)
-  useHotkeys('alt+s', () => setSelectedButton('Dsc'))
-  useHotkeys('alt+p', () => setSelectedButton('Price'))
-  useHotkeys('alt+q', () => setSelectedButton('Qty'))
+  const useConditionalHotkeys = (key, callback) => {
+    useHotkeys(key, () => {
+      if (!openOrder) {
+        callback()
+      }
+    })
+  }
+
+  useConditionalHotkeys('Enter', handlePayOrder)
+  useConditionalHotkeys('Backspace', handleDeleteClick)
+  useConditionalHotkeys('alt+s', () => setSelectedButton('Dsc'))
+  useConditionalHotkeys('alt+p', () => setSelectedButton('Price'))
+  useConditionalHotkeys('alt+q', () => setSelectedButton('Qty'))
 
   for (let i = 0; i < 10; i++) {
-    useHotkeys(`${i}`, () => handleNumberClick(i.toString()))
+    useConditionalHotkeys(`${i}`, () => handleNumberClick(i.toString()))
   }
-  useHotkeys('.', () => handleNumberClick('.'))
+
+  useConditionalHotkeys('.', () => handleNumberClick('.'))
 
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, '\u200B', 0, '.']
   const chunks = []
@@ -102,25 +112,28 @@ export default function OrderOptions () {
     chunks.push(numbers.slice(i, i + 3))
   }
 
+  console.log(order)
+
   return (
-    <div className="grid grid-cols-7 h-96 items-stretch w-[90vw] lg:w-full">
-      <div className="col-span-3 grid gap-2 grid-rows-3 w-full">
+    <div className="grid grid-cols-7 items-stretch w-[90vw] lg:w-full h-full">
+      <div className="col-span-3 grid grid-rows-4 gap-3 w-full">
         <OrderClient>
-          <Button variant="outline" className="gap-2 row-span-1 h-full">
-            <User />
-            <p className="text-xl">
-              {selectedClient ? selectedClient.name : 'Client'}
-            </p>
+          <Button
+            variant="outline"
+            className="gap-2 row-span-1 col-span-2 h-full mt-1"
+          >
+            <User size={20} />
+            <p>{selectedClient ? selectedClient.name : 'Client'}</p>
           </Button>
         </OrderClient>
         <Dialog open={openOrder} onOpenChange={setOpenOrder}>
           <DialogTrigger asChild>
             <Button
               disabled={
-                !order || order.products.length === 0 || !selectedClient
+                !order || order.products.length === 0 || !order.client
               }
               onClick={handlePayOrder}
-              className="row-span-5 h-full flex flex-col gap-2 items-center justify-center"
+              className="row-span-3 h-full mt-1 flex flex-col col-span-2 gap-2 items-center justify-center"
             >
               <ChevronRight size={32} />
               <p className="text-xl">Pay</p>

@@ -2,7 +2,7 @@
 import { useOrderStore } from '@/store/order'
 import { useEffect, useState } from 'react'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import { useToast } from '@/components/ui/use-toast'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 // icons
 import { X, User, Delete } from 'lucide-react'
@@ -13,17 +13,17 @@ import SelectValueItem from '../entry/select-item'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
 import Invoice from '../invoice/invoice'
-import { ToastAction } from '@/components/ui/toast'
 
 export default function OrderValidation () {
-  const { toast } = useToast()
-
+  // states
   const [cash, setCash] = useState('0')
   const [change, setChange] = useState('0')
   const [note, setNote] = useState('')
   const [remaining, setRemaining] = useState('0')
 
+  // state
   const order = useOrderStore((state) => state.order)
+  const isInvoiceVisible = useOrderStore((state) => state.isInvoiceVisible)
   const iva = useOrderStore((state) => state.iva)
   const paymentMethods = useOrderStore((state) => state.paymentMethods)
   const paymentMethod = useOrderStore((state) => state.paymentMethod)
@@ -31,20 +31,18 @@ export default function OrderValidation () {
     (state) => state.fetchPaymentMethods
   )
 
+  // actions
   const setOrder = useOrderStore((state) => state.setOrder)
   const setOpenOrder = useOrderStore((state) => state.setOpenOrder)
+  const setIsInvoiceVisible = useOrderStore(
+    (state) => state.setIsInvoiceVisible
+  )
 
+  // handlers
   const handleSelectPaymentMethod = useOrderStore(
     (state) => state.handleSelectPaymentMethod
   )
   const handleSaveOrder = useOrderStore((state) => state.handleSaveOrder)
-
-  useEffect(() => {
-    const data = async () => {
-      await fetchPaymentMethods()
-    }
-    data()
-  }, [])
 
   const handleNumberClick = (number) => {
     const newCash = cash === '0' ? number : cash + number
@@ -79,8 +77,21 @@ export default function OrderValidation () {
     handleSaveOrder()
     setNote('')
     setCash('0')
-    setOpenOrder(false)
+    setIsInvoiceVisible(true)
   }
+
+  useEffect(() => {
+    const data = async () => {
+      await fetchPaymentMethods()
+    }
+    data()
+  }, [])
+
+  for (let i = 0; i < 10; i++) {
+    useHotkeys(`${i}`, () => handleNumberClick(i.toString()))
+  }
+  useHotkeys('.', () => handleNumberClick('.'))
+  useHotkeys('Backspace', handleDeleteClick)
 
   return (
     <div className="flex h-full bg-background">
@@ -131,27 +142,34 @@ export default function OrderValidation () {
             onChange={(e) => handleNoteChange(e.target.value)}
           />
         </div>
-        <Button
-          className="mt-8 w-full h-16 py-4"
-          disabled={cash === '0' || parseFloat(remaining) < 0}
-          onClick={() => {
-            handleValidateClick()
-            toast({
-              title: 'Order validated',
-              description: 'The order has been validated successfully',
-              action: (
-                <PDFDownloadLink
-                  document={<Invoice order={order} iva={iva} />}
-                  fileName={`invoice-${order.code}.pdf`}
-                >
-                  <ToastAction>Download invoice</ToastAction>
-                </PDFDownloadLink>
-              )
-            })
-          }}
-        >
-          Validate
-        </Button>
+        {isInvoiceVisible
+          ? (
+          <PDFDownloadLink
+            document={<Invoice order={order} iva={iva} />}
+            fileName={`invoice-${order.code}.pdf`}
+          >
+            <Button
+              className="mt-8 w-full h-16 py-4"
+              onClick={() => {
+                setIsInvoiceVisible(false)
+                setOpenOrder(false)
+              }}
+            >
+              Download invoice
+            </Button>
+          </PDFDownloadLink>
+            )
+          : (
+          <Button
+            className="mt-8 w-full h-16 py-4"
+            disabled={cash === '0' || parseFloat(remaining) < 0}
+            onClick={() => {
+              handleValidateClick()
+            }}
+          >
+            Validate
+          </Button>
+            )}
       </aside>
       <div className="w-1/2 flex flex-col gap-4 bg-background p-8">
         <div className="h-[35%] border rounded-lg">

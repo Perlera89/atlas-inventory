@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useHotkeys } from 'react-hotkeys-hook'
 
 // icons
-import { ShoppingCart, ChevronLeft } from 'lucide-react'
+import { ShoppingCart, ChevronLeft, Trash2 } from 'lucide-react'
 
 // components
 import OrderFooter from './order-footer'
@@ -31,39 +31,46 @@ export default function OrderList () {
   const setDiscount = useOrderStore((state) => state.setDiscount)
 
   const handleNewOrder = useOrderStore((state) => state.handleNewOrder)
+  const handleDeleteOrder = useOrderStore((state) => state.handleDeleteOrder)
+
+  const handleClickDelete = () => {
+    handleDeleteOrder(order.id)
+    handleNewOrder()
+  }
 
   useHotkeys('alt+n', () => handleNewOrder())
   useHotkeys('alt+o', () => setOpenOrders(true))
 
   return (
-    <div>
-              <div className="flex justify-between w-1/3 items-center">
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => router.push('/orders')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Button>
-            <OrdersList open={openOrders} setOpen={setOpenOrders}>
-              <div className="relative cursor-pointer">
-                <ShoppingCart />
-                <Badge className="absolute bottom-4 left-4">
-                  {ordersCount}
-                </Badge>
-              </div>
-            </OrdersList>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={handleNewOrder}>New Order</Button>
-          </div>
+    <div className="grid w-full h-full gap-4">
+      <div className="flex justify-between items-center">
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => router.push('/orders')}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Back</span>
+          </Button>
+          <OrdersList open={openOrders} setOpen={setOpenOrders}>
+            <div className="relative cursor-pointer">
+              <ShoppingCart />
+              <Badge className="absolute bottom-4 left-4">{ordersCount}</Badge>
+            </div>
+          </OrdersList>
         </div>
-      <div className="flex h-full flex-col overflow-y-auto border rounded-md w-[90vw] lg:w-full">
+        <div className="flex gap-2">
+          <Button variant="ghost" onClick={handleClickDelete}>
+            <Trash2 />
+          </Button>
+          <Button onClick={handleNewOrder}>New Order</Button>
+        </div>
+      </div>
+      <div className="flex flex-col h-[63.5vh] overflow-y-auto border rounded-md w-[93vw] lg:w-full">
         {(!order?.products || order?.products.length === 0) && (
-          <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
+          <div className="flex flex-col h-full items-center justify-center gap-4">
             <div className="flex flex-col items-center gap-4">
               <ShoppingCart className="h-12 w-12 text-gray-400" />
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
@@ -80,16 +87,13 @@ export default function OrderList () {
             quantity={product.quantity}
             price={product.price}
             discount={product.discount}
-            isSelected={
-              clickedItem === product.id ||
-              product.id === order.products[order.products.length - 1].id
-            }
+            isSelected={clickedItem === product.product}
             onClick={() => {
-              setClickedItem(product.id)
+              setClickedItem(product.product)
               setSelectedProduct(product)
               setPrice(product.price)
               setQuantity(product.quantity)
-              setDiscount('')
+              setDiscount(product.discount)
             }}
           />
         ))}

@@ -14,7 +14,7 @@ export default function OrderItem ({
   }
   return (
     <div
-      className={`flex justify-between items-center p-2 transition-colors ${
+      className={`flex justify-between min-h-16 max-h-20 items-center p-2 transition-colors ${
         isSelected ? 'bg-muted' : 'hover:bg-muted/50 active:bg-muted/70'
       }`}
       onClick={onClick}

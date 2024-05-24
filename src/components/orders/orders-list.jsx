@@ -17,20 +17,12 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger
-} from '@/components/ui/context-menu'
 
 import { X } from 'lucide-react'
 
 export default function OrdersList ({ open, setOpen, children }) {
   const setOrder = useOrderStore((state) => state.setOrder)
   const orders = useOrderStore((state) => state.orders)
-
-  const handleDeleteOrder = useOrderStore((state) => state.handleDeleteOrder)
 
   const handleClick = (newOrder) => {
     setOpen(false)
@@ -56,20 +48,9 @@ export default function OrdersList ({ open, setOpen, children }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order, index) => (
-              <TableRow key={index} onClick={() => handleClick(order)}>
-                <ContextMenu>
-                  <ContextMenuTrigger>
-                    <TableCell>{order.code}</TableCell>
-                  </ContextMenuTrigger>
-                  <ContextMenuContent>
-                    <ContextMenuItem
-                      onClick={() => handleDeleteOrder(order.id)}
-                    >
-                      Delete Order
-                    </ContextMenuItem>
-                  </ContextMenuContent>
-                </ContextMenu>
+            {orders.map((order) => (
+              <TableRow key={order.code} onClick={() => handleClick(order)}>
+                <TableCell>{order.code}</TableCell>
                 <TableCell>{order.date}</TableCell>
                 <TableCell>{order?.client?.name || 'No client'}</TableCell>
                 <TableCell>{order?.products?.length}</TableCell>

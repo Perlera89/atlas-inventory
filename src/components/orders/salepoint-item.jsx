@@ -2,7 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 
-export default function SalepointItem ({ title, status, closing, balance, onOpen }) {
+export default function SalepointItem ({
+  title,
+  status,
+  closing,
+  balance,
+  onOpen
+}) {
   return (
     <Card className="w-96">
       <CardHeader>
