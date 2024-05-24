@@ -2,57 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240, 10%, 3.92%;
+    --foreground: 0 0% 70%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0, 0%, 100%;
+
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 70%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 70%;
+
+    --input: 0 0% 20%;
+
+    --card: 0 0% 20%;
+    --card-foreground: 0 0% 70%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 240, 3.7%, 15.88%;
+    --secondary-foreground: 0 0% 70%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 0%;
+
+    --ring: 0 0% 0%;
+    --border: 0 0% 20%;
+    --radius: 0.5rem;
+  }
 }
 
-body {
-  overflow: hidden;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    user-select: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #535657;
+    border-radius: 15px;
+  }
 }
 
-.ant-layout-sider-children {
-  background: #141414 !important;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #535657;
-  border-radius: 15px;
-}
-
-.select-none {
-  user-select: none;
-}
-
-.display-none {
-  display: none;
-}
-
-.ant-breadcrumb-separator {
-  display: none;
-}
-
-.menu-scroll {
-  max-height: 500px;
-  overflow-y: scroll;
-}
-
-.events {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.events .ant-badge-status {
-  width: 100%;
-  overflow: hidden;
-  font-size: 12px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.notes-month {
-  font-size: 20px;
-  text-align: center;
-}
-.notes-month section {
-  font-size: 28px;
+label:has(+ [required])::after {
+  content: "*";
+  color: rgb(239 68 68);
+  margin-left: 4px;
 }

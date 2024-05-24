@@ -1,34 +1,33 @@
 'use client'
+import { usePathname } from 'next/navigation'
 
-import React from 'react'
-import { Layout, theme } from 'antd'
-import HeaderLayout from './header'
-import SiderLayout from './sidebar'
-const { Content } = Layout
+import { PanelRight } from 'lucide-react'
+import { Button } from '../ui/button'
+import SidebarLayout from './sidebar'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
-const ContentLayout = ({ children }) => {
-  const {
-    token: { colorBgContainer }
-  } = theme.useToken()
+export default function ContentLayout ({ children }) {
+  const path = usePathname()
+  if (path === '/auth/login' || path === '/auth/register') {
+    return children
+  }
+
   return (
-    <Layout className="flex flex-col overflow-hidden">
-      <SiderLayout />
-      <Layout className="flex flex-col h-min-screen">
-        <HeaderLayout />
-        <Content
-          className="text-font-color h-screen"
-          style={{
-            padding: 16,
-            margin: 0,
-            minHeight: 280,
-            background: colorBgContainer
-          }}
-        >
-          {children}
-        </Content>
-      </Layout>
-    </Layout>
+    <div className="flex min-h-screen w-full bg-background">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button className="fixed flex sm:hidden z-20 bottom-10 right-10 rounded-full shadow-lg w-12 h-12">
+            <PanelRight size={24} />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-24">
+          <SidebarLayout isCollapsed />
+        </SheetContent>
+      </Sheet>
+      <div className="hidden sm:flex">
+        <SidebarLayout />
+      </div>
+      <main className="flex flex-1 flex-col gap-4 p-4 sm:border-l overflow-y-auto h-screen">{children}</main>
+    </div>
   )
 }
-
-export default ContentLayout

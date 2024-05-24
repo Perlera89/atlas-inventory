@@ -1,6 +1,4 @@
-import { ConfigProvider as AntdProvider } from 'antd'
-import { AntdRegistry } from '@ant-design/nextjs-registry'
-import theme from '@/themes/themeConfig'
+import { ThemeProvider } from './provider'
 
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -15,16 +13,19 @@ export const metadata = {
 
 export default function RootLayout ({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/icon.svg" />
       </head>
       <body className={inter.className}>
-        <AntdProvider theme={theme}>
-          <AntdRegistry>
-            <ContentLayout>{children}</ContentLayout>
-          </AntdRegistry>
-        </AntdProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ContentLayout>{children}</ContentLayout>
+          </ThemeProvider>
       </body>
     </html>
   )
