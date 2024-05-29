@@ -134,8 +134,8 @@ export const useEmployeeStore = create((set, get) => {
         city
       } = get()
       const validationItems = {
-        firstName: firstName.length >= 3,
-        lastName: lastName.length >= 3,
+        firstName: firstName?.length >= 3,
+        lastName: lastName?.length >= 3,
         dui: !!dui,
         email: !!email,
         phone: !!phone,

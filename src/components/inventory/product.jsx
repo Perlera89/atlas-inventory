@@ -303,13 +303,14 @@ const ProductTags = () => {
 }
 
 const ProductImage = () => {
+  const thumbnail = useInventoryStore((state) => state.thumbnail)
   return (
     <Card className="overflow-hidden">
       <CardHeader>
         <CardTitle>Product Images</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <ImageSave />
+        <ImageSave thumbnail={thumbnail} />
       </CardContent>
     </Card>
   )
@@ -498,8 +499,8 @@ export default function ProductPage ({ productId }) {
                   disabled={!validationValues}
                   onClick={async () => {
                     setThumbnail(await handleSubmit())
-                    router.push('/inventory')
                     handleSaveProduct()
+                    router.push('/inventory')
                   }}
                 >
                   Save Product
@@ -527,8 +528,8 @@ export default function ProductPage ({ productId }) {
                 disabled={!validationValues}
                 onClick={async () => {
                   setThumbnail(await handleSubmit())
-                  router.push('/inventory')
                   handleSaveProduct()
+                  router.push('/inventory')
                 }}
               >
                 Save Product

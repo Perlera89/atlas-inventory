@@ -11,6 +11,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "prisma": {
+    "seed": "node prisma/seed.cjs"
+  },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
     "@atlaskit/select": "^17.3.4",

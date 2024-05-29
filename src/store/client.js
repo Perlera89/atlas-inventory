@@ -25,8 +25,6 @@ export const useClientStore = create((set, get) => {
     relevantInfo: '',
     clientsCount: 0,
     action: 'view',
-    error: '',
-    openResult: false,
     validationItems: {},
     validationValues: false
   }
@@ -124,8 +122,8 @@ export const useClientStore = create((set, get) => {
         city
       } = get()
       const validationItems = {
-        firstName: firstName.length >= 3,
-        lastName: lastName.length >= 3,
+        firstName: firstName?.length >= 3,
+        lastName: lastName?.length >= 3,
         dui: !!dui,
         email: !!email,
         phone: !!phone,

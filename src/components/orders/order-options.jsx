@@ -42,6 +42,7 @@ export default function OrderOptions () {
   const updateProduct = useOrderStore((state) => state.updateProduct)
 
   const handleNumberClick = (number) => {
+    if (!selectedProduct) return
     switch (selectedButton) {
       case 'Qty':
         setQuantity(quantity.toString() + number)
@@ -57,6 +58,7 @@ export default function OrderOptions () {
   }
 
   const handleDeleteClick = () => {
+    if (!selectedProduct) return
     switch (selectedButton) {
       case 'Qty': {
         const newQuantity = String(quantity).slice(0, -1)

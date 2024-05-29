@@ -3,11 +3,9 @@ import { useDropzone } from 'react-dropzone'
 import { AspectRatio } from '../ui/aspect-ratio'
 import { ImagePlus, Upload } from 'lucide-react'
 import { useImageStore } from '@/store/image'
-import { useInventoryStore } from '@/store/inventory'
 
-function App () {
+function ImageSave ({ thumbnail }) {
   const setAcceptedFiles = useImageStore((state) => state.setAcceptedFiles)
-  const thumbnail = useInventoryStore((state) => state.thumbnail)
 
   const onDrop = useCallback((acceptedFiles) => {
     setAcceptedFiles(acceptedFiles)
@@ -45,7 +43,7 @@ function App () {
               ? (
               <div className="flex flex-col gap-2 aspect-square w-full items-center justify-center rounded-md border border-dashed">
                 <ImagePlus className="h-4 w-4 text-foreground" />
-                <span>Drap files here</span>
+                <span>Drap file here</span>
               </div>
                 )
               : (
@@ -60,4 +58,4 @@ function App () {
   )
 }
 
-export default App
+export default ImageSave

@@ -148,15 +148,7 @@ export default function OrderValidation () {
             document={<Invoice order={order} iva={iva} />}
             fileName={`invoice-${order.code}.pdf`}
           >
-            <Button
-              className="mt-8 w-full h-16 py-4"
-              onClick={() => {
-                setIsInvoiceVisible(false)
-                setOpenOrder(false)
-              }}
-            >
-              Download invoice
-            </Button>
+            <Button>Download invoice</Button>
           </PDFDownloadLink>
             )
           : (

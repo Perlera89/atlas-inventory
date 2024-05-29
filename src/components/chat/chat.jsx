@@ -3,7 +3,7 @@ import { useChat } from 'ai/react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useEffect, useRef } from 'react'
-import { Pyramid } from 'lucide-react'
+import { Pyramid, SendHorizonal } from 'lucide-react'
 
 export default function Chat () {
   const { messages, input, handleInputChange, handleSubmit } = useChat()
@@ -21,12 +21,12 @@ export default function Chat () {
         <h1 className="text-2xl font-bold">Atlas AI</h1>
       </header>
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
-      {messages.length < 1 && (
-        <div className="flex opacity-70 h-24 w-24 items-center justify-center mx-auto gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground place-content-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <Pyramid className="h-12 w-12" />
-          <span className="sr-only">Atlas Inv.</span>
-        </div>
-      )}
+        {messages.length < 1 && (
+          <div className="flex opacity-70 h-24 w-24 items-center justify-center mx-auto gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground place-content-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Pyramid className="h-12 w-12" />
+            <span className="sr-only">Atlas Inv.</span>
+          </div>
+        )}
         {messages.map((message) => (
           <div
             key={message.id}
@@ -58,7 +58,9 @@ export default function Chat () {
           value={input}
           onChange={handleInputChange}
         />
-        <Button type="submit">Send</Button>
+        <Button type="submit" className='rounded-full w-12 h-12'>
+          <SendHorizonal />
+        </Button>
       </form>
     </div>
   )

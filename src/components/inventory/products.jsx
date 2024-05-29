@@ -81,7 +81,7 @@ const ProductKanban = ({ products }) => {
       {products.map((product, key) => (
         <CardItem
           key={key}
-          image={product.productInfo.thumbnail}
+          thumbnail={product.productInfo.thumbnail}
           name={product.productInfo.name}
           price={product.salePrice}
           stock={product.stock}
