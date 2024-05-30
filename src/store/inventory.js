@@ -6,8 +6,7 @@ import {
   AREAS_ROOT,
   BRANDS_ROOT,
   CATEGORIES_ROOT,
-  PRODUCTS_ROOT,
-  TAGS_ROOT
+  PRODUCTS_ROOT
 } from '@/util/config'
 import trimStart from '@/util/trimStart'
 
@@ -44,8 +43,6 @@ export const useInventoryStore = create((set, get) => {
     area: '',
     areas: [],
     tags: [],
-    tagsCategory:
-      get()?.tags.filter((tag) => tag.value === get().category) || [],
     selectedTags: [],
     safetyInfo: '',
     description: '',
@@ -69,10 +66,13 @@ export const useInventoryStore = create((set, get) => {
       category,
       brand,
       area,
-      tags,
+      selectedTags,
       safetyInfo,
       description
     } = get()
+
+    const newTags = selectedTags.filter(tag => !tag.isCreated)
+    const existingTags = selectedTags.filter(tag => tag.isCreated)
 
     return {
       name,
@@ -89,7 +89,8 @@ export const useInventoryStore = create((set, get) => {
       category,
       brand,
       area,
-      tags,
+      existingTags,
+      newTags,
       safetyInfo,
       description
     }
@@ -118,12 +119,15 @@ export const useInventoryStore = create((set, get) => {
       editHandler({ [field]: value })
     },
     handleCategoryChange: (value) => {
-      console.log('value', value)
-      const tagsCategory = get().tags.filter(
-        (tag) => tag.value === Number(value)
-      )
-      console.log('tagsCategory', tagsCategory)
-      editHandler({ category: value, tagsCategory })
+      editHandler({ category: value })
+      const tags = get().categories.find((cat) => cat.id === value).tags
+      set({
+        tags: tags.map((tag) => ({
+          label: tag.name,
+          value: tag.id,
+          isCreated: true
+        }))
+      })
     },
     handleSelect: (field, value) => editHandler({ [field]: value }),
     handleChangeView: (value) => set({ view: value }),
@@ -292,10 +296,12 @@ export const useInventoryStore = create((set, get) => {
             category: productData.productInfo.category.id,
             brand: productData.productInfo.brand.id,
             area: productData.productInfo.area.id,
-            selectedTags: productData.productInfo.tagDetails.map((tag) => ({
-              label: tag.tag.name,
-              value: tag.tag.id
-            })),
+            tags: productData.category.tags.map((tag) => {
+              return {
+                label: tag.name,
+                value: tag.id
+              }
+            }),
             safetyInfo: productData.productInfo.safetyInfo,
             description: productData.productInfo.description
           })
@@ -324,16 +330,8 @@ export const useInventoryStore = create((set, get) => {
     fetchCategories: async () => {
       const res = await axios.get(CATEGORIES_ROOT)
       const categories = await res.data
+      console.log('categories', categories)
       set({ categories }, false, 'FETCH_CATEGORIES')
-    },
-    fetchTags: async () => {
-      const res = await axios.get(TAGS_ROOT)
-      const tags = await res.data.map((tag) => ({
-        label: tag.name,
-        value: tag.id
-      }))
-      console.log('tags', tags)
-      set({ tags }, false, 'FETCH_TAGS')
     }
   }
 

@@ -37,22 +37,28 @@ export async function GET (_, { params }) {
           category: {
             select: {
               id: true,
-              name: true
-            }
-          },
-          type: {
-            select: {
-              id: true,
-              name: true
-            }
-          },
-          tagDetails: {
-            select: {
-              tag: {
+              name: true,
+              tags: {
                 select: {
                   id: true,
                   name: true
                 }
+              }
+            }
+          }
+        },
+        type: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        tagDetails: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true
               }
             }
           }

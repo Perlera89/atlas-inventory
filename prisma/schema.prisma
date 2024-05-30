@@ -179,8 +179,8 @@ model TagDetail {
   updatedAt DateTime @default(now())
   isDeleted Boolean  @default(false)
 
-  tag         Tag         @relation(fields: [tagId], references: [id])
-  productInfo ProductInfo @relation(fields: [productId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model ProductInfo {
@@ -204,7 +204,6 @@ model ProductInfo {
   brand    Brand    @relation(fields: [brandId], references: [id])
 
   products   Product[]
-  tagDetails TagDetail[]
 }
 
 model Product {
@@ -226,6 +225,7 @@ model Product {
 
   purshase     Purchase?
   productSales ProductSale[]
+  tagDetails   TagDetail[]
 }
 
 model ProductSale {

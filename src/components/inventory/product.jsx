@@ -28,7 +28,7 @@ import ImageSave from '../display/drag-image'
 import { useEffect, useState } from 'react'
 import { PopConfirmItem } from '../display/popconfirm'
 import axios from 'axios'
-import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT } from '@/util/config'
+import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT, TAGS_ROOT } from '@/util/config'
 import MultipleSelect from '../ui/multiple-select'
 import SelectInputItem from '../entry/select-input'
 
@@ -187,11 +187,11 @@ const ProductTags = () => {
   const category = useInventoryStore((state) => state.category)
   const brand = useInventoryStore((state) => state.brand)
   const area = useInventoryStore((state) => state.area)
-  const selectedTags = useInventoryStore((state) => state.selectedTags)
   const categories = useInventoryStore((state) => state.categories)
   const brands = useInventoryStore((state) => state.brands)
   const areas = useInventoryStore((state) => state.areas)
-  const tags = useInventoryStore((state) => state.tagsCategory)
+  const tags = useInventoryStore((state) => state.tags)
+  const selectedTags = useInventoryStore((state) => state.selectedTags)
 
   const handleSelect = useInventoryStore((state) => state.handleSelect)
   const handleCategoryChange = useInventoryStore(
@@ -201,7 +201,6 @@ const ProductTags = () => {
   const fetchCategories = useInventoryStore((state) => state.fetchCategories)
   const fetchBrands = useInventoryStore((state) => state.fetchBrands)
   const fetchAreas = useInventoryStore((state) => state.fetchAreas)
-  const fetchTags = useInventoryStore((state) => state.fetchTags)
 
   const [inputCategory, setInputCategory] = useState('')
   const [inputBrand, setInputBrand] = useState('')
@@ -212,7 +211,6 @@ const ProductTags = () => {
       await fetchAreas()
       await fetchBrands()
       await fetchCategories()
-      await fetchTags()
     }
 
     fetchData()
@@ -267,7 +265,7 @@ const ProductTags = () => {
             onChange={(value) => handleSelect('area', value)}
             valueTitle="Area"
             optionsTitle="Areas"
-            className='mt-2'
+            className="mt-2"
             inputValue={inputArea}
             onInputChange={(e) => setInputArea(e.target.value)}
             onKeyPress={async (e) => {
@@ -281,12 +279,15 @@ const ProductTags = () => {
             }}
           />
           <div className="grid gap-2">
-            <Label className='text-sm' htmlFor="tags">Tags</Label>
+            <Label className="text-sm" htmlFor="tags">
+              Tags
+            </Label>
             <MultipleSelect
               className="text-foreground/70 mt-2"
               value={selectedTags}
               creatable
-              defaultOptions={tags}
+              options={tags}
+              onChange={(value) => handleSelect('selectedTags', value)}
               placeholder="Select tags..."
               hidePlaceholderWhenSelected
               emptyIndicator={

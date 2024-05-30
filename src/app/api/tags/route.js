@@ -7,3 +7,26 @@ export async function GET () {
 
   return NextResponse.json(categories)
 }
+
+export async function POST (restCategory) {
+  console.log('restCategory', restCategory)
+  try {
+    const categoryData = await restCategory.json()
+
+    const category = await prisma.tag.create({
+      data: {
+        name: categoryData.name,
+        category: {
+          connect: {
+            id: Number(categoryData.category)
+          }
+        }
+      }
+    })
+    await prisma.$disconnect()
+
+    return NextResponse.json(category)
+  } catch (error) {
+    console.error(error)
+  }
+}
