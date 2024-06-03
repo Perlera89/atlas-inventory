@@ -34,8 +34,13 @@ export const useClientStore = create((set, get) => {
     get().handleValidation()
   }
 
-  const { clients, allClients, clientsCount, action, ...initialStateWithoutClients } =
-    initialState
+  const {
+    clients,
+    allClients,
+    clientsCount,
+    action,
+    ...initialStateWithoutClients
+  } = initialState
 
   const clearState = () => set(initialStateWithoutClients)
 
@@ -80,7 +85,6 @@ export const useClientStore = create((set, get) => {
         } else {
           await axios.post(CLIENTS_ROOT, data)
           toast.success('Created successfully')
-          set({ openResult: true })
         }
       } catch (error) {
         console.log('error', error)
@@ -97,7 +101,7 @@ export const useClientStore = create((set, get) => {
           toast.success('Deleted successfully')
         })
         .catch((err) => {
-          get().handleError(err)
+          console.error(err)
         })
       await get().handleClearClient()
       await get().fetchClients()
@@ -166,33 +170,21 @@ export const useClientStore = create((set, get) => {
     fetchClients: async () => {
       const clients = get().clients
       if (clients.length > 0) return
-      else {
-        await axios
-          .get(CLIENTS_ROOT)
-          .then((response) => {
-            const allClients = response.data.filter(
-              (client) => !client.isDeleted
-            )
-            set({
-              allClients,
-              clients: allClients,
-              clientsCount: allClients.length,
-              id: allClients.id,
-              firstName: allClients.firstName,
-              lastName: allClients.lastName,
-              dui: allClients.dui,
-              email: allClients.email,
-              phone: allClients.phone,
-              department: allClients?.address?.department.id,
-              district: allClients?.address?.district.id,
-              city: allClients?.address?.city.id,
-              relevantInfo: allClients.relevantInfo
-            })
+      await axios
+        .get(CLIENTS_ROOT)
+        .then((response) => {
+          const allClients = response.data.filter(
+            (client) => !client.isDeleted
+          )
+          set({
+            allClients,
+            clients: allClients,
+            clientsCount: allClients.length
           })
-          .catch((error) => {
-            console.log('error', error)
-          })
-      }
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
     },
     fetchDepartments: async () => {
       await axios.get(DEPARTMENTS_ROOT).then((response) => {

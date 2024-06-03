@@ -26,6 +26,11 @@ export async function GET (_, { params }) {
           name: true
         }
       },
+      user: {
+        select: {
+          username: true
+        }
+      },
       address: {
         select: {
           department: {
@@ -94,7 +99,12 @@ export async function PUT (body, { params }) {
             id: Number(employeeData.position)
           }
         },
-        salary: employeeData.salary
+        salary: employeeData.salary,
+        user: {
+          update: {
+            username: employeeData.username
+          }
+        }
       }
     })
 

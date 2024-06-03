@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import bycript from 'bcryptjs'
 
 export async function GET () {
-  const clients = await prisma.employee.findMany({
+  const employees = await prisma.employee.findMany({
     select: {
       id: true,
       firstName: true,
@@ -13,6 +14,11 @@ export async function GET () {
       genreId: true,
       salary: true,
       positionId: true,
+      user: {
+        select: {
+          username: true
+        }
+      },
       address: {
         select: {
           department: true,
@@ -26,15 +32,17 @@ export async function GET () {
 
   await prisma.$disconnect()
 
-  return NextResponse.json(clients)
+  return NextResponse.json(employees)
 }
 
 export async function POST (body) {
-  const clientData = await body.json()
+  const employeeData = await body.json()
   const {
     id,
     firstName,
     lastName,
+    username,
+    password,
     dui,
     email,
     phone,
@@ -44,7 +52,11 @@ export async function POST (body) {
     department,
     district,
     city
-  } = clientData
+  } = employeeData
+
+  console.log('employeeData', employeeData)
+
+  const hashedPassword = await bycript.hash(password, 10)
 
   const employee = await prisma.employee.create({
     data: {
@@ -70,7 +82,19 @@ export async function POST (body) {
           id: Number(position)
         }
       },
-      salary
+      salary,
+      user: {
+        create: {
+          email,
+          username,
+          password: hashedPassword,
+          type: {
+            connect: {
+              id: 2
+            }
+          }
+        }
+      }
     }
   })
 

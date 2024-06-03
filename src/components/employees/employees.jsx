@@ -15,13 +15,18 @@ import {
 import { Button } from '../ui/button'
 import { SearchItem } from '../ui/search'
 
-export default function EmployeeList ({ employees }) {
+export default function EmployeeList () {
   const router = useRouter()
 
+  const employees = useEmployeeStore((state) => state.employees)
   const allEmployees = useEmployeeStore((state) => state.allEmployees)
   const setAction = useEmployeeStore((state) => state.setAction)
-  const handleClearEmployee = useEmployeeStore((state) => state.handleClearEmployee)
+  const handleClearEmployee = useEmployeeStore(
+    (state) => state.handleClearEmployee
+  )
   const handleSearch = useEmployeeStore((state) => state.handleSearch)
+
+  console.log('employees', employees)
 
   return (
     <>
@@ -36,7 +41,6 @@ export default function EmployeeList ({ employees }) {
         >
           Add Employee
         </Button>
-        <Button>Add User</Button>
 
         <form className="w-full">
           <SearchItem
@@ -53,6 +57,7 @@ export default function EmployeeList ({ employees }) {
             <TableHead>Id</TableHead>
             <TableHead>First name</TableHead>
             <TableHead className="text-center">Last name</TableHead>
+            <TableHead className="text-center">Username</TableHead>
             <TableHead className="text-center">DUI</TableHead>
             <TableHead className="text-center">Email</TableHead>
             <TableHead className="text-right">Phone</TableHead>
@@ -70,6 +75,9 @@ export default function EmployeeList ({ employees }) {
               <TableCell>{record.id}</TableCell>
               <TableCell>{record.firstName}</TableCell>
               <TableCell className="text-center">{record.lastName}</TableCell>
+              <TableCell className="text-center">
+                {record.user.username || 'No user'}
+              </TableCell>
               <TableCell className="text-center">{record.dui}</TableCell>
               <TableCell className="text-center">{record.email}</TableCell>
               <TableCell className="text-right">{record.phone}</TableCell>

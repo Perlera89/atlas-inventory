@@ -140,7 +140,8 @@ export const useInventoryStore = create((set, get) => {
             toast.success('Updated successfully')
           })
           .catch((err) => {
-            get().handleError(err)
+            console.log(err)
+            toast.error('Error updating product')
           })
       } else {
         await axios
@@ -150,7 +151,7 @@ export const useInventoryStore = create((set, get) => {
           })
           .catch((err) => {
             console.log(err)
-            get().handleError(err)
+            toast.error('Error creating product')
           })
       }
       get().fetchProducts()
@@ -164,7 +165,8 @@ export const useInventoryStore = create((set, get) => {
           toast.success('Deleted successfully')
         })
         .catch((err) => {
-          get().handleError(err)
+          toast.error('Error deleting product')
+          console.log(err)
         })
       get().fetchProducts()
     },

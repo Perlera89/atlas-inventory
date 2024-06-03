@@ -18,6 +18,8 @@ export const useEmployeeStore = create((set, get) => {
     id: '',
     firstName: '',
     lastName: '',
+    username: '',
+    password: '',
     dui: '',
     email: '',
     phone: '',
@@ -33,7 +35,6 @@ export const useEmployeeStore = create((set, get) => {
     department: '',
     departments: [],
     employeesCount: 0,
-    usersCount: 0,
     action: 'view',
     error: '',
     openResult: false,
@@ -83,6 +84,8 @@ export const useEmployeeStore = create((set, get) => {
           id: get().id,
           firstName: get().firstName,
           lastName: get().lastName,
+          username: get().username,
+          password: get().password,
           genre: get().genre,
           salary: get().salary,
           position: get().position,
@@ -96,6 +99,7 @@ export const useEmployeeStore = create((set, get) => {
 
         if (get().id) {
           await axios.put(`${EMPLOYEES_ROOT}/${get().id}`, data)
+          await get().fetchEmployees()
           toast.success('Updated successfully')
         } else {
           await axios.post(EMPLOYEES_ROOT, data)
@@ -176,6 +180,7 @@ export const useEmployeeStore = create((set, get) => {
               id: employee.id,
               firstName: employee.firstName,
               lastName: employee.lastName,
+              username: employee?.user?.username,
               dui: employee.dui,
               email: employee.email,
               phone: employee.phone,
@@ -210,16 +215,7 @@ export const useEmployeeStore = create((set, get) => {
             {
               allEmployees,
               employees: allEmployees,
-              employeesCount: allEmployees.length,
-              id: allEmployees.id,
-              firstName: allEmployees.firstName,
-              lastName: allEmployees.lastName,
-              dui: allEmployees.dui,
-              email: allEmployees.email,
-              phone: allEmployees.phone,
-              department: allEmployees?.address?.department?.id,
-              district: allEmployees?.address?.district?.id,
-              city: allEmployees?.address?.city?.id
+              employeesCount: allEmployees.length
             },
             false,
             'FETCH_EMPLOYEES'

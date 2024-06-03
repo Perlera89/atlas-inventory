@@ -302,8 +302,8 @@ const EmployeeContact = () => {
 }
 
 const UserProfile = () => {
-  const email = useEmployeeStore((state) => state.email)
-  const phone = useEmployeeStore((state) => state.phone)
+  const username = useEmployeeStore((state) => state.username)
+  const password = useEmployeeStore((state) => state.password)
   const handleInputChange = useEmployeeStore(
     (state) => state.handleInputChange
   )
@@ -311,42 +311,31 @@ const UserProfile = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contact</CardTitle>
+        <CardTitle>User information</CardTitle>
+        <CardDescription className='text-foreground/70'>Optional information only for employees who are users</CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-6">
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
+              id="username"
               type="text"
-              placeholder="user@mail.com"
-              value={email}
-              onChange={(e) => handleInputChange('email', e)}
+              placeholder="user"
+              value={username}
+              onChange={(e) => handleInputChange('username', e)}
               className="w-full"
               required
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="phone">Password</Label>
+            <Label htmlFor="password">Password</Label>
             <Input
-              id="phone"
-              type="tel"
-              placeholder="1234-5678"
-              value={phone}
-              onChange={(e) => handleInputChange('phone', e)}
-              className="w-full"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="phone">Confirm password</Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="1234-5678"
-              value={phone}
-              onChange={(e) => handleInputChange('phone', e)}
+              id="password"
+              type="password"
+              placeholder="********"
+              value={password}
+              onChange={(e) => handleInputChange('password', e)}
               className="w-full"
               required
             />
@@ -469,10 +458,11 @@ export default function EmployeePage ({ employeeId }) {
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                 <PersonalInformation />
-                <EmployeeAddress />
+                <EmployeeContact />
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                <EmployeeContact />
+                <EmployeeAddress />
+                <UserProfile />
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 md:hidden">

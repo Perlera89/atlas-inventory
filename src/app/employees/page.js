@@ -22,27 +22,18 @@ import { useEmployeeStore } from '@/store/employee'
 import { useEffect } from 'react'
 
 const Employees = () => {
-  const employees = useEmployeeStore((state) => state.employees)
   const employeesCount = useEmployeeStore((state) => state.employeesCount)
-  const usersCount = useEmployeeStore((state) => state.usersCount)
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className='flex gap-4'>
-        <CardCountItem
-          title="Total employees"
-          count={employeesCount}
-          icon={Briefcase}
-          handleFilter={null}
-        />
-        <CardCountItem
-          title="Total users"
-          count={usersCount}
-          icon={Users}
-          handleFilter={null}
-        />
-      </div>
-      <EmployeesList employees={employees} />
+      <CardCountItem
+        title="Total employees"
+        count={employeesCount}
+        icon={Briefcase}
+        handleFilter={null}
+      />
+
+      <EmployeesList />
     </div>
   )
 }
