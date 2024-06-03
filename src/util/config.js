@@ -24,5 +24,7 @@ export const PURCHASES_ROOT = `${ROOT}/purchase`
 export const ORDER_ROOT = `${ROOT}/order`
 export const SALE_POINTS_ROOT = `${ROOT}/sale-point`
 export const TAGS_ROOT = `${ROOT}/tags`
+export const MESSAGES_ROOT = `${ROOT}/messages`
+export const CHAT_ROOT = `${ROOT}/chat`
 export const TAG_DETAILS_ROOT = `${ROOT}/tag-detail`
 export const INITIAL_PROMPT = 'Actúa como un asistente del sistema Atlas - Inventory. Saluda y presentate al usuario como Atlas. Solo responde preguntas relacionadas con el sistema Atlas - Inventory'

@@ -28,7 +28,6 @@ export default function UserOptions () {
     }
 
     fetchData()
-    router.push('/orders/1')
   }, [])
 
   // const session = await getServerSession(authOptions)
@@ -56,7 +55,14 @@ export default function UserOptions () {
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            signOut()
+            router.push('/auth/login')
+          }}
+        >
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
