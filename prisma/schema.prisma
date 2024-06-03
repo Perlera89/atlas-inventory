@@ -113,14 +113,14 @@ model Sale {
   isCancel        Boolean  @default(false)
   statusId        Int
   paymentMethodId Int
-  userId          Int
+  employeeId      Int
   clientId        Int?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   isDeleted       Boolean  @default(false)
 
   status        Status         @relation(fields: [statusId], references: [id])
-  user          User           @relation(fields: [userId], references: [id])
+  employee      Employee       @relation(fields: [employeeId], references: [id])
   client        Client?        @relation(fields: [clientId], references: [id])
   paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
 
@@ -179,8 +179,8 @@ model TagDetail {
   updatedAt DateTime @default(now())
   isDeleted Boolean  @default(false)
 
-  tag     Tag     @relation(fields: [tagId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  tag         Tag         @relation(fields: [tagId], references: [id])
+  productInfo ProductInfo @relation(fields: [productId], references: [id])
 }
 
 model ProductInfo {
@@ -204,6 +204,7 @@ model ProductInfo {
   brand    Brand    @relation(fields: [brandId], references: [id])
 
   products   Product[]
+  tagDetails TagDetail[]
 }
 
 model Product {
@@ -225,7 +226,6 @@ model Product {
 
   purshase     Purchase?
   productSales ProductSale[]
-  tagDetails   TagDetail[]
 }
 
 model ProductSale {
@@ -273,23 +273,25 @@ model Employee {
   genre    Genre    @relation(fields: [genreId], references: [id])
   position Position @relation(fields: [positionId], references: [id])
   address  Address  @relation(fields: [addressId], references: [id])
+  user     User?
 
+  sales      Sale[]
   salePoints SalePoint[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  typeId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isDeleted Boolean  @default(false)
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  username   String   @unique
+  password   String
+  typeId     Int
+  employeeId Int?     @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isDeleted  Boolean  @default(false)
 
-  type TypeUser @relation(fields: [typeId], references: [id])
-
-  sales   Sale[]
+  type     TypeUser  @relation(fields: [typeId], references: [id])
+  employee Employee? @relation(fields: [employeeId], references: [id])
 }
 
 model TypeUser {

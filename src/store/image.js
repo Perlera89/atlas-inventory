@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import axios from 'axios'
 
 export const useImageStore = create((set, get) => ({
   acceptedFiles: [],
@@ -11,14 +12,12 @@ export const useImageStore = create((set, get) => ({
     formData.append('upload_preset', 'llxhes8k')
     formData.append('api_key', '497174235592243')
 
-    const res = await fetch(
-      'https://api.cloudinary.com/v1_1/dn1mocdua/image/upload',
-      {
-        method: 'POST',
-        body: formData
-      }
-    )
-    const data = await res.json()
-    return data.secure_url
+    const res = await axios
+      .post('https://api.cloudinary.com/v1_1/dn1mocdua/image/upload', formData)
+      .then(() => {
+        const data = res.data
+        return data.secure_url
+      })
+      .catch((err) => console.log(err))
   }
 }))

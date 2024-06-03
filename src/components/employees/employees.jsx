@@ -28,7 +28,6 @@ export default function EmployeeList ({ employees }) {
       <div className="flex gap-2 justify-start w-full items-center">
         <Button
           className="w-auto"
-          size="sm"
           onClick={() => {
             setAction('edit')
             router.push('/employees/add')
@@ -37,6 +36,7 @@ export default function EmployeeList ({ employees }) {
         >
           Add Employee
         </Button>
+        <Button>Add User</Button>
 
         <form className="w-full">
           <SearchItem

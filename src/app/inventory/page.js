@@ -121,6 +121,7 @@ export default function InventoryPage () {
       <Toaster
         position="top-center"
         toastOptions={{
+          duration: 5000,
           style: {
             background: '#1d1d1d',
             color: 'white'

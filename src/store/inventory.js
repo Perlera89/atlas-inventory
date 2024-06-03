@@ -12,9 +12,9 @@ import trimStart from '@/util/trimStart'
 
 export const useInventoryStore = create((set, get) => {
   const initialState = {
+    isLoading: true,
     allProducts: [],
     lastProducts: [],
-    isLoading: true,
     products: [],
     productCount: 0,
     productOnSaleCount: 0,
@@ -71,8 +71,8 @@ export const useInventoryStore = create((set, get) => {
       description
     } = get()
 
-    const newTags = selectedTags.filter(tag => !tag.isCreated)
-    const existingTags = selectedTags.filter(tag => tag.isCreated)
+    const newTags = selectedTags.filter((tag) => !tag.isCreated)
+    const existingTags = selectedTags.filter((tag) => tag.isCreated)
 
     return {
       name,
@@ -99,7 +99,6 @@ export const useInventoryStore = create((set, get) => {
   const editHandler = async (state) => {
     set({ ...state, action: 'edit' })
     await get().handleValidation()
-    console.log('productData()', productData())
   }
 
   const {
@@ -207,9 +206,6 @@ export const useInventoryStore = create((set, get) => {
           }))
       )
     },
-    handleError: (err) => {
-      set({ openResult: true, error: err })
-    },
     handleValidation: () => {
       const {
         name,
@@ -250,6 +246,8 @@ export const useInventoryStore = create((set, get) => {
 
   const fetchFuctions = {
     fetchProducts: async () => {
+      const products = get().products
+      if (products.length > 0) return
       const url = PRODUCTS_ROOT
       await axios
         .get(url)
@@ -270,45 +268,58 @@ export const useInventoryStore = create((set, get) => {
           )
         })
         .catch((err) => {
-          get().handleError(err)
+          console.log(err)
         })
     },
     fetchProduct: async (id) => {
+      if (!id) return
       await axios
         .get(`${PRODUCTS_ROOT}/${id}`)
         .then((res) => {
           const productData = res.data
-          set({
-            openProduct: true,
-            id: productData.id,
-            infoId: productData.productInfo.id,
-            name: productData.productInfo.name,
-            thumbnail: productData.productInfo.thumbnail,
-            code: productData.code,
-            stock: productData.stock,
-            onSale: productData.isOnSale,
-            price: productData.salePrice,
-            cost: productData.purchasePrice,
-            minimumPrice: productData.minimumPrice,
-            minimumStock: productData.productInfo.minimumStock,
-            iva: productData.iva,
-            type: productData.productInfo.type.id,
-            category: productData.productInfo.category.id,
-            brand: productData.productInfo.brand.id,
-            area: productData.productInfo.area.id,
-            tags: productData.category.tags.map((tag) => {
-              return {
-                label: tag.name,
-                value: tag.id
-              }
-            }),
-            safetyInfo: productData.productInfo.safetyInfo,
-            description: productData.productInfo.description
-          })
-          console.log('get().selectedTags', get().selectedTags)
+
+          console.log('productData', productData)
+          set(
+            {
+              id: productData.id,
+              name: productData.productInfo.name,
+              thumbnail: productData.productInfo.thumbnail,
+              code: productData.code,
+              stock: productData.stock,
+              onSale: productData.isOnSale,
+              price: productData.salePrice,
+              cost: productData.purchasePrice,
+              minimumPrice: productData.minimumPrice,
+              minimumStock: productData.productInfo.minimumStock,
+              iva: productData.iva,
+              type: productData.productInfo.type.id,
+              category: productData.productInfo.category.id,
+              brand: productData.productInfo.brand.id,
+              area: productData.productInfo.area.id,
+              tagDetailsId: productData.productInfo.tagDetails.id,
+              tags: productData.productInfo.category.tags.map((tag) => {
+                return {
+                  label: tag.name,
+                  value: tag.id
+                }
+              }),
+              selectedTags: productData.productInfo.tagDetails.map((detail) => {
+                return {
+                  id: detail.id,
+                  value: detail.tag.id,
+                  label: detail.tag.name,
+                  isCreated: true
+                }
+              }),
+              safetyInfo: productData.productInfo.safetyInfo,
+              description: productData.productInfo.description
+            },
+            false,
+            'FETCH_PRODUCT'
+          )
         })
         .catch((err) => {
-          get().handleError(err)
+          console.log('err', err)
         })
     },
     fetchBrands: async () => {
@@ -319,7 +330,7 @@ export const useInventoryStore = create((set, get) => {
           set({ brands }, false, 'FETCH_BRANDS')
         })
         .catch((err) => {
-          get().handleError(err)
+          console.log(err)
         })
     },
     fetchAreas: async () => {

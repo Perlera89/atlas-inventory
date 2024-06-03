@@ -46,8 +46,8 @@ export default function SalePointsPage () {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="w-full flex gap-2">
-        <Button>Add sale point</Button>
+      <div className="w-full flex gap-2 items-center">
+        <Button >Add sale point</Button>
         <SearchItem placeholder="Search sale point" />
         <ComboboxDropdownMenu />
         <Tabs defaultValue="list" size="small">

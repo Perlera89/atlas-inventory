@@ -301,6 +301,62 @@ const EmployeeContact = () => {
   )
 }
 
+const UserProfile = () => {
+  const email = useEmployeeStore((state) => state.email)
+  const phone = useEmployeeStore((state) => state.phone)
+  const handleInputChange = useEmployeeStore(
+    (state) => state.handleInputChange
+  )
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Contact</CardTitle>
+      </CardHeader>
+      <CardContent className="px-6 pb-6">
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Username</Label>
+            <Input
+              id="email"
+              type="text"
+              placeholder="user@mail.com"
+              value={email}
+              onChange={(e) => handleInputChange('email', e)}
+              className="w-full"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Password</Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="1234-5678"
+              value={phone}
+              onChange={(e) => handleInputChange('phone', e)}
+              className="w-full"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Confirm password</Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="1234-5678"
+              value={phone}
+              onChange={(e) => handleInputChange('phone', e)}
+              className="w-full"
+              required
+            />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function EmployeePage ({ employeeId }) {
   const router = useRouter()
 
@@ -413,10 +469,10 @@ export default function EmployeePage ({ employeeId }) {
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                 <PersonalInformation />
+                <EmployeeAddress />
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                 <EmployeeContact />
-                <EmployeeAddress />
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 md:hidden">
@@ -460,6 +516,7 @@ export default function EmployeePage ({ employeeId }) {
       <Toaster
         position="top-center"
         toastOptions={{
+          duration: 5000,
           style: {
             background: '#1d1d1d',
             color: 'white'

@@ -1,9 +1,11 @@
-'use client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useInventoryStore } from '@/store/inventory'
 import { useImageStore } from '@/store/image'
 import { useRouter } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
+import axios from 'axios'
+import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT } from '@/util/config'
 
 // icons
 import { ChevronLeft } from 'lucide-react'
@@ -25,12 +27,10 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '../ui/checkbox'
 import ImageSave from '../display/drag-image'
-import { useEffect, useState } from 'react'
 import { PopConfirmItem } from '../display/popconfirm'
-import axios from 'axios'
-import { AREAS_ROOT, BRANDS_ROOT, CATEGORIES_ROOT, TAGS_ROOT } from '@/util/config'
 import MultipleSelect from '../ui/multiple-select'
 import SelectInputItem from '../entry/select-input'
+import SelectItem from '../entry/select-item'
 
 const ProductDetails = () => {
   const name = useInventoryStore((state) => state.name)
@@ -216,6 +216,9 @@ const ProductTags = () => {
     fetchData()
   }, [])
 
+  console.log('category', category)
+  console.log('selectedTags', selectedTags)
+
   return (
     <Card>
       <CardHeader>
@@ -305,6 +308,7 @@ const ProductTags = () => {
 
 const ProductImage = () => {
   const thumbnail = useInventoryStore((state) => state.thumbnail)
+
   return (
     <Card className="overflow-hidden">
       <CardHeader>
@@ -327,7 +331,7 @@ const ProductType = () => {
         <CardTitle>Product Type</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <SelectInputItem
+        <SelectItem
           value={type}
           options={[
             { id: 1, name: 'Consumable' },
@@ -382,11 +386,16 @@ const ProductExtra = () => {
 
 export default function ProductPage ({ productId }) {
   const router = useRouter()
+
   const onSale = useInventoryStore((state) => state.onSale)
   const isBlock = useInventoryStore((state) => state.isBlock)
-  const handleSelect = useInventoryStore((state) => state.handleSelect)
   const name = useInventoryStore((state) => state.name)
-  const fetchProduct = useInventoryStore((state) => state.fetchProduct)
+  const validationValues = useInventoryStore((state) => state.validationValues)
+  const id = useInventoryStore((state) => state.id)
+  const handleSubmit = useImageStore((state) => state.handleSubmit)
+  const setThumbnail = useInventoryStore((state) => state.setThumbnail)
+
+  const handleSelect = useInventoryStore((state) => state.handleSelect)
   const handleSaveProduct = useInventoryStore(
     (state) => state.handleSaveProduct
   )
@@ -396,14 +405,13 @@ export default function ProductPage ({ productId }) {
   const handleDeleteProduct = useInventoryStore(
     (state) => state.handleDeleteProduct
   )
-  const validationValues = useInventoryStore((state) => state.validationValues)
-  const id = useInventoryStore((state) => state.id)
-  const handleSubmit = useImageStore((state) => state.handleSubmit)
-  const setThumbnail = useInventoryStore((state) => state.setThumbnail)
+
+  const fetchProduct = useInventoryStore((state) => state.fetchProduct)
 
   useEffect(() => {
     const fetchData = async () => {
       if (productId) {
+        console.log('Entro aqui')
         await fetchProduct(productId)
       }
     }

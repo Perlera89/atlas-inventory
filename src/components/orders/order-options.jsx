@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { Button } from '../ui/button'
 
 const OptionItem = ({ onClick, variant = 'outline', children }) => (
-  <Button variant={variant} onClick={onClick} className="h-full w-full m-1">
+  <Button variant={variant} onClick={onClick} size="sm" className="h-full w-full m-1">
     {children}
   </Button>
 )

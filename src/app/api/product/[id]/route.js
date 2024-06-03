@@ -45,20 +45,21 @@ export async function GET (_, { params }) {
                 }
               }
             }
-          }
-        },
-        type: {
-          select: {
-            id: true,
-            name: true
-          }
-        },
-        tagDetails: {
-          select: {
-            tag: {
-              select: {
-                id: true,
-                name: true
+          },
+          type: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          tagDetails: {
+            select: {
+              id: true,
+              tag: {
+                select: {
+                  id: true,
+                  name: true
+                }
               }
             }
           }
@@ -66,14 +67,16 @@ export async function GET (_, { params }) {
       }
     }
   })
-  await prisma.$disconnect()
 
+  await prisma.$disconnect()
   return NextResponse.json(products)
 }
 
 export async function PUT (restProduct, { params }) {
   try {
     const productData = await restProduct.json()
+
+    console.log('productData', productData)
 
     const updatedProduct = await prisma.product.update({
       where: {
@@ -119,7 +122,61 @@ export async function PUT (restProduct, { params }) {
       }
     })
 
-    return NextResponse.json({ updatedProduct })
+    let resultNewTags
+    let resultExistingTags
+
+    if (productData.newTags && productData.newTags.length > 0) {
+      resultNewTags = await Promise.all(
+        productData.newTags.map(async (tag) => {
+          console.log('tag', tag)
+          if (tag.id) {
+            // Update existing tag
+            return prisma.tag.update({
+              where: {
+                id: Number(tag.id)
+              },
+              data: {
+                name: tag.label,
+                categoryId: Number(productData.category)
+              }
+            })
+          } else {
+            // Create new tag
+            return prisma.tag.create({
+              data: {
+                name: tag.label,
+                categoryId: Number(productData.category)
+              }
+            })
+          }
+        })
+      )
+    }
+
+    if (productData.existingTags && productData.existingTags.length > 0) {
+      resultExistingTags = await Promise.all(
+        productData.existingTags.map(async (tag) => {
+          console.log('tag', tag)
+
+          return prisma.tagDetail.update({
+            where: {
+              id: Number(tag.id)
+            },
+            data: {
+              productId: Number(params.id),
+              tagId: tag.value
+            }
+          })
+        })
+      )
+    }
+
+    await prisma.$disconnect()
+    return NextResponse.json([
+      updatedProduct,
+      resultNewTags,
+      resultExistingTags
+    ])
   } catch (err) {
     return NextResponse.json(err)
   }

@@ -24,7 +24,7 @@ export const useProfileStore = create((set, get) => {
     action: 'view',
     validationItems: {},
     validationValues: false,
-    idDeleted: true
+    isDeleted: true
   }
 
   const editHandler = async (state) => {
@@ -126,7 +126,7 @@ export const useProfileStore = create((set, get) => {
             cities: profile.address.district.cities,
             description: profile.description,
             profile,
-            idDeleted: profile.isDeleted
+            isDeleted: profile.isDeleted
           })
         })
         .catch((error) => {

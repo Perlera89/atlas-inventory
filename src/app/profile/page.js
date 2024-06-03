@@ -47,8 +47,6 @@ export default function ProfilePage () {
 
   const isDeleted = useProfileStore((state) => state.isDeleted)
 
-  console.log('isDeleted', isDeleted)
-
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -74,6 +72,7 @@ export default function ProfilePage () {
       <Toaster
         position="top-center"
         toastOptions={{
+          duration: 5000,
           style: {
             background: '#1d1d1d',
             color: 'white'

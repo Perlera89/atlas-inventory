@@ -61,11 +61,11 @@ export default function OrderList () {
             </div>
           </OrdersList>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Button variant="ghost" onClick={handleClickDelete}>
             <Trash2 />
           </Button>
-          <Button onClick={handleNewOrder}>New Order</Button>
+          <Button size="sm" onClick={handleNewOrder}>New Order</Button>
         </div>
       </div>
       <div className="flex flex-col h-[63.5vh] overflow-y-auto border rounded-md w-[93vw] lg:w-full">

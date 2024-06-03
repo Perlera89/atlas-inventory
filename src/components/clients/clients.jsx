@@ -28,7 +28,6 @@ export default function ClientList ({ clients }) {
       <div className="flex gap-2 justify-start w-full items-center">
         <Button
           className="w-auto"
-          size="sm"
           onClick={() => {
             setAction('edit')
             router.push('/clients/add')

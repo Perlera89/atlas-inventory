@@ -14,7 +14,7 @@ import EmployeesList from '@/components/employees/employees'
 import { Button } from '@/components/ui/button'
 
 // icons
-import { Briefcase } from 'lucide-react'
+import { Briefcase, Users } from 'lucide-react'
 
 // hooks & stores
 import { usePathname, useRouter } from 'next/navigation'
@@ -24,15 +24,24 @@ import { useEffect } from 'react'
 const Employees = () => {
   const employees = useEmployeeStore((state) => state.employees)
   const employeesCount = useEmployeeStore((state) => state.employeesCount)
+  const usersCount = useEmployeeStore((state) => state.usersCount)
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <CardCountItem
-        title="Total employees"
-        count={employeesCount}
-        icon={Briefcase}
-        handleFilter={null}
-      />
+      <div className='flex gap-4'>
+        <CardCountItem
+          title="Total employees"
+          count={employeesCount}
+          icon={Briefcase}
+          handleFilter={null}
+        />
+        <CardCountItem
+          title="Total users"
+          count={usersCount}
+          icon={Users}
+          handleFilter={null}
+        />
+      </div>
       <EmployeesList employees={employees} />
     </div>
   )
@@ -110,7 +119,7 @@ export default function EmployeesPage () {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="gap-4">
-          {isLoading && employeesCount === 0 ? <NoEmployees /> : <Employees />}
+          {!isLoading && employeesCount === 0 ? <NoEmployees /> : <Employees />}
         </div>
       </div>
       <ResultItem

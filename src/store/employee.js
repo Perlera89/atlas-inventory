@@ -1,7 +1,12 @@
 import { create } from 'zustand'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { DEPARTMENTS_ROOT, EMPLOYEES_ROOT, GENRES_ROOT, POSITIONS_ROOT } from '@/util/config'
+import {
+  DEPARTMENTS_ROOT,
+  EMPLOYEES_ROOT,
+  GENRES_ROOT,
+  POSITIONS_ROOT
+} from '@/util/config'
 
 import trimStart from '@/util/trimStart'
 
@@ -28,6 +33,7 @@ export const useEmployeeStore = create((set, get) => {
     department: '',
     departments: [],
     employeesCount: 0,
+    usersCount: 0,
     action: 'view',
     error: '',
     openResult: false,
@@ -40,8 +46,13 @@ export const useEmployeeStore = create((set, get) => {
     get().handleValidation()
   }
 
-  const { employees, allEmployees, employeesCount, action, ...initialStateWithoutEmployees } =
-    initialState
+  const {
+    employees,
+    allEmployees,
+    employeesCount,
+    action,
+    ...initialStateWithoutEmployees
+  } = initialState
 
   const clearState = () => set(initialStateWithoutEmployees)
 
@@ -160,22 +171,26 @@ export const useEmployeeStore = create((set, get) => {
         .then((response) => {
           const employee = response.data
           console.log('employee', employee)
-          set({
-            id: employee.id,
-            firstName: employee.firstName,
-            lastName: employee.lastName,
-            dui: employee.dui,
-            email: employee.email,
-            phone: employee.phone,
-            genre: employee.genre.id,
-            salary: employee.salary,
-            position: employee.position.id,
-            department: employee.address.department.id,
-            district: employee.address.district.id,
-            districts: employee.address.department.districts,
-            city: employee.address.city.id,
-            cities: employee.address.district.cities
-          }, false, 'FETCH_EMPLOYEE')
+          set(
+            {
+              id: employee.id,
+              firstName: employee.firstName,
+              lastName: employee.lastName,
+              dui: employee.dui,
+              email: employee.email,
+              phone: employee.phone,
+              genre: employee.genre.id,
+              salary: employee.salary,
+              position: employee.position.id,
+              department: employee.address.department.id,
+              district: employee.address.district.id,
+              districts: employee.address.department.districts,
+              city: employee.address.city.id,
+              cities: employee.address.district.cities
+            },
+            false,
+            'FETCH_EMPLOYEE'
+          )
         })
         .catch((error) => {
           console.log('error', error)
@@ -184,15 +199,15 @@ export const useEmployeeStore = create((set, get) => {
     fetchEmployees: async () => {
       const employees = get().employees
       if (employees.length > 0) return
-      else {
-        await axios
-          .get(EMPLOYEES_ROOT)
-          .then((response) => {
-            const allEmployees = response.data.filter(
-              (employee) => !employee.isDeleted
-            )
-            console.log('allEmployees', allEmployees)
-            set({
+      await axios
+        .get(EMPLOYEES_ROOT)
+        .then((response) => {
+          const allEmployees = response.data.filter(
+            (employee) => !employee.isDeleted
+          )
+          console.log('allEmployees', allEmployees)
+          set(
+            {
               allEmployees,
               employees: allEmployees,
               employeesCount: allEmployees.length,
@@ -205,12 +220,14 @@ export const useEmployeeStore = create((set, get) => {
               department: allEmployees?.address?.department?.id,
               district: allEmployees?.address?.district?.id,
               city: allEmployees?.address?.city?.id
-            }, false, 'FETCH_EMPLOYEES')
-          })
-          .catch((error) => {
-            console.log('error', error)
-          })
-      }
+            },
+            false,
+            'FETCH_EMPLOYEES'
+          )
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
     },
     fetchDepartments: async () => {
       await axios.get(DEPARTMENTS_ROOT).then((response) => {
