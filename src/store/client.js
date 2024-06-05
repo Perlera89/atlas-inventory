@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { CLIENTS_ROOT, DEPARTMENTS_ROOT } from '@/util/config'
+import { CLIENTS_ROOT, DEPARTMENTS_ROOT, DISTRICS_ROOT } from '@/util/config'
 
 import trimStart from '@/util/trimStart'
 
@@ -187,10 +187,15 @@ export const useClientStore = create((set, get) => {
         })
     },
     fetchDepartments: async () => {
-      await axios.get(DEPARTMENTS_ROOT).then((response) => {
-        const departments = response.data
-        set({ departments })
-      })
+      await axios
+        .get(DEPARTMENTS_ROOT)
+        .then((response) => {
+          const departments = response.data
+          set({ departments })
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
     }
   }
 

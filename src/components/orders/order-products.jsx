@@ -25,6 +25,8 @@ export default function OrderProducts () {
     getProducts()
   }, [getProducts])
 
+  console.log('productsToOrder', productsToOrder)
+
   return (
     <div className="w-full lg:w-2/3">
       <SearchItem
@@ -54,15 +56,16 @@ export default function OrderProducts () {
         {filteredProducts.slice(0, 10).map((product, index) => (
           <CardItem
             key={index}
-            thumbnail={product.productInfo.thumbnail}
-            name={product.productInfo.name}
+            thumbnail={product.thumbnail}
+            name={product.name}
             price={product.salePrice}
             stock={product.stock}
             onClick={() =>
               handleAddProductToOrder({
                 product: product.id,
-                name: product.productInfo.name,
+                name: product.name,
                 price: product.salePrice,
+                blocked: product.isBlocked,
                 iva: product.iva,
                 quantity: 1,
                 discount: '0'

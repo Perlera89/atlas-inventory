@@ -261,9 +261,19 @@ export const useOrderStore = create(
           await axios
             .get(url)
             .then((res) => {
-              const productsToOrder = res.data.filter(
-                (product) => !product.isDeleted
-              )
+              const productsToOrder = res.data
+                .filter((product) => !product.isDeleted && product.isOnSale)
+                .map((product) => ({
+                  id: product.id,
+                  thumbnail: product.productInfo.thumbnail,
+                  name: product.productInfo.name,
+                  code: product.code,
+                  stock: product.stock,
+                  salePrice: product.salePrice,
+                  iva: product.iva,
+                  isOnSale: product.isOnSale,
+                  isBlocked: product.isBlocked
+                }))
               set(
                 {
                   productsToOrder,

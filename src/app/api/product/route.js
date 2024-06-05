@@ -7,6 +7,7 @@ export async function GET () {
       id: true,
       code: true,
       isOnSale: true,
+      isBlocked: true,
       salePrice: true,
       purchasePrice: true,
       stock: true,
@@ -41,6 +42,7 @@ export async function POST (restProduct) {
       salePrice: Number(productData.salePrice),
       iva: Number(productData.iva),
       isOnSale: productData.onSale,
+      isBlocked: productData.blocked,
       purchasePrice: Number(productData.purchasePrice),
       minimumPrice: Number(productData.minimumPrice),
       productInfo: {

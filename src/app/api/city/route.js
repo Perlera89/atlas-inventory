@@ -14,7 +14,11 @@ export async function POST (resCity) {
   const city = await prisma.city.create({
     data: {
       name: cityData.name,
-      district: Number(cityData.district)
+      district: {
+        connect: {
+          id: Number(cityData.district)
+        }
+      }
     }
   })
   await prisma.$disconnect()

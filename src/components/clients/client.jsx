@@ -18,15 +18,6 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectGroup,
-  SelectItem,
-  SelectValue,
-  SelectLabel
-} from '@/components/ui/select'
-import {
   Card,
   CardContent,
   CardDescription,
@@ -39,11 +30,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { useEffect, useState } from 'react'
 import { PopConfirmItem } from '../display/popconfirm'
 import axios from 'axios'
-import {
-  CITIES_ROOT,
-  DEPARTMENTS_ROOT,
-  DISTRICS_ROOT
-} from '@/util/config'
+import { CITIES_ROOT, DEPARTMENTS_ROOT, DISTRICS_ROOT } from '@/util/config'
+import SelectInputItem from '../entry/select-input'
 
 const PersonalInformation = () => {
   const firstName = useClientStore((state) => state.firstName)
@@ -117,7 +105,6 @@ const ClientAddress = () => {
   const handleSelectCity = useClientStore((state) => state.handleSelectCity)
 
   const fetchDepartments = useClientStore((state) => state.fetchDepartments)
-
   const [inputDeparment, setInputDeparment] = useState('')
   const [inputDistrict, setInputDistrict] = useState('')
   const [inputCity, setInputCity] = useState('')
@@ -128,7 +115,7 @@ const ClientAddress = () => {
     }
 
     fetchData()
-  }, [])
+  }, [fetchDepartments])
 
   return (
     <Card>
@@ -140,115 +127,81 @@ const ClientAddress = () => {
       </CardHeader>
       <CardContent className="px-6 pb-6">
         <div className="grid gap-2">
-          <div className="grid gap-2">
-            <Label htmlFor="deparment">Department</Label>
-            <Select
-              id="deparment"
-              onValueChange={handleSelectDeparment}
-              value={department}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select deparment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Deparments</SelectLabel>
-                  {departments.map((deparment) => (
-                    <SelectItem key={deparment.id} value={deparment.id}>
-                      {deparment.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new department"
-                    className="mt-2 bg-transparent"
-                    value={inputDeparment}
-                    onChange={(e) => setInputDeparment(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(DEPARTMENTS_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputDeparment('')
-                        // await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+          <SelectInputItem
+            valueTitle="Deparment"
+            optionsTitle="Departments"
+            value={department}
+            options={departments}
+            onChange={handleSelectDeparment}
+            inputValue={inputDeparment}
+            onInputChange={(e) => setInputDeparment(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios
+                  .post(DEPARTMENTS_ROOT, {
+                    name: e.target.value
+                  })
+                  .then(() => {
+                    setInputDeparment('')
+                    fetchDepartments()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
+              }
+            }}
+          />
+          <SelectInputItem
+            valueTitle="District"
+            optionsTitle="Districts"
+            value={district}
+            onChange={handleSelectDistrict}
+            options={districts}
+            inputValue={inputDistrict}
+            onInputChange={(e) => setInputDistrict(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios
+                  .post(DISTRICS_ROOT, {
+                    name: e.target.value,
+                    department
+                  })
+                  .then(() => {
+                    setInputDistrict('')
+                    fetchDistricts()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
+              }
+            }}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="district">Districts</Label>
-            <Select
-              id="district"
-              onValueChange={handleSelectDistrict}
-              value={district}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select district" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Districts</SelectLabel>
-                  {districts?.map((district) => (
-                    <SelectItem key={district.id} value={district.id}>
-                      {district.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new district"
-                    className="mt-2 bg-transparent"
-                    value={inputDistrict}
-                    onChange={(e) => setInputDistrict(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(DISTRICS_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputDistrict('')
-                        // await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="city">City</Label>
-            <Select id="city" onValueChange={handleSelectCity} value={city}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select city" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Cities</SelectLabel>
-                  {cities.map((city) => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name}
-                    </SelectItem>
-                  ))}
-                  <Input
-                    placeholder="Type new city"
-                    className="mt-2 bg-transparent"
-                    value={inputCity}
-                    onChange={(e) => setInputCity(e.target.value)}
-                    onKeyPress={async (e) => {
-                      if (e.key === 'Enter') {
-                        await axios.post(CITIES_ROOT, {
-                          name: e.target.value
-                        })
-                        setInputCity('')
-                        // await fetchSelects()
-                      }
-                    }}
-                  />
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+          <SelectInputItem
+            valueTitle="City"
+            optionsTitle="Cities"
+            value={city}
+            onChange={handleSelectCity}
+            options={cities}
+            inputValue={inputCity}
+            onInputChange={(e) => setInputCity(e.target.value)}
+            onKeyPress={async (e) => {
+              if (e.key === 'Enter') {
+                await axios
+                  .post(CITIES_ROOT, {
+                    name: e.target.value,
+                    district
+                  })
+                  .then(() => {
+                    setInputCity('')
+                    fetchDepartments()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
+              }
+            }}
+          />
         </div>
       </CardContent>
     </Card>
@@ -423,29 +376,25 @@ export default function ClientPage ({ clientId }) {
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 md:hidden">
-            {id
-              ? (
-                  <PopConfirmItem
-                    confirm={() => {
-                      handleClientDelete()
-                      router.push('/clients')
-                    }}
-                    title={`Delete client ${firstName} ${lastName}`}
-                  >
-                    <Button variant="outline" size="sm">
-                      Delete
-                    </Button>
-                  </PopConfirmItem>
-                )
-              : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleClearClient}
-                  >
-                    Discard
+              {id
+                ? (
+                <PopConfirmItem
+                  confirm={() => {
+                    handleClientDelete()
+                    router.push('/clients')
+                  }}
+                  title={`Delete client ${firstName} ${lastName}`}
+                >
+                  <Button variant="outline" size="sm">
+                    Delete
                   </Button>
-                )}
+                </PopConfirmItem>
+                  )
+                : (
+                <Button variant="outline" size="sm" onClick={handleClearClient}>
+                  Discard
+                </Button>
+                  )}
               <Button
                 size="sm"
                 disabled={!validationValues}

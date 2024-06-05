@@ -89,6 +89,7 @@ export async function PUT (restProduct, { params }) {
         purchasePrice: Number(productData.cost),
         minimumPrice: Number(productData.minimumPrice),
         isOnSale: productData.onSale,
+        isBlocked: productData.blocked,
         stock: Number(productData.stock),
         productInfo: {
           update: {

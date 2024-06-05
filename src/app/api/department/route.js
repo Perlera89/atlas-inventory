@@ -25,16 +25,15 @@ export async function GET () {
   return NextResponse.json(deparments)
 }
 
-export async function POST (resCity) {
-  const cityData = await resCity.json()
+export async function POST (resDepartment) {
+  const deparmentData = await resDepartment.json()
 
-  const city = await prisma.city.create({
+  const deparment = await prisma.department.create({
     data: {
-      name: cityData.name,
-      district: Number(cityData.district)
+      name: deparmentData.name
     }
   })
   await prisma.$disconnect()
 
-  return NextResponse.json(city)
+  return NextResponse.json(deparment)
 }

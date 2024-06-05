@@ -196,58 +196,79 @@ const EmployeeAddress = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        <div className="grid gap-4">
-        <SelectInputItem
+        <div className="grid gap-2">
+          <SelectInputItem
+            valueTitle="Deparment"
+            optionsTitle="Departments"
             value={department}
             options={departments}
             onChange={handleSelectDeparment}
-            valueTitle="Deparment"
-            optionsTitle="Deparments"
             inputValue={inputDeparment}
             onInputChange={(e) => setInputDeparment(e.target.value)}
             onKeyPress={async (e) => {
               if (e.key === 'Enter') {
-                await axios.post(DEPARTMENTS_ROOT, {
-                  name: e.target.value
-                })
-                setInputDeparment('')
-                await fetchDepartments()
+                await axios
+                  .post(DEPARTMENTS_ROOT, {
+                    name: e.target.value
+                  })
+                  .then(() => {
+                    setInputDeparment('')
+                    fetchDepartments()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
               }
             }}
           />
           <SelectInputItem
-            value={district}
-            options={districts}
-            onChange={handleSelectDistrict}
             valueTitle="District"
             optionsTitle="Districts"
+            value={district}
+            onChange={handleSelectDistrict}
+            options={districts}
             inputValue={inputDistrict}
             onInputChange={(e) => setInputDistrict(e.target.value)}
             onKeyPress={async (e) => {
               if (e.key === 'Enter') {
-                await axios.post(DISTRICS_ROOT, {
-                  name: e.target.value
-                })
-                setInputDistrict('')
-                await fetchDepartments()
+                await axios
+                  .post(DISTRICS_ROOT, {
+                    name: e.target.value,
+                    department
+                  })
+                  .then(() => {
+                    setInputDistrict('')
+                    fetchDepartments()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
               }
             }}
           />
+
           <SelectInputItem
-            value={city}
-            options={cities}
-            onChange={handleSelectCity}
             valueTitle="City"
             optionsTitle="Cities"
+            value={city}
+            onChange={handleSelectCity}
+            options={cities}
             inputValue={inputCity}
             onInputChange={(e) => setInputCity(e.target.value)}
             onKeyPress={async (e) => {
               if (e.key === 'Enter') {
-                await axios.post(CITIES_ROOT, {
-                  name: e.target.value
-                })
-                setInputCity('')
-                await fetchDepartments()
+                await axios
+                  .post(CITIES_ROOT, {
+                    name: e.target.value,
+                    district
+                  })
+                  .then(() => {
+                    setInputCity('')
+                    fetchDepartments()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                  })
               }
             }}
           />
@@ -312,7 +333,9 @@ const UserProfile = () => {
     <Card>
       <CardHeader>
         <CardTitle>User information</CardTitle>
-        <CardDescription className='text-foreground/70'>Optional information only for employees who are users</CardDescription>
+        <CardDescription className="text-foreground/70">
+          Optional information only for employees who are users
+        </CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-6">
         <div className="grid gap-4">

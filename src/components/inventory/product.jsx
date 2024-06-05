@@ -388,7 +388,7 @@ export default function ProductPage ({ productId }) {
   const router = useRouter()
 
   const onSale = useInventoryStore((state) => state.onSale)
-  const isBlock = useInventoryStore((state) => state.isBlock)
+  const blocked = useInventoryStore((state) => state.isBlock)
   const name = useInventoryStore((state) => state.name)
   const validationValues = useInventoryStore((state) => state.validationValues)
   const id = useInventoryStore((state) => state.id)
@@ -477,7 +477,7 @@ export default function ProductPage ({ productId }) {
               <div className="flex gap-2 items-center">
                 <Checkbox
                   id="isBlock"
-                  checked={isBlock}
+                  checked={blocked}
                   onCheckedChange={(value) => handleSelect('isBLock', value)}
                 />
                 <Label htmlFor="isBlock ">Lock</Label>

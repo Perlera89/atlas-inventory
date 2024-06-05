@@ -9,8 +9,19 @@ import OrderValidation from './order-validation'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 
-const OptionItem = ({ onClick, variant = 'outline', children }) => (
-  <Button variant={variant} onClick={onClick} size="sm" className="h-full w-full m-1">
+const OptionItem = ({
+  onClick,
+  variant = 'outline',
+  disabled = false,
+  children
+}) => (
+  <Button
+    variant={variant}
+    disabled={disabled}
+    onClick={onClick}
+    size="sm"
+    className="h-full w-full m-1"
+  >
     {children}
   </Button>
 )
@@ -98,8 +109,17 @@ export default function OrderOptions () {
 
   useConditionalHotkeys('Enter', handlePayOrder)
   useConditionalHotkeys('Backspace', handleDeleteClick)
-  useConditionalHotkeys('alt+s', () => setSelectedButton('Dsc'))
-  useConditionalHotkeys('alt+p', () => setSelectedButton('Price'))
+  useConditionalHotkeys('alt+s', () => {
+    if (!selectedProduct.blocked) {
+      setSelectedButton('Dsc')
+    }
+  })
+
+  useConditionalHotkeys('alt+p', () => {
+    if (!selectedProduct.blocked) {
+      setSelectedButton('Price')
+    }
+  })
   useConditionalHotkeys('alt+q', () => setSelectedButton('Qty'))
 
   for (let i = 0; i < 10; i++) {
@@ -131,9 +151,7 @@ export default function OrderOptions () {
         <Dialog open={openOrder} onOpenChange={setOpenOrder}>
           <DialogTrigger asChild>
             <Button
-              disabled={
-                !order || order.products.length === 0 || !order.client
-              }
+              disabled={!order || order.products.length === 0 || !order.client}
               onClick={handlePayOrder}
               className="row-span-3 h-full mt-1 flex flex-col col-span-2 gap-2 items-center justify-center"
             >
@@ -164,6 +182,7 @@ export default function OrderOptions () {
         {['Qty', 'Dsc', 'Price'].map((option) => (
           <OptionItem
             key={option}
+            disabled={option !== 'Qty' && selectedProduct.blocked}
             onClick={() => setSelectedButton(option)}
             className={
               selectedButton === option &&
