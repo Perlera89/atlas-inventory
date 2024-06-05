@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import bycript from 'bcryptjs'
 import prisma from '@/lib/prisma'
 
 export async function GET (_, { params }) {
@@ -71,6 +72,7 @@ export async function PUT (body, { params }) {
   try {
     const employeeData = await body.json()
     console.log('employeeData', employeeData)
+    const hashedPassword = await bycript.hash(employeeData.password, 10)
 
     const updatedEmployee = await prisma.employee.update({
       where: {
@@ -102,7 +104,8 @@ export async function PUT (body, { params }) {
         salary: employeeData.salary,
         user: {
           update: {
-            username: employeeData.username
+            username: employeeData.username,
+            password: hashedPassword
           }
         }
       }

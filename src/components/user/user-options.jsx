@@ -1,8 +1,9 @@
 // import { getServerSession } from 'next-auth/next'
 // import { authOptions } from '@/app/api/auth/[...nextauth]/route.js'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useProfileStore } from '@/store/profile'
+import { useUserStore } from '@/store/user'
 
 import {
   DropdownMenu,
@@ -21,6 +22,21 @@ export default function UserOptions () {
   const thumbnail = useProfileStore((state) => state.thumbnail)
 
   const fetchProfile = useProfileStore((state) => state.fetchProfile)
+  const fetchUser = useUserStore((state) => state.fetchUser)
+
+  const { data } = useSession()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (data) {
+        const email = data?.user?.email
+        if (email) {
+          await fetchUser(email)
+        }
+      }
+    }
+    fetchData()
+  }, [data])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +69,6 @@ export default function UserOptions () {
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {

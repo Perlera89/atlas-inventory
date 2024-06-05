@@ -54,11 +54,7 @@ export async function POST (res) {
         username: userData.username,
         email: userData.email,
         password: hashedPassword,
-        type: {
-          connect: {
-            id: 1
-          }
-        }
+        role: 'admin'
       }
     })
 

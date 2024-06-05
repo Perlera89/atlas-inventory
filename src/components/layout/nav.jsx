@@ -1,4 +1,9 @@
 'use client'
+// hooks & stores
+import { usePathname } from 'next/navigation'
+import { useUserStore } from '@/store/user'
+
+// icons
 import {
   Pyramid,
   ShoppingCart,
@@ -8,14 +13,24 @@ import {
   , Users
 } from 'lucide-react'
 
+// components
 import TooltipItem from '../display/tooltip'
-
 import Link from 'next/link'
-
-import { usePathname } from 'next/navigation'
 
 export default function NavBar () {
   const router = usePathname()
+
+  const role = useUserStore((state) => state.role)
+
+  const links = [
+    ['/', 'Home', Home],
+    ['/orders', 'Orders', ShoppingCart],
+    ['/inventory', 'Products', Package],
+    ['/clients', 'Clients', Users],
+    ['/employees', 'Employees', Briefcase]
+  ]
+
+  const filteredLinks = role === 'admin' ? links : links.filter(([href]) => !['/inventory', '/employees'].includes(href))
 
   return (
     <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -26,13 +41,7 @@ export default function NavBar () {
         <Pyramid className="h-4 w-4 transition-all group-hover:scale-110" />
         <span className="sr-only">Atlas Inv.</span>
       </Link>
-      {[
-        ['/', 'Home', Home],
-        ['/orders', 'Orders', ShoppingCart],
-        ['/inventory', 'Products', Package],
-        ['/clients', 'Clients', Users],
-        ['/employees', 'Employees', Briefcase]
-      ].map(([href, label, Icon]) => (
+      {filteredLinks.map(([href, label, Icon]) => (
         <TooltipItem content={label} key={label}>
           <Link
             href={href}

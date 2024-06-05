@@ -1,5 +1,4 @@
 'use client'
-import { Triangle } from 'react-loader-spinner'
 // components
 import { Toaster } from 'react-hot-toast'
 import { ProductsItem } from '../../components/inventory/products'
@@ -19,7 +18,7 @@ import { LuBoxes, LuShoppingCart } from 'react-icons/lu'
 import { usePathname, useRouter } from 'next/navigation'
 import { useInventoryStore } from '@/store/inventory'
 import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 const Products = () => {
   const productCount = useInventoryStore((state) => state.productCount)

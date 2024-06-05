@@ -285,21 +285,12 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String
-  typeId    Int
+  role      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDeleted Boolean  @default(false)
 
-  type     TypeUser  @relation(fields: [typeId], references: [id])
   employee Employee?
-}
-
-model TypeUser {
-  id        Int     @id @default(autoincrement())
-  name      String
-  isDeleted Boolean @default(false)
-
-  users User[]
 }
 
 model Profile {

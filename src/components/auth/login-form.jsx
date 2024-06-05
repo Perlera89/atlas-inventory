@@ -1,14 +1,14 @@
 'use client'
-
+// hooks and store
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import CardWrapper from './card-wrapper'
 import { toast, Toaster } from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 
 export default function RegisterForm () {
   const router = useRouter()
