@@ -88,11 +88,7 @@ export async function POST (body) {
           email,
           username,
           password: hashedPassword,
-          type: {
-            connect: {
-              id: 2
-            }
-          }
+          role: 'user'
         }
       }
     }
