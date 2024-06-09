@@ -48,8 +48,150 @@ export default async function querySelector (query) {
       console.log('Products', producto)
       return JSON.stringify(producto)
     }
-    default:
+
+    case `Precio minimo de ${getLastWord(query)}`: {
+      const producto = await prisma.product.findMany({
+        where: {
+          productInfo: {
+            name: {
+              contains: getLastWord(query)
+            }
+          },
+          isDeleted: false
+        },
+        select: {
+          minimumPrice: true
+        }
+      })
+      console.log('Products', producto)
+      return JSON.stringify(producto)
+    }
+
+    case `Area de ${getLastWord(query)}`: {
+      const area = await prisma.Product.findMany({
+        where: {
+          productInfo: {
+            name: {
+              contains: getLastWord(query)
+            }
+          },
+          isDeleted: false
+        },
+        select: {
+          productInfo: {
+            select: {
+              area: {
+                select: {
+                  name: true
+                }
+              }
+            }
+          }
+        }
+      })
+      return JSON.stringify(area)
+    }
+
+    case 'Productos eliminados': {
+      const producto = await prisma.product.findMany({
+        where: {
+          isDeleted: true
+        },
+        select: {
+          productInfo: {
+            select: {
+              name: true
+            }
+          }
+        }
+      })
+      return JSON.stringify(producto)
+    }
+
+    case 'Productos en venta': {
+      const producto = await prisma.product.findMany({
+        where: {
+          isDeleted: false,
+          isOnSale: true
+        },
+        select: {
+          id: true,
+          productInfo: {
+            select: {
+              name: true
+            }
+          }
+        }
+      })
+      console.log('Products', producto)
+      return JSON.stringify(producto)
+    }
+
+    case `Distritos del departamento ${getLastWord(query)}` : {
+      const district = await prisma.district.findMany({
+        where: {
+          department: {
+            name: getLastWord(query)
+          }
+        },
+        select: {
+          name: true
+        }
+      })
+      return JSON.stringify(district)
+    }
+
+    case `informacion de cliente ${getLastWord(query)}`: {
+      const client = await prisma.client.findMany({
+        where: {
+          firstName: getLastWord(query)
+        },
+        select: {
+          firstName: true,
+          lastName: true,
+          dui: true,
+          email: true,
+          phone: true,
+          address: {
+            select: {
+              department: true,
+              city: true,
+              district: true
+            }
+          }
+        }
+      })
+      console.log('Client', client)
+      return JSON.stringify(client)
+    }
+
+    case `Informacion de empleado ${getLastWord(query)}`: {
+      const employee = await prisma.employee.findMany({
+        where: {
+          firstName: getLastWord(query)
+        },
+        select: {
+          firstName: true,
+          lastName: true,
+          dui: true,
+          email: true,
+          phone: true,
+          address: {
+            select: {
+              department: true,
+              city: true,
+              district: true
+            }
+          }
+        }
+      })
+      console.log('Employee', employee)
+      return JSON.stringify(employee)
+    }
+
+    default:{
       return 'SELECT * FROM user'
+    }
   }
 }
 

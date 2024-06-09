@@ -13,10 +13,6 @@ async function main () {
     ]
   })
 
-  await prisma.typeUser.createMany({
-    data: [{ name: 'Admin' }, { name: 'Employee' }]
-  })
-
   await prisma.type.createMany({
     data: [{ name: 'Consumable' }, { name: 'Storable' }, { name: 'Service' }]
   })
