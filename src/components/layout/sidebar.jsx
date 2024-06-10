@@ -24,7 +24,7 @@ export default function SidebarLayout (isCollapsed) {
               <BotMessageSquare />
             </Button>
           </DialogTrigger>
-          <DialogContent className="min-w-[30vw] min-h-[90vh]">
+          <DialogContent className="min-w-[40vw] min-h-[90vh]">
             <Chat />
           </DialogContent>
         </Dialog>

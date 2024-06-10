@@ -1,11 +1,8 @@
-import fs from 'fs'
 import OpenAI from 'openai'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { INITIAL_PROMPT } from '@/util/config'
 import querySelector from '@/util/querys'
 import docReader from '@/util/docs'
 
-// OpenAI configuration
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
@@ -13,46 +10,54 @@ const openai = new OpenAI({
 export async function POST (req) {
   const { messages } = await req.json()
 
-  console.log('messages', messages)
+  const userMessage = messages[messages.length - 1]?.content
+  console.log('userMessage', userMessage)
 
-  const userMessage = messages.find(
-    (message) => message.role === 'user'
-  )?.content
+  let message = ''
+  let jsonContent = ''
+  let mdContent = ''
 
-  let message
-  let mdContent
-
+  // Obteniendo el comando del mensaje del usuario
   const command = messages[messages.length - 1]?.content.split(' ')[0]
-  console.log('command', command)
 
+  // Verificando el comando y ejecutando la acción correspondiente
   if (command === 'Query:') {
-    message = await querySelector(userMessage)
+    jsonContent = await querySelector(userMessage)
     console.log('message a enviar', message)
   } else if (command === 'Docs:') {
+    console.log('entro a revisar los documentos')
     mdContent = docReader(userMessage)
   } else {
-    message = 'Not found'
+    message = 'No encontrado'
   }
 
-  console.log('ultimo pa enviar', message)
+  console.log('message', message)
+  console.log('jsonContent', jsonContent)
+  console.log('mdContent', mdContent)
 
+  // Creando la respuesta de la API
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     stream: true,
     messages: [
       {
         role: 'system',
-        content: mdContent
+        content:
+          'Eres Atlas AI, un chatbot asistente para un producto software de gestión de inventario llamado Atlas - Inventory. Respondes a las preguntas sobre el sistema. Primero define el titulo de la pregunta luego responde con el contenido solicitado.'
       },
       {
-        role: 'user',
-        content: message
-          ? `Eres un experto en redacción de consultas. Lee el JSON que proporciono y lista en un formato de texto natural para que sea fácil de leer (separa, lista y remarca lo que sea necesario). JSON: ${message}`
-          : `Eres un experto en redacción de consultas. Lee el archivo Markdown que proporciono y lista en un formato de texto natural para que sea fácil de leer. Archivo: ${mdContent}`
+        role: mdContent ? 'system' : 'assistant',
+        content: mdContent
+          ? `{Responde la información solicitada sobre la documentación. Analiza el formato en Markdown y responde con un formato de texto natural. Archivo Markdown:}${mdContent}. 
+          
+          Si no hay archivo contesta tomando como contexto el documento anterior.`
+          : `{Responde la información solicitada sobre la consulta a la base de datos. Analiza el formato en JSON y responde con un formato de texto natural. Archivo JSON:}${jsonContent}. 
+          
+          Si no hay archivo contesta tomando como contexto el documento anterior.`
       },
       ...messages
     ],
-    max_tokens: 500,
+    max_tokens: 800,
     temperature: 0.7,
     top_p: 1,
     frequency_penalty: 1,

@@ -28,4 +28,3 @@ export const MESSAGES_ROOT = `${ROOT}/messages`
 export const CHAT_ROOT = `${ROOT}/chat`
 export const AUTH_ROOT = `${ROOT}/user`
 export const TAG_DETAILS_ROOT = `${ROOT}/tag-detail`
-export const INITIAL_PROMPT = 'Responde con markdown'

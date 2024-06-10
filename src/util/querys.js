@@ -32,7 +32,7 @@ export default async function querySelector (query) {
       return JSON.stringify(products)
     }
 
-    case query.includes(`Stock en ${getLastWord(query)}`): {
+    case query.includes(`Existencias en ${getLastWord(query)}`): {
       const producto = await prisma.product.findMany({
         where: {
           productInfo: {

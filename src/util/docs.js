@@ -1,17 +1,27 @@
 import fs from 'fs'
 
-export default function docReader (query) {
-  switch (true) {
-    case query.includes('Iniciar Sesión'):
-      console.log('entro')
-      return fs.readFileSync('src/assets/auth.md', 'utf8')
-    case query.includes('Agregar un Producto'):
-      console.log('entro')
-      return fs.readFileSync('src/assets/inventory.md', 'utf8')
-    case 'route':
-      console.log('Actualizar un Producto')
-      return fs.readFileSync('src/assets/inventory.md', 'utf8')
-    default:
-      return 'No encontrado'
+const queryFileMap = {
+  'Iniciar Sesión': 'src/assets/auth.md',
+  'Realizar Registro': 'src/assets/auth.md',
+  'Agregar un Producto': 'src/assets/inventory.md',
+  'Actualizar un Producto': 'src/assets/inventory.md',
+  'Eliminar un Producto': 'src/assets/inventory.md',
+  'Agregar un Cliente': 'src/assets/client.md',
+  'Actualizar un Cliente': 'src/assets/client.md',
+  'Eliminar un Cliente': 'src/assets/client.md',
+  'Agregar un Empleado': 'src/assets/employee.md',
+  'Actualizar un Empleado': 'src/assets/employee.md',
+  'Eliminar un Empleado': 'src/assets/employee.md',
+  'Agregar una Orden': 'src/assets/order.md'
+}
+
+export default function docReader (docName) {
+  const file = Object.keys(queryFileMap).find((key) => docName.includes(key))
+  console.log('file', file)
+
+  if (file) {
+    return fs.readFileSync(queryFileMap[file], 'utf8')
+  } else {
+    return 'No encontrado'
   }
 }
