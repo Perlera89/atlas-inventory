@@ -2,8 +2,8 @@ import prisma from '@/lib/prisma'
 
 export default async function querySelector (query) {
   console.log('query', query)
-  switch (query) {
-    case 'Detalles de usuario': {
+  switch (true) {
+    case query.includes('Detalles de usuarios'): {
       const users = await prisma.user.findMany({
         select: {
           id: true,
@@ -15,7 +15,7 @@ export default async function querySelector (query) {
       return JSON.stringify(users)
     }
 
-    case 'Detalles de producto': {
+    case query.includes('Detalles de producto'): {
       const products = await prisma.product.findMany({
         select: {
           id: true,
@@ -32,7 +32,7 @@ export default async function querySelector (query) {
       return JSON.stringify(products)
     }
 
-    case `Stock en ${getLastWord(query)}`: {
+    case query.includes(`Stock en ${getLastWord(query)}`): {
       const producto = await prisma.product.findMany({
         where: {
           productInfo: {
@@ -49,7 +49,7 @@ export default async function querySelector (query) {
       return JSON.stringify(producto)
     }
 
-    case `Precio minimo de ${getLastWord(query)}`: {
+    case query.includes(`Precio minimo de ${getLastWord(query)}`): {
       const producto = await prisma.product.findMany({
         where: {
           productInfo: {
@@ -66,8 +66,7 @@ export default async function querySelector (query) {
       console.log('Products', producto)
       return JSON.stringify(producto)
     }
-
-    case `Area de ${getLastWord(query)}`: {
+    case query.includes(`Area de ${getLastWord(query)}`): {
       const area = await prisma.Product.findMany({
         where: {
           productInfo: {
@@ -92,7 +91,7 @@ export default async function querySelector (query) {
       return JSON.stringify(area)
     }
 
-    case 'Productos eliminados': {
+    case query.includes('Productos eliminados'): {
       const producto = await prisma.product.findMany({
         where: {
           isDeleted: true
@@ -108,7 +107,7 @@ export default async function querySelector (query) {
       return JSON.stringify(producto)
     }
 
-    case 'Productos en venta': {
+    case query.includes('Productos en venta'): {
       const producto = await prisma.product.findMany({
         where: {
           isDeleted: false,
@@ -126,8 +125,7 @@ export default async function querySelector (query) {
       console.log('Products', producto)
       return JSON.stringify(producto)
     }
-
-    case `Distritos del departamento ${getLastWord(query)}` : {
+    case query.includes(`Distritos del departamento ${getLastWord(query)}`) : {
       const district = await prisma.district.findMany({
         where: {
           department: {
@@ -141,7 +139,7 @@ export default async function querySelector (query) {
       return JSON.stringify(district)
     }
 
-    case `informacion de cliente ${getLastWord(query)}`: {
+    case query.includes(`Informacion de cliente ${getLastWord(query)}`): {
       const client = await prisma.client.findMany({
         where: {
           firstName: getLastWord(query)
@@ -165,7 +163,7 @@ export default async function querySelector (query) {
       return JSON.stringify(client)
     }
 
-    case `Informacion de empleado ${getLastWord(query)}`: {
+    case query.includes(`Informacion de empleado ${getLastWord(query)}`): {
       const employee = await prisma.employee.findMany({
         where: {
           firstName: getLastWord(query)
@@ -178,9 +176,15 @@ export default async function querySelector (query) {
           phone: true,
           address: {
             select: {
-              department: true,
-              city: true,
-              district: true
+              department: {
+                select: { name: true }
+              },
+              city: {
+                select: { name: true }
+              },
+              district: {
+                select: { name: true }
+              }
             }
           }
         }
@@ -188,13 +192,10 @@ export default async function querySelector (query) {
       console.log('Employee', employee)
       return JSON.stringify(employee)
     }
-
-    default:{
-      return 'SELECT * FROM user'
-    }
+    default:
+      return 'No encontrado'
   }
 }
-
 function getLastWord (sentence) {
   const words = sentence.split(' ')
   return words[words.length - 1]
