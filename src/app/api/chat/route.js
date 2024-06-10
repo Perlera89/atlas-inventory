@@ -37,13 +37,13 @@ export async function POST (req) {
 
   // Creando la respuesta de la API
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o',
     stream: true,
     messages: [
       {
         role: 'system',
         content:
-          'Eres Atlas AI, un chatbot asistente para un producto software de gestión de inventario llamado Atlas - Inventory. Respondes a las preguntas sobre el sistema. Primero define el titulo de la pregunta luego responde con el contenido solicitado.'
+          'Eres Atlas AI, un chatbot asistente para un producto software de gestión de inventario llamado Atlas - Inventory. Respondes a las preguntas sobre el sistema (Si la pregunta esta fuera del contexto del sistema limitar al usuario e indicar que solo contestara a preguntas sobre este). Primero define el titulo de la pregunta si está relacionada al sistema, luego responde con el contenido solicitado.'
       },
       {
         role: mdContent ? 'system' : 'assistant',
@@ -51,9 +51,13 @@ export async function POST (req) {
           ? `{Responde la información solicitada sobre la documentación. Analiza el formato en Markdown y responde con un formato de texto natural. Archivo Markdown:}${mdContent}. 
           
           Si no hay archivo contesta tomando como contexto el documento anterior.`
-          : `{Responde la información solicitada sobre la consulta a la base de datos. Analiza el formato en JSON y responde con un formato de texto natural. Archivo JSON:}${jsonContent}. 
+          : `{Responde la información solicitada sobre la consulta a la base de datos. Analiza el formato en JSON y responde con un formato de texto natural. Asegurate de leer el archivo. Archivo JSON:}${jsonContent}. 
           
           Si no hay archivo contesta tomando como contexto el documento anterior.`
+      },
+      {
+        role: 'user',
+        content: userMessage
       },
       ...messages
     ],

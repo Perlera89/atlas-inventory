@@ -11,7 +11,6 @@ export default async function querySelector (query) {
           email: true
         }
       })
-      console.log('Users', users)
       return JSON.stringify(users)
     }
 
@@ -28,7 +27,6 @@ export default async function querySelector (query) {
           salePrice: true
         }
       })
-      console.log('Products', products)
       return JSON.stringify(products)
     }
 
@@ -45,7 +43,6 @@ export default async function querySelector (query) {
           stock: true
         }
       })
-      console.log('Products', producto)
       return JSON.stringify(producto)
     }
 
@@ -63,7 +60,6 @@ export default async function querySelector (query) {
           minimumPrice: true
         }
       })
-      console.log('Products', producto)
       return JSON.stringify(producto)
     }
     case query.includes(`Area de ${getLastWord(query)}`): {
@@ -91,7 +87,7 @@ export default async function querySelector (query) {
       return JSON.stringify(area)
     }
 
-    case query.includes('Productos eliminados'): {
+    case query.includes('Productos Eliminados'): {
       const producto = await prisma.product.findMany({
         where: {
           isDeleted: true
@@ -107,7 +103,7 @@ export default async function querySelector (query) {
       return JSON.stringify(producto)
     }
 
-    case query.includes('Productos en venta'): {
+    case query.includes('Productos en Venta'): {
       const producto = await prisma.product.findMany({
         where: {
           isDeleted: false,
@@ -122,7 +118,6 @@ export default async function querySelector (query) {
           }
         }
       })
-      console.log('Products', producto)
       return JSON.stringify(producto)
     }
     case query.includes(`Distritos del departamento ${getLastWord(query)}`) : {
@@ -159,7 +154,6 @@ export default async function querySelector (query) {
           }
         }
       })
-      console.log('Client', client)
       return JSON.stringify(client)
     }
 
@@ -189,7 +183,6 @@ export default async function querySelector (query) {
           }
         }
       })
-      console.log('Employee', employee)
       return JSON.stringify(employee)
     }
     default:

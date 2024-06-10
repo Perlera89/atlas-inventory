@@ -97,7 +97,7 @@ const cards = [
   {
     title: 'Productos que están eliminados',
     icon: <Trash2 className="absolute bottom-4 right-4" />,
-    value: 'Query: Productos eliminados'
+    value: 'Query: Productos Eliminados'
   },
   {
     title: 'Distritos del departamento',
@@ -152,7 +152,7 @@ export default function Chat () {
       </header>
       <div className="flex-1 grid overflow-y-auto p-6 space-y-4">
         {messages.length < 1 && (
-          <div className="grid gap-4 mt-20">
+          <div className="grid gap-4 mt-12">
             <div className="flex opacity-70 h-32 w-32 items-center justify-center mx-auto gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground place-content-center">
               <Pyramid className="h-16 w-16" />
               <span className="sr-only">Atlas Inv.</span>
@@ -160,7 +160,7 @@ export default function Chat () {
             <h3 className="scroll-m-20 text-xl font-semibold tracking-tight text-center">
               {greeting}
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 ml-10">
               {selectedCards?.map((card) => (
                 <Card
                   className="w-52 hover:bg-muted/50 transition-colors cursor-pointer"
@@ -277,7 +277,7 @@ export default function Chat () {
                   <DropdownMenuSubContent>
                     {[
                       ['Detalles de usuario', 'Query: Detalles de usuarios'],
-                      ['Detalles de producto', 'Query: Detalles de producto'],
+                      ['Detalles de producto', 'Query: Detalles de producto', 'Producto'],
                       [
                         'Existencias en producto',
                         'Query: Existencias en',
@@ -289,8 +289,8 @@ export default function Chat () {
                         'Producto'
                       ],
                       ['Area de producto', 'Query: Area de', 'Producto'],
-                      ['Productos eliminados', 'Query: Productos eliminados'],
-                      ['Productos en venta', 'Query: Clientes eliminados'],
+                      ['Productos eliminados', 'Query: Productos Eliminados'],
+                      ['Productos en venta', 'Query: Productos en Venta'],
                       [
                         'Distritos del departamento',
                         'Query: Distritos del departamento',
